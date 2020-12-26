@@ -1,1 +1,1996 @@
+ #+TITLE: Signal Processing for Communication
+#+DATE: <2020-07-20 Mo>
+#+AUTHOR: Ch. Bollinger
+#+EMAIL: christian.bollinger@hispeed.ch
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t c:nil creator:comment d:(not "LOGBOOK") date:t
+#+OPTIONS: e:t email:nil f:t inline:t num:t p:nil pri:nil stat:t
+#+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:t title:t todo:t |:t
+#+CREATOR: Emacs 24.3.1 (Org mode 8.2.5h)
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: de
+#+bind: org-export-publishing-directory "./exports"
+#+SELECT_TAGS: export
+#+TODO: TODO(t) OPEN(o) | DONE(d) FIXED(f)
+# By default I do not want that source code blocks are evaluated on export. Usually
+# I want to evaluate them interactively and retain the original results.
 
+# This option causes problems with Block Diagrams!!!!!
+# #+PROPERTY: header-args :eval never-export
+
+# #+OPTIONS: texht:t
+
+# Org and LaTeX exporter Configuration
+# NOTE: LATEX_HEADER_EXTRA lines will not be loaded when previewing
+# LaTeX snippets while LATEX_HEADER lines will be evaluated even for
+# rendering snippets
+# fontpsec: enables UTF8 with more than 256 characters. (pdftex requiers fontenc instead)
+#+LATEX_COMPILER: xelatex                                    
+#+LATEX_CLASS: koma-article                                    
+#+LATEX_CLASS_OPTIONS: [a4paper,10pt,DIV=15,draft=false]      
+
+#+LATEX_HEADER_EXTRA: \usepackage{fontspec}                     
+
+#+LATEX_HEADER_EXTRA: \usepackage{lmodern}                     
+#+LATEX_HEADER_EXTRA: \usepackage{rotfloat}                    
+
+# Miscellaneous setting
+#+LATEX_HEADER: \hypersetup{colorlinks=true, linkcolor=blue}   
+#+LATEX_HEADER_EXTRA: \usepackage{units}                       
+#+LATEX_HEADER_EXTRA: \usepackage{comment}                     
+#+LaTeX_HEADER_EXTRA: \usepackage{lipsum} 
+
+# Graphic Packages
+# bclogo
+#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
+#+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz} 
+#+OPTIONS: tex:imagemagick
+# Math Packages
+#+LaTeX_HEADER: \usepackage{amsmath}
+#+LaTeX_HEADER: \usepackage{amsxtra}
+#+Latex: \everymath{\displaystyle}
+# Electronic Circuit Diagarams
+#+LaTeX_HEADER: \usepackage[siunitx, europeanresistors]{circuitikz}
+# DSP Diagrams
+#+LaTex_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
+# Gray Header around everything
+#+LATEX_HEADER: \newenvironment{gbar}[2]{\def\FrameCommand{{\color{#1}\vrule width 3pt}\colorbox{#2}}\MakeFramed{\advance\hsize-\width\FrameRestore}}{\endMakeFramed}
+
+# Konfiguration Dokumentelemente
+# Enumeration releated configuration
+#+LATEX_HEADER: \usepackage{enumitem}
+#+LATEX_HEADER: \setlist{nolistsep}
+#+LATEX: \setlength\parindent{0pt}
+# Table related configuration
+
+# Koma-Script Document Layout
+#+LATEX_HEADER: \newcommand{\versiondate}{\today}
+#+LATEX_HEADER: \newcommand{\firstAuthor}{Christian Bollinger}
+#+LATEX_HEADER: \newcommand{\shortAuthors}{Ch. Bollinger}
+#+LATEX_HEADER: \newcommand{\authorname}{\firstAuthor}
+
+#+LaTeX_HEADER: \usepackage{lastpage} %For getting page x of y
+#+LATEX_HEADER: \usepackage[headsepline=true,footsepline=true]{scrlayer-scrpage}
+#+LATEX_HEADER: \pagestyle{scrheadings}
+#+LATEX_HEADER: \automark{section}{}
+
+#+LATEX_HEADER: \ifoot*{\shortAuthors}
+#+LATEX_HEADER: \cfoot*{page \thepage}
+#+LATEX_HEADER: \ofoot*{\today}
+
+#+STARTUP: hideblocks 
+
+
+\newpage
+
+* Module 1: Basics of Digital Signal Processing
+** Introduction to digital signal processing
+*** Signal
+- Description of the evoultion of a physical phenomenon
+  | phenomenon      | signal              |
+  | wehather        | temperature         |
+  | sound           | pressure            |
+  | sound           | magnetic deviation  |
+  | light intensity | gray level on paper |
+*** Processing 
+  - *Analysis:* Understanding the information carried by the signal
+  - *Synthesis:* Creating a signal to contain the given information
+*** Digital
+  - Discrete Time
+    - Splice up time into a series of descrete instance without loosing information
+    - Harry Nyquist and Claude Shannon state with the \textcolor{blue}{Sampling Theorem} that
+      continous time representation and discrete time representation are equivalent.
+    - The Sampling Theorem: Under appropriate "slowness" conditions for x(t) we have
+      #+results:
+      #+begin_export latex
+      \begin{equation}
+       x(t) = \sum_{n=-\infty}^{\infty} x[n]\;sinc(\frac{t - nT_s}{T_s})
+      \end{equation}
+      #+end_export
+
+    - The conditiion under which the Sampling Theorem holds was given by Fourier and it's
+      \textcolor{blue}{Fourier Analysis}.
+    - The fouriere transform will give us a quantitive measure how fast a signal moves
+  - Discrete Amplitude
+    - Through discretisation of ampltitudes only a set of predefined values are possible. 
+    - The set of levels is countable i.e. we can always map the level of a sample to an
+      integer. If our data is represented by integer it becomes complete abstract and general
+      which has very importand consequences in the following three domains:
+      - *Storage* special devices for recoding needed
+      - *Processing* General purpose microprocessor is sufficient 
+      - *Transmission* Reproduction of the original signal and therefore eliminating nois
+        is easy
+*** From Analog to Digital Signal Processing
+ - Analog asks for $\displaystyle f_{(t)} = ?$
+ #+results: Display Speech
+ [[file:./image/speech.png]]
+
+ - Digital represnts data as a sequence of numbers (scaled with a factor of 1000)
+ #+results: Represent speach 1
+ | -12 | -12 | -12 | -11 | -11 | -12 | -12 | -11 | -11 | -10 |
+
+ #+results: Represent speach 2
+ | -10 | -10 | -9 | -10 | -10 | -9 | -9 | -9 | -9 | -9 |
+
+ #+results: Represent speach 3
+ | -8 | -8 | -7 | -7 | -8 | -8 | -8 | -7 | -7 | -7 |
+
+** Discrete-Time Signals
+*** Basic Definitions
+- Sequence: defined as \textcolor{blue}{complex-valued function}
+- Discrete-Time Signal: a sequnece of complex numbers
+  - one dimension (for now)
+  - notation: x[n]
+  - two-sides sequencies: $\displaystyle \text{x: } \mathbb{Z} \rightarrow \mathbb{C}$
+  - n is /a-dimensional/ "time", sets an order on the sequence of samples 
+  - analysis: periodic measurement
+  - synthesis: stream of generated samples, reproduce a physical phenomenon
+
+*** Basic Signals
+#+attr_latex: :options {0.4\textwidth} :float 
+#+begin_minipage latex 
+\begin{dspPlot}[width=5cm, xticks=5]{-5, 5}{-1.2, 1.2}
+  \dspSignal[linecolor=blue, xmin=-5, xmax=-1]{0}
+  \dspTaps[linecolor=blue]{0 1}
+  \dspSignal[linecolor=blue, xmin=1, xmax=5]{0}
+\end{dspPlot}
+#+end_minipage                                          
+#+attr_latex: :options [c]{0.5\textwidth} :float right
+#+begin_minipage latex
+\color{blue}Impulse \color{black}
+\begin{equation}
+  \delta[n]=\left\{
+      \begin{array}{ll}
+        1 & n = 0     \\
+        0 & n \neq 0  \\
+      \end{array}\right.
+\end{equation}
+ #+end_minipage
+
+#+attr_latex: :options {0.4\textwidth} :float 
+#+begin_minipage latex
+\begin{dspPlot}[width=5cm, xticks=5]{-5, 5}{-1.2, 1.2}
+  \dspSignal[linecolor=blue, xmin=-5, xmax=-1]{0}
+  \dspSignal[linecolor=blue, xmin=0, xmax=5]{1}
+\end{dspPlot}
+#+end_minipage                                          
+#+attr_latex: :options [c]{0.5\textwidth} :float right
+#+begin_minipage latex
+\color{blue}Unit Step \color{black}
+\begin{equation}
+  \mu[n]=\left\{
+      \begin{array}{ll}
+        1 & n \geq 0     \\
+        0 & n < 0  \\
+      \end{array}\right.
+\end{equation}
+ #+end_minipage
+
+#+attr_latex: :options {0.4\textwidth} :float 
+#+begin_minipage latex
+\begin{dspPlot}[width=5cm, xticks=5]{-5, 5}{-1.2, 1.2}
+  \dspSignal[linecolor=blue, xmin=-5, xmax=-1]{0}
+  \dspSignal[linecolor=blue, xmin=0, xmax=5]{0.7 x exp 1 mul}
+\end{dspPlot}
+#+end_minipage                                          
+#+attr_latex: :options [c]{0.5\textwidth} :float right
+ #+begin_minipage latex
+\textcolor{blue}{Exponential Decay}
+\begin{equation}
+  x[n]= a^n \times \mu[n] \mbox{, } a \in \mathbb{C} \mbox{, } |a| < 1
+\end{equation}
+ #+end_minipage
+
+#+attr_latex: :options {0.4\textwidth} :float 
+#+begin_minipage latex
+\begin{dspPlot}[width=5cm, xticks=5]{-15, 15}{-1.2, 1.2}
+  \dspSignal[linecolor=blue]{5 3.14 mul x mul 3.14 add cos }  % cos (5*3.14*x + 3.14)
+\end{dspPlot}
+#+end_minipage                                          
+#+attr_latex: :options [c]{0.5\textwidth} :float right
+#+begin_minipage latex
+\color{blue}Real value sinus \color{black}
+\begin{equation}
+  x[n]= cos(\omega_0 n + \Phi)
+\end{equation}
+ #+end_minipage
+
+**** Octave Algorithm for some basic
+***** Impulse - Ocatve Algorithm
+#+results:
+#+begin_export latex
+\begin{equation*}
+x[n] = \delta[n]
+\end{equation*}
+#+end_export
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Impulse
+  #+BEGIN_SRC octave
+  N=33                             # Vector lenght
+  n=-(N-1)/2:(N-1)/2;              # Discrete Time Vector
+
+  for i = 1 : length(n)            # Impulse algorithm
+    if n(i) == 0
+      f(i) = 1;
+    else
+      f(i) = 0;
+    end
+  end
+                                    # Graphik
+  figure( 1, "visible", "off");     #  Do not open the graphic window in org
+
+  stem(n,f, "filled", "linewidth", 2);
+  axis([-(N-1)/2 (N-1)/2 0 1.2])
+  grid on ;
+  xlabel("Discrete Time Vector [n]");
+                                      # Org-Mode specific output
+  print -dpng ./image/impulse.png;  # Set print device
+  ans = "./image/impulse.png";      # The mandtory return value
+  #+END_SRC
+
+  #+results: Impulse
+  [[file:./image/impulse.png]]
+
+***** The Unit Step - Octave Algorithm
+#+results:
+#+begin_export latex
+\begin{equation*}
+ u[n] = x[n] = 1
+\end{equation*}
+#+end_export
+
+  #+ATTR_LATEX: :options bgcolor=gray!30
+  #+NAME: Unit Step
+  #+BEGIN_SRC octave
+  N=33                             # Vector lenght
+  n=-(N-1)/2:(N-1)/2;              # Discrete Time Vector
+
+  for i = 1 : length(n)            # Unit Step algorithm
+    if n(i) >= 0
+      f(i) = 1;
+    else
+      f(i) = 0;
+    end
+  end
+                                    # Graphik
+  figure( 1, "visible", "off");     # Do not open the graphic window in org
+
+  stem(n,f, "filled", "linewidth", 2);
+  axis([-(N-1+4)/2 (N-1+4)/2 -0.5 1.5])
+  grid on ;
+  xlabel("Discrete Time Vector [n]");
+                                      # Org-Mode specific output
+  print -dpng ./image/unit_step.png;  # Set print device
+  ans = "./image/unit_step.png";      # The mandtory return value
+  #+END_SRC
+
+  #+results: Unit Step
+  [[file:./image/unit_step.png]]
+
+***** The exponential decay - Octave Algorithm
+#+results:
+#+begin_export latex
+\begin{equation*}
+ x[n] = |a|^n\;u[n] \text{, } |a| < 1 
+\end{equation*}
+#+end_export
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: exponential decay
+#+BEGIN_SRC octave
+N=33                             # Vector lenght
+n=-(N-1)/2:(N-1)/2;              # Discrete Time Vector
+a = 0.75
+
+for i = 1 : length(n)            # The exponential decay algorithm
+  if n(i) >= 0
+    f(i) = abs(a)^n(i);
+  else
+    f(i) = 0;
+  end
+end
+                                  # Graphik
+figure( 1, "visible", "off");     # Do not open the graphic window in org
+
+stem(n,f, "filled", "linewidth", 2);
+axis([-(N-1+4)/2 (N-1+4)/2 -0.5 1.5])
+grid on ;
+xlabel("Discrete Time Vector [n]");
+                                    # Org-Mode specific output
+print -dpng ./image/exp_decay.png;  # Set print device
+ans = "./image/exp_decay.png";      # The mandtory return value
+#+END_SRC
+
+#+results: exponential decay
+[[file:./image/exp_decay.png]]
+
+
+***** Some Wave form examples
+- [[https://www.youtube.com/watch?v=SMkkBfSdm1E&t=955s][Youtube Introduction to GNU Octave]]
+#+results:
+[[file:./image/signals.png]]
+
+*** Classes of Discrete-Time signals
+**** Finite-Length
+- indicate notation: $\displaystyle x[n] \text{, }n=0.1.2.....N-1$
+- vector notation: $\displaystyle x = [x_0, x_1, ... x_{N-1}]^T$
+- practical entities, good for numerical packages (e.g. numpy)
+**** Infinte-Length
+- sequence notation: $\displaystyle x[n] \text{, n } \in \mathbb{Z}$
+- abstraction, good for theorems
+**** Periodic
+- N-periodic sequence: $\displaystyle \tilde{x}[n] = \tilde{x}[n+kN] \text{, n,k,N } \in \mathbb{Z}$
+- same information as in finite-length of length N
+- \textcolor{blue}{natural bridge} between finite and infinite length
+**** Finite-Support
+#+results:
+#+begin_export latex
+\color{blue}Finite-support sequence \color{black}
+\begin{equation}
+  \overline{x}[n]=\left\{
+      \begin{array}{ll}
+        x[n] & if 0 \leq n < N, n \in \mathbb{Z}     \\
+        0 &  otherwise  \\
+      \end{array}\right.
+\end{equation}
+#+end_export
+
+- same information as in finite-length of length N
+- another bridge between finite and infinite lengths
+
+**** Elementary Operations
+ - Scaling ::
+   #+results:
+   #+begin_export latex
+   \begin{equation}
+     y[n]= ax[n] \rightarrow \left\{
+        \begin{array}{ll}
+          a>0 & amplification     \\
+          a<0 & attenuation       \\
+        \end{array}\right.
+   \end{equation}
+   #+end_export
+
+ - Sum ::
+   #+results:
+   #+begin_export latex
+   \begin{equation} y[n] = x[n] + z[n] \end{equation}
+   #+end_export
+
+- Product ::
+  #+results:
+  #+begin_export latex
+  \begin{equation} y[n] = x[n] * z[n] \end{equation}
+  #+end_export
+
+- Shift ::
+  #+results:
+  #+begin_export latex
+  \begin{equation}
+    y[n]= x[n-k] \rightarrow \left\{
+        \begin{array}{ll}
+          k>0 & deleay     \\
+          k<0 & anticipate \\
+        \end{array}\right.
+  \end{equation}
+  #+end_export
+
+- Integration ::
+  #+results:
+  #+begin_export latex
+  \begin{equation} y[n] = \sum\limits_{k=-\infty}^{n} x[k] \end{equation}
+  #+end_export
+
+- Differentation ::
+  #+results:
+  #+begin_export latex
+  \begin{equation} y[n] = x[n] - x[n-1] \end{equation}
+  #+end_export
+
+#+ATTR_LATEX: :options [logo=\bcbook,couleur=green!10,barre=snake,arrondi=0.1]{Relation Operator and Signals}
+ #+BEGIN_bclogo
+- The \textcolor{blue}{unit step} can be optained by applying the
+  \textcolor{blue}{integration} operator to the
+  \textcolor{blue}{discrete time pulse}.
+- The \textcolor{blue}{unit impulse} can be optained by applying the
+  \textcolor{blue}{differentation} operator to the \textcolor{blue}{unit step}.
+ #+END_bclogo
+
+*** Shift of finite-length: finite-support
+#+attr_latex: :options {0.4\textwidth} :float 
+ #+begin_minipage latex
+\begin{equation*} 
+\tilde{x}[n] = ..\ 0\ 0\ \textcolor{blue}{x_0\ x_1\ x_2\  \\
+                                   x4\ x_4\ x_5\ x_6\  x_7}\ 0\ 0\ ...
+\end{equation*}
+  \begin{dspPlot}[width=5cm, xticks=1]{0, 7}{-1.2,1.2}
+    \dspSignal[linecolor=blue]{1 x 10 div sub}
+  \end{dspPlot}
+ #+end_minipage                                          
+ #+attr_latex: :options [c]{0.5\textwidth} :float right
+ #+begin_minipage latex
+\begin{equation*}
+\tilde{x}[n-3] = ..\ 0\ \textcolor{blue}{0\ 0\ 0\ x_0\ \\
+                                x_0\ x_1\ x_2\ x_3\ x_4}\ x_5\ x_6\ x_7\ 0...
+\end{equation*}
+\begin{dspPlot}[width=5cm, xticks=1]{0, 7}{-1.2,1.2}
+    \dspSignal[linecolor=blue, xmin=0, xmax=2]{0}
+    \dspSignal[linecolor=blue, xmin=3 ]{1 x 3 sub 10 div sub}
+\end{dspPlot}
+ #+end_minipage
+
+- As we shift, we pull in 0s and we lose data.
+
+*** Shift of finite-length: periodization
+#+attr_latex: :options {0.4\textwidth} :float 
+ #+begin_minipage latex
+\begin{equation*}
+  \tilde{x}[n-3] = \textcolor{blue}{x_1\ x_2\ x_3\ x_4\ x_5\ x_6\ x_7\ x_8}
+\end{equation*}
+\begin{dspPlot}[width=5cm, xticks=1]{0, 7}{-1.2,1.2}
+    \dspSignal[linecolor=blue]{1 x 10 div sub}
+\end{dspPlot}
+ #+end_minipage                                          
+ #+attr_latex: :options [c]{0.5\textwidth} :float right
+ #+begin_minipage latex
+\begin{equation*}
+  \tilde{x}[n-3] = \textcolor{blue}{x_6\ x_7\ x_8\ x_1\ x_2\ x_3\ x_4\ x_5}
+\end{equation*}
+\begin{dspPlot}[width=5cm, xticks=1]{0, 7}{-1.2,1.2}
+    \dspSignal[linecolor=blue, xmin=0, xmax=2]{1 x 5 add 10 div sub }
+    \dspSignal[linecolor=blue, xmin=3 ]{1 x 3 sub 10 div sub}
+\end{dspPlot}
+ #+end_minipage
+
+*** Energy and Power
+- Energy ::
+  Many sequencies have an infinity amount of energy e.g. the unit step u[n],
+#+results:
+#+begin_export latex
+\begin{equation}
+  E_x = \vert\vert x \vert\vert_2^2 = \sum\limits_{k=-\infty}^{\infty} \vert x[n] \vert^2
+\end{equation}
+#+end_export
+
+- Power ::
+  To describe the energetic properties of the sequencies we use the concept of power
+  #+results:
+  #+begin_export latex
+  \begin{equation}
+     P_x = \vert\vert x \vert\vert_2^2 = \frac{1}{N}\sum\limits_{n=0}^{N-1} \vert x[n] \vert^2
+  \end{equation}
+  #+end_export
+
+- Many signals have infi 
+** Basic signal processing
+*** How a PC plays discrete-time sounds
+**** The discrete-time sinusoid
+#+results:
+#+begin_export latex
+\begin{equation*}
+ x[n] = sin(\omega_0\;t + \Theta)
+\end{equation*}
+#+end_export
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: sinusoid
+#+BEGIN_SRC octave
+N=33                             # Vector lenght
+n=-(N-1)/2:pi/10:(N-1)/2;        # Discrete Time Vector
+omega0 = pi/10;
+theta = pi/2
+
+f = sin(omega0+n + theta);          # The sinusoid
+                                  # Graphik
+figure( 1, "visible", "off");     # Do not open the graphic window in org
+
+stem(n,f, "filled", "linewidth", 2);
+axis([-(N-1+4)/2 (N-1+4)/2 -2 2])
+grid on ;
+xlabel("Discrete Time Vector [n]");
+                                    # Org-Mode specific output
+print -dpng ./image/sin.png;        # Set print device
+ans = "./image/sin.png";            # The mandtory return value
+#+END_SRC
+
+#+results: sinusoid
+[[file:./image/sin.png]]
+
+**** Digital vs physical frequency
+- Discrete Time:
+  - Periodicity: how many samples before the pattern repeats (M)
+  - n: no physical dimension
+- Physical World:
+  - Periodicity: hoq many seconds before the pattern repeats
+  - frequency measured in Hz
+- Soundcard T_s System Clock
+  - A sound card takes ever T_s an new sample from the discrete-time sequence.
+  - periodicity of M samples \rightarrow periodicity of $\displaystyle M\;T_s$ seconds
+  - real world frequency
+    #+results:
+    #+begin_export latex
+    \begin{equation}
+     f = \frac{1}{M\;T_s}Hz
+    \end{equation}
+    #+end_export
+
+- Example
+  - usually we choose F_s the number of samples per seconds
+  - T_s = 1/F_s
+    #+results:
+    #+begin_export latex
+    \begin{align*}
+      F_s  &= 48000     \text{e.g. a typical value } \\ 
+      T_s  &= 20.8\mu\;s \\
+       f   &= 440Hz      \text{ , with M = 110}
+    \end{align*}
+    #+end_export
+
+*** The Karplus Strong Algorithm
+**** The Moving Average
+  - simple average (2 point average)
+    #+results:
+    #+begin_export latex
+    \begin{equation}
+     m = \frac{a+b}{2}
+    \end{equation}
+    #+end_export
+
+  - moving average: take a "local" average
+    #+results:
+    #+begin_export latex
+    \begin{equation}
+       y[n]= \frac{x[n] + x[n-1]}{2}
+    \end{equation}
+    #+end_export
+
+  -  Average a sinusoid
+    #+results:
+    #+begin_export latex
+    \begin{align*}
+       x[n] &= cos(\omega\;n) \\
+       y[n] &= \frac{cos(\omega\;n) - cos(\omega\;(n-1)}{2} \\
+       y[n] &= cos(\omega\;n + \theta)  
+    \end{align*}
+    #+end_export
+
+#+results: Moving Average 2
+[[file:./image/ma01.png]]
+
+#+ATTR_LATEX: :options [couleur = brown!20, arrondi = 0.1, logo=\bcbook, ombre=true]{Linear Transformation}
+#+BEGIN_bclogo
+Applying a linear transformation to a sinusoidal input results in a sinusoidal output of
+the same frequency with a phase shift.
+#+END_bclogo
+
+**** Reversing the loop
+    #+results:
+    #+begin_export latex
+    \begin{equation}
+       y[n]= x[n] + \alpha\;y[n-1] \rightarrow \text{ The Karplus Strong Algorithm}
+    \end{equation}
+    #+end_export
+
+- *Zero Initial Conditions:*
+  - set a start time (usually n_0 = 0)
+  - assume input and output are zero for all time before N_0
+***** One-Time Investment
+
+#+results: Karplus Strong 01
+[[file:./image/kas01.png]]
+    
+** Digital Frequency
+#+ATTR_LATEX: :options [logo=\bcbook,couleur=blue!20,barre=snake]{Digital Frequency}
+#+BEGIN_bclogo
+\begin{equation}
+  \begin{split}
+    \sin\bigg(n\big(\omega + 2k\pi\big)\bigg) & = \sin\big(n\omega+\phi\big) \text{, k in }\mathbb{Z} \\
+                                              & = e^{i(\phi + n*2\pi\omega)}
+  \end{split}
+\end{equation} 
+#+END_bclogo
+
+#+ATTR_LATEX: :options [logo=\bcdz, couleur=red!20, barre=snake]{Complex Exponential}
+#+BEGIN_bclogo 
+\begin{equation}
+  \omega = \frac{M}{N} \times 2 \times \pi
+\end{equation}
+#+END_bclogo
+** The Reproduction Formula
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=green!10, barre=snake, arrondi=0.1]{Reproduction Formula}
+ #+BEGIN_bclogo
+\begin{equation}
+x[n] = \sum\limits_{k=-\infty}^{\infty} x[k]\delta[n-k]
+\end{equation}
+Any \textcolor{blue}{signal} can be expressed as a linear combination of wighted and shifted pulses.
+ #+END_bclogo
+
+* Vector Spaces
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=brown!20, barre=snake, arrondi=0.1]{Vector Space}
+#+BEGIN_bclogo
+Vector spaces build among others a common framework to work with the four classes of signals:
+- Finite Length Signal
+- Infinte Length Signal
+- Periodic Signal
+- Finite Support Signal
+
+Finite length and periodic signal, i.e. the "practical signal processing"  live in the
+$\mathbb{C}^N$ Space.
+To represent infinite length signals we need something more. We require sequneces to be
+square-summabe $\sum_{n=-\infty}^{\infty} |x[n]|^2$
+#+END_bclogo
+
+#+ATTR_LATEX: :options [leftmargin=5cm, labelwidth=4.7cm, itemindent=-2pt]
+- $\displaystyle \mathbb{R}^2$, $\mathbb{R}^3$ :: Euclidean space, geomtery
+- $\displaystyle \mathbb{R}^n$, $\mathbb{C}^n$  :: Linear algebrag
+- $\displaystyle \ell_2(\mathbb{Z})$ :: Square-Summable infinite sequences
+- $\displaystyle L_2([a,b])$ :: Square-integrable functions over an interval
+
+** Hilbert Space
+A hilbert space is  an *inner product space* which fulfills completeness. 
+
+*** Operationl Definitions
+#+ATTR_LATEX: :options [leftmargin=5cm, labelwidth=4.7cm, itemindent=-2pt]
+   - Inner Product :: 
+     - $\displaystyle \langle{\mathbf{p},\mathbf{q}}\rangle := \mathbf{p} \times \mathbf{q}$
+     - In German Scalar Product
+     - A vector space with an inner product is called an *inner product space*
+   - Norm of a Vector :: 
+     - $\displaystyle ||\mathbf{v}|| := \langle{\mathbf{v},\mathbf{v}}\rangle$
+     - self inner product
+   - Orthogonal :: 
+     - $\displaystyle \langle{\mathbf{p},\mathbf{q}}\rangle = 0$
+     - maximal different vectors
+     - inner product = 0
+   - Distance :: $\displaystyle  d(x,y) = ||\mathbf{x} -\mathbf{y}||_2$ 
+
+** Scalar Multiplication
+$\mathbb{L}_2[-1,1]$
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+BEGIN_SRC gnuplot :exports results :file image/smult.png :eval query-export
+# Reset all plotting variables to their default values.
+reset
+#set size square
+# Title
+set title "Scalar Multiplication in L_2[-1,1]"
+# Legend
+set key 6.1,1.3
+# Axes Label
+set xlabel "Phase (radians)"
+set ylabel "Amplitude"
+# Axes ranges
+set xrange [0:2*pi]
+set yrange [-1.5:1.5]
+# Axes tics     
+set xtics ("0" 0,"0.5{/Symbol p}" pi/2, "{/Symbol p}" pi, "1.5{/Symbol p}" 1.5*pi, "2{/Symbol p}" 2*pi)
+set ytics 1
+# Draw a horizontal centreline.
+set xzeroaxis
+# curves
+f(x) = sin(x)
+# Plot the curve.
+plot f(x)  w l lw 2, 1.3*f(x) w l lw 2 
+#+END_SRC
+
+#+results:
+[[file:image/smult.png]]
+
+** Summation of two Vectors
+Summation of two Vectors in $\mathbb{L}_2[-1,1]$
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+BEGIN_SRC gnuplot :exports results :file image/vadd.png :eval query-export
+# Reset all plotting variables to their default values.
+# reset
+#set size square
+# Title
+set title "Summation in L_2[-1,1]"
+# Legend
+set key 6.1,1.3
+# Axes Label
+set xlabel "Phase (radians)"
+set ylabel "Amplitude"
+# Axes ranges
+set xrange [0:2*pi]
+set yrange [-1.5:1.5]
+# Axes tics     
+set xtics ("0" 0,"0.5{/Symbol p}" pi/2, "{/Symbol p}" pi, "1.5{/Symbol p}" 1.5*pi, "2{/Symbol p}" 2*pi)
+set ytics 1
+# Draw a horizontal centreline.
+set xzeroaxis
+# curves
+f(x) = sin(x)
+g(x) = 0.3*f(25*x)
+# Plot the curve.
+plot f(x) w l lw 2 , g(x)  w l lw 2 , f(x) + g(x)  w l lw 2 
+#+END_SRC
+
+#+results:
+[[file:image/vadd.png]]
+
+** Inner Product - Scalar Product
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=green!10, barre=snake, arrondi=0.1]{Inner Product}
+ #+BEGIN_bclogo
+Measure of similarity between vectors
+ #+END_bclogo
+
+*** Inner Product
+in $\displaystyle\mathbb{R}^2$
+#+BEGIN_SRC latex
+\begin{equation}
+ \langle{\mathbf{x},\mathbf{y}}\rangle = x_0y_0+x_1y_1 =||\mathbf{x}|| + ||\mathbf{y}|| cos(\alpha)
+\end{equation}
+#+END_SRC
+*** General Definition of the inner Product
+#+BEGIN_SRC latex
+\begin{equation}
+ \langle{\mathbf{x},\mathbf{y}}\rangle = \int\limits_{-1}^{1} x(t) y(t) dt
+\end{equation}
+#+END_SRC
+*** Example Inner Product
+in $\displaystyle\mathbb{L}_2[-1,1]$: The Norm
+
+#+BEGIN_SRC latex
+  \begin{equation}
+    \begin{split}
+      x                                     &= sin(\pi) \\
+      \langle{\mathbf{x},\mathbf{x}}\rangle &= ||\mathbf{x}||^2 = \int\limits_{-1}^{1} sin^2(\pi)dt = 1
+    \end{split}
+  \end{equation}
+#+END_SRC
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+BEGIN_SRC gnuplot :exports results :file image/iproduct_sin.png :eval query-export
+ Reset all plotting variables to their default values.
+# reset
+#set size square
+# Title
+set title "Inner Product in L_2[-1,1]"
+# Legend
+set key 6.1,1.3
+# Axes Label
+set xlabel "Phase (radians)"
+set ylabel "Amplitude"
+# Axes ranges
+set xrange [0:2*pi]
+set yrange [-1.5:1.5]
+# Axes tics     
+set xtics ("0" 0,"0.5{/Symbol p}" pi/2, "{/Symbol p}" pi, "1.5{/Symbol p}" 1.5*pi, "2{/Symbol p}" 2*pi)
+set ytics 1
+# Draw a horizontal centreline.
+set xzeroaxis
+# curves
+f(x) = sin(x)
+g(x) = sin(x) * sin(x)
+# Plot the curve.
+plot f(x) w l lw 2 , g(x)  w filledcurve l lw 2
+#+END_SRC
+
+#+results:
+[[file:image/iproduct_sin.png]]
+
+** Signal Spaces
+Finite length signal live in $\mathbb{C}^{N}$
+- all operations well defined and intuitive
+- space of N-periodic signals sometimes indicated by $\tilde{\mathbb{C}}^{ N}$  
+** TODO Bases
+** TODO Subspaces Approximations
+\newpage
+* The Fourier Transform 
+** Introduction to Fourier Analysis
+*** Sustainable dynamic systems exhibit oscillatory behavior
+- A train has got an engine which makes the wheels turn in circular motion
+- Waves, ebb and flow can be modeled as sinusoidal fashion
+- Musical instruments generates sound by vibrating at a certain fundamental frequency
+- Intuitivly: things that don't move in circles can't last
+  - bombs
+  - rockets
+  - human beeings
+*** Descriptin of the oscillations in the plane
+- Period :: $P$
+- Frequency :: $f = \frac{1}{P}$
+- Ordinate :: $\sin(ft)$
+- Abscissa :: $\cos(ft)$
+*** Example Sinusoidal Detectors in our Body:
+- cochlea :: In the inner ear that detects air pressure sinusoids at frequenies from 20
+  to 20kHz
+- retina :: In the eye to detect electromagnetic sinusoids with frequency 430THz to
+  790THz. This is the frequency of lights in the visible spectrum
+- Humans anlayze complex signals (audio, images) in terms of their sinusoidal components
+- Frequency Domain semms to be as good a the time domain
+*** Fundamental Questions: Can we decompse any signal into sinusoidal elements?
+- Yes, Fourier showed us how to do it exactely
+- Analysis 
+  - From time domain to frequency domain
+  - Find the contribution of different frequencies
+  - Discover "hidden" signal properties
+- Synthesis 
+  - From frequency domain to time domain
+  - Create signals with known frequency content
+  - Fit signals to specific frequency regions
+** The Discrete Fourier Transform (DFT)
+*** The DFT as a change of basis
+**** The Fourier Basis
+***** The Fourier Basis for
+$\displaystyle\mathbb{C}^N$ in "Signal" Notation
+#+BEGIN_SRC latex
+\begin{equation}
+  w_k[n] = e^{j\frac{2\pi}{N}nk} \text{with } n,k = 0,1,...,N-1
+\end{equation}
+ #+END_SRC
+
+***** The Fourier Basis in Vector Notation
+#+BEGIN_SRC latex
+\begin{equation}
+  \{ \mathbf{w}^{(k)} \}_{k=0,1...N-1} \text{with } w_n^{(k)} = e^{j\frac{2\pi}{N}nk} \text{, } n=0,1,...N-1
+\end{equation}
+ #+END_SRC
+  - N :: N Dimension of vector space
+  - k :: Index for different vectors and goes from 0..N-1
+  - n :: Index of element in each vector goes from 0...N-1
+
+*** Definition of the DFT
+**** Basis Expansion Vector Notation
+\par
+***** Analysis Formula:
+#+BEGIN_SRC latex
+\begin{equation}
+  X_k = \langle \mathbf{w}^{(k)}, \mathbf{x} \rangle \text{ k = 0,...N-1}
+\end{equation}
+ #+END_SRC
+- $X_k$ :: Coefficent for the new basis. Inner Product of $\mathbf{x}$ with each vector $\mathbf{w}^{(k)}$
+- $\mathbf{x}$ :: An arbitrary vector of $\mathbb{C}^N$
+- $\mathbf{w}^{(k)}$ :: New basis
+\par
+***** Synthesis Formula
+#+BEGIN_SRC latex
+\begin{equation}
+  \mathbf{x} = \frac{1}{N} \sum_{k=0}^{N-1} X_k\mathbf{w}^{(k)} \text{ k = 0,...N-1}
+\end{equation}
+ #+END_SRC
+
+**** TODO Basis Expansion Matrix Form
+
+**** Basis Expansion Signal Notation
+- Consider explicitely the operations involved in the transformation
+- This notion is particulary useful if you want to consider the algorithmic nature of the
+  transform
+\par
+***** Analysis Formula N-point signal in the frequency domain
+#+BEGIN_SRC latex
+\begin{equation}
+  X[k] = \sum_{n=0}^{N-1} x[n] e^{-j\frac{2\pi}{N}nk} \text{, } k = 0,1,..N-1
+\end{equation}
+ #+END_SRC
+- $X[k]$ :: Signal vector in the frequency domain 
+- $x[n]$ :: Signal vector in the (discrete) time domain
+- Reminder :: This is the inner Product in explicite form
+\par
+***** Synthesis Formula N-point signal in the time domain
+#+BEGIN_SRC latex
+\begin{equation}
+  x[n] = \frac{1}{N} \sum_{n=0}^{N-1} X[k] e^{j\frac{2\pi}{N}nk} \text{, } k = 0,1,..N-1
+\end{equation}
+ #+END_SRC
+  - $x[n]$ :: Signal vector in the (discrete) time domain
+  - $X[k]$ :: Signal vector in the frequency domain 
+  - $\frac{1}{N}$ :: Normalisation coeficent
+  - Reminder :: This is the inner Product in explicite fashion  
+
+*** DFT of the impulse function
+\begin{equation*}
+x[n] = \delta[n]
+\end{equation*}
+
+#+BEGIN_SRC latex
+\begin{equation*}
+  X[k] = \sum_{n=0}^{N-1} \delta[n] e^{-j\frac{2\pi}{N}nk} = 1
+\end{equation*}
+ #+END_SRC
+
+#+attr_latex: :options {0.4\textwidth} :float 
+#+begin_minipage latex 
+\begin{dspPlot}[width=5cm, xticks=5]{0, 10}{-1.2, 1.2}
+  \dspTaps[linecolor=blue]{0 1}  
+  \dspSignal[linecolor=blue, xmin=1, xmax=10]{0}
+\end{dspPlot}
+#+end_minipage                                          
+#+attr_latex: :options [c]{0.5\textwidth} :float right
+#+begin_minipage latex
+   \begin{dspPlot}[width=5cm, xticks=5]{0, 10}{-1.2, 1.2}
+     \dspSignal[linecolor=blue, xmin=0, xmax=10]{1}
+   \end{dspPlot}
+ #+end_minipage
+
+- The delata contains all frequencies over the range of all possible frequencies
+*** DFT of the unit step
+\begin{equation*}
+x[n] = 1
+\end{equation*}
+
+#+BEGIN_SRC latex
+\begin{equation*}
+  X[k] = \sum_{n=0}^{N-1} e^{-j\frac{2\pi}{N}nk} = N\delta[k]
+\end{equation*}
+ #+END_SRC
+
+#+attr_latex: :options {0.4\textwidth} :float 
+#+begin_minipage latex 
+\begin{dspPlot}[width=5cm, xticks=5]{0, 10}{-1.2, 1.2}
+  \dspSignal[linecolor=blue, xmin=0, xmax=10]{1}
+\end{dspPlot}
+#+end_minipage                                          
+#+attr_latex: :options [c]{0.5\textwidth} :float right
+#+begin_minipage latex
+\begin{dspPlot}[width=5cm, xticks=5]{0, 10}{-1.2, 1.2}
+  \dspTaps[linecolor=blue]{0 1}  
+  \dspSignal[linecolor=blue, xmin=1, xmax=10]{0}
+\end{dspPlot}
+ #+end_minipage
+
+*** DFT Cosine Calculation Problem 1
+ #+BEGIN_SRC latex 
+\begin{equation*}
+ x[n] = 3\cos(2\pi/16\times{n}) \text{, } x[n] = \mathbb{C}^{64}
+\end{equation*}
+#+END_SRC
+1. Determine dimension and fundamental frequency of the signal
+   - Dimension of space  N = 64
+   - Fundamental frequency $\omega = \frac{2\pi}{N} = \frac{2\pi}{64}$
+
+     All frequencies in the fourier basis will be a multiple of the fundamental frequency
+     $\omega$. With this in mind we can start by expressing our sinuoid as a muiltiple of
+     the fundamental frequenncy in space $\displaystyle\mathbb{C}^{64}$.
+2. Express the signal as a multiple of the fundamental frequency in space.
+   #+BEGIN_SRC latex 
+     \begin{gbar}{gray!15}{gray!15} 
+       \begin{align*}
+             X[n] &= 3\cos(\frac{2\pi}{16}n)  \\
+                  &= 3\cos(\frac{2\pi}{64}4n) \\
+                  &= \frac{3}{2} \left[ e^{j\frac{2\pi}{64}4n} + e^{-j\frac{2\pi}{64}4n} \right]   
+                     \text{, with Euler: } cos(\omega) = \frac{e^{j\omega} + e^{-j\omega}}{2} \\ 
+                  &= \frac{3}{2} \left[ e^{j\frac{2\pi}{64}4 n} + e^{j\frac{2\pi}{64}60n} \right]   
+                     \text{, with: } j\frac{2\pi}{64}60n  = -j \frac{2\pi}{64}4n + j 2 \pi n \\           
+                  &= \frac{3}{2} \langle w_{4}[n] + w_{60}[n] \rangle      
+       \end{align*}
+     \end{gbar}
+   #+END_SRC
+   - $w_4[n]$ Basis vector number 4
+   - $w_{60}[n]$ Basis vector number 60
+   
+    \begin{gbar}{gray!15}{blue!10} 
+     Now we don't like this minus. So what we're going to do is exploit the fact that we can
+     always add an integer multiple of 2pi to the exponent of the complex exponential. And the
+     point will not change on the complex plane.
+     \end{gbar}
+    
+   - *The original signal is now expressed as the sum of two fourier basis vectors*
+3. Calculate the DFT with the analysis forumla
+   #+BEGIN_SRC latex 
+     \begin{gbar}{gray!15}{gray!15} 
+       \begin{align*}
+         X[k] &= \langle w_k[n], x[n] \rangle
+                \text{, with: } k = 0, 1, ..N-1  \\           
+              &=
+                \begin{cases}
+                  96  & \text{for } k = 4, 60 \\
+                  0  & \text{otherwise}
+                \end{cases} 
+       \end{align*}
+     \end{gbar}
+   #+END_SRC
+- $w_{k}[n]$ Canonical basis vector number k
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: DFT Cosine
+#+BEGIN_SRC octave :exports results :results file
+  N=64;
+  n=0:N-1;
+
+  x1=3*cos(2*pi/16*n);
+  X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+
+  # Graphik  
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  subplot(3,1,1)
+  stem(x1, "filled", "linewidth", 2), axis([0 N -5 5])
+  grid on;
+  #stem(n-N/2,fftshift(x1))
+
+  subplot(3,1,2),stem(n, real(X1), "filled", "linewidth", 2), axis([0 N 0 100])  
+  grid minor
+  xlabel("Samples")
+  ylabel("Real{X[k]}")
+
+  subplot(3,1,3), stem(n,  imag(X1), "filled", "linewidth", 2), axis([0 N -2 2])
+  grid minor
+  xlabel("Samples")
+  ylabel("Imag{X[k]}")
+
+  # Org-Mode specific setting
+  print -dpng ./image/dft_cosine.png;
+  ans = "./image/dft_cosine.png"; 
+#+END_SRC
+
+#+results: DFT Cosine
+[[file:./image/dft_cosine.png]]
+
+*** DFT Cosine Calculation Problem 2
+  #+BEGIN_SRC latex 
+\begin{align*}
+   x[n]  &= 3\;cos(2\;pi/16\;n + pi/3) \text{, } x[n] \in \mathbb{C}^{64} \\
+   X[k]  &=
+     \begin{cases}
+        96e^{j\frac{\pi}{3}}  & \text{for } k = 4 \\
+        96e^{-j\frac{\pi}{3}} & \text{for } k = 96 \\
+        0                  & \text{otherwise}
+      \end{cases}  
+\end{align*}
+   #+END_SRC
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: DFT Cosine + PHI
+#+BEGIN_SRC octave :exports results :results file
+  N=64;
+  n=0:N-1;
+  A=3
+
+  x1=A*cos(2*pi/N*4*n + pi/3);
+  X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+
+  # Graphik  
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  subplot(3,1,1)
+  stem(x1, "filled", "linewidth", 2), axis([0 N -A A])
+  grid on;
+
+  subplot(3,1,2),stem(n, real(X1), "filled", "linewidth", 2), axis([0 N 0 100])  
+  grid minor;
+  xlabel("Samples");
+  ylabel("Real{[k]");
+
+  subplot(3,1,3), stem(n, imag(X1), "filled", "linewidth", 2), axis([0 N -100 100])
+  grid minor;
+  xlabel("Samples");
+  ylabel("Imag{X[k]}");
+
+  # Org-Mode specific setting
+  print -dpng ./image/dft_cosine_phi.png;
+  ans = "./image/dft_cosine_phi.png"; 
+#+END_SRC
+
+#+results: DFT Cosine + PHI
+[[file:./image/dft_cosine_phi.png]]
+
+
+The calcution of the phase just does not work out of the box with octave.
+
+*** DFT Cosine Calculation Problem 3
+ #+BEGIN_SRC latex 
+   \begin{align*}
+      x[n]  &= 3\;cos(2\;pi/10\;n) \text{, } x[n] \in \mathbb{C}^{64} \\
+      X[k]  &=
+     \begin{cases}
+        96e^{j\frac{\pi}{3}}  & \text{for } k = 4 \\
+        96e^{-j\frac{\pi}{3}} & \text{for } k = 96 \\
+        0                  & \text{otherwise}
+      \end{cases}  
+   \end{align*}
+ #+END_SRC
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: DFT Cosine not periodic
+#+BEGIN_SRC octave :exports results :results file
+  N=64;
+  n=0:N-1;
+
+  x1=3*cos(2*pi/10*n);
+  X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+
+  # Graphik  
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  subplot(3,1,1)
+  stem(x1, "filled", "linewidth", 2), axis([0 N -5 5])
+  grid on;
+  #stem(n-N/2,fftshift(x1))
+
+  subplot(3,1,2),stem(n, abs(X1), "filled", "linewidth", 2), axis([-2 N+1 0 80])  
+  grid minor;
+  xlabel("Sample");
+  ylabel("Mag{X[k]}");
+  
+  subplot(3,1,3), stem(n, angle(X1), "filled", "linewidth", 2), axis([-2 N+1 -2 2])
+  grid minor;
+  xlabel("Sample");
+  ylabel("Phase{X[k]}");
+  
+  # Org-Mode specific setting
+  print -dpng ./image/dft_cosine_not_periodic.png;
+  ans = "./image/dft_cosine_not_periodic.png"; 
+#+END_SRC
+
+#+results: DFT Cosine not periodic
+[[file:./image/dft_cosine_not_periodic.png]]
+
+*** Properties of the DFT
+- Linearity :: $DFT {\alpha x[n] + \beta y[n]} = DFT {\alpha x[n]} + DFT {\beta y[n]}$
+*** Interpreting a DFT Plot
+- Frequency coefficence $\displaystyle < \pi[ 0... N/2]$ are interpreted as counter clock wise rotation in
+  the plane
+- Frequency coefficence $\displaystyle > \pi[ N/2...N-1]$ are interpreted as clock wise rotation in the
+  plane
+- The fastest frequency of the signal in the vector space is at N/2
+    
+    [[./image/32c_freqBand.png]]
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=green!10, barre=snake, arrondi=0.1]{Energy of a Signal}
+ #+BEGIN_bclogo
+The square magnitude of the k-th DFT coefficent is proportional to the signal's energy at
+frequency $\omega = (\frac{2\pi}{N})k$
+ #+END_bclogo
+
+- Energy concentrated on single frequency
+  (counterclockwise and clockwise combine to give real signal)
+ #+BEGIN_SRC latex 
+   \begin{align*}
+      x1[n]  &= 3\;cos(2\;pi/16\;n) \text{, } x[n] \in \mathbb{C}^{64} \\
+      x1[n]  &= u[n] - u[n-4] \\
+   \end{align*}
+ #+END_SRC
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Energy of a sinusoid
+#+BEGIN_SRC octave :exports results :results file
+  pkg load specfun
+
+    N=64;
+        n=0:N-1;
+
+        x1=3*cos(2*pi/16*n);
+        X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+
+        # Graphik  
+        figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+        subplot(2,1,1)
+        stem(n, abs(X1), "filled", "linewidth", 2), axis([-2 N+1 0 80])  
+        grid minor;
+        xlabel("Sample");
+        ylabel("Mag{X[k]}");
+        title('Energy of a sinusoid')
+
+        x2 = heaviside(n,1) - heaviside(n-4,1);
+        X2 = fft(x2);
+        subplot(2,1,2)
+        stem(n, abs(X2), "filled", "linewidth", 2), axis([-2 N+1 0 4])
+        xlabel("Sample");
+        ylabel("Mag{X[k]}");
+        title('Energy of a step function')
+
+
+        # Org-Mode specific setting
+        print -dpng ./image/energy_sinusoid.png;
+        ans = "./image/energy_sinusoid.png"; 
+#+END_SRC
+
+#+results: Energy of a sinusoid
+[[file:./image/energy_sinusoid.png]]
+
+- For real signals the DFT is \textcolor{blue}{symmetric} in magnitude
+  - $|X[k]| = |X[N-k]| \text{, for } k = 1, 2,...[N/2]$
+  - For real signals, magnitude plots need only $[N/2] + 1$ points
+
+*** DFT Analysis
+**** Daily Temeperature (2920 days)
+- The recorded signal
+  #+ATTR_LATEX: :width 7cm
+  [[./image/33a_dailyTemp.png]] 
+- DFT daily temperature signal
+  #+ATTR_LATEX: :width 7cm
+  [[./image/33a_DFTdailyTemp.png]]
+
+- average value (0-th DFT coefficient: 12.3°
+- DFT main peak for $k = 8$, value 6.4°C
+- 8 cycles over 29920 days
+- $period = \frac{2920}{8} = 365 days$
+- temperature exursion: 12.3° +/- 12.8°C
+
+The fastest positive frequency of a singnal is at $frac{N}{2}$ samples.
+Since a full revolution of $2\;\pi$ requires N samples,
+the discrete frequency corresponding with $\frac{N}{2}) \text{ is } \pi$.
+
+**** Labeling Frequency Band Ax§is
+- If "clock" of a System is $T_s$ 
+  - fastest (positive) frequency is $\omega = \pi$
+  - sinosoid at $\omega = \pi$ needs two samples to do a full revolution
+  - time between samples: $T_s = \frac{1}{F_s}$ seconds
+  - real world period for fastest sinosoid: $2T_s$ seconds
+  - reald world frequency for fastest sinosoid: $F_s/2$ Hz
+- The discrete frequency x of a sinusoid compenent at peak k can be determined as follows:
+  \begin{equation}
+   \frac{x}{k} = \frac{N}{2 \pi} \text{, with k=0...N-1}
+  \end{equation}
+- The real world frequency of a siusoid compenent at peak k can be determined as follows:
+  \begin{align*}
+   \frac{x}{k}      &= \frac{2 \pi}{N} \text{, with k=0...N-1}                \\
+   \frac{f_s}{2}    &= \rightarrow \pi  \text{, } f_s \text{ sampling frequency} \\ 
+   \frac{x}{k}      &= \frac{f_s}{N}          \\
+   x                &= \frac{k f_s}{N}        \\ 
+  \end{align*}
+
+***** Example
+A DFT analysis of a signal with length $N = 4000$ samples at a frequency $fs = 44.1kHz$
+shows a peak at $k = 500$. What is the corresponding frequency in Hz of this digital
+frequency in Hz.
+- Solution
+#+BEGIN_SRC latex
+  \begin{align*}
+    \frac{x}{k}         &= \frac{2\;\pi}{N} \\
+    x                   &\rightarrow \frac{2\;\pi\;k}{N}  \\
+    \frac{f_s}{2}       &\rightarrow \pi              \\
+    x &= \frac{k}{N}f_s &= 55125.5              \\
+  \end{align*}
+ #+END_SRC
+
+**** DFT Example - Analysis of Musical Instruments
+- The fundamental note is the \textcolor{blue}{first peak} in the spectrum
+- The relative size of the harmonics gives the timber or the charachter of an instrument
+*** DFT Synthesis
+*** DFT Examples
+**** Tide Prediction in Venice
+**** MP3 Compression
+- MP3 compression approx. factor 20 or more
+- Compression introduces nois from approximation error
+- \textcolor{blue}{Noise Shaping} : Error shaped as the song in the Fourier domain. 
+- \textcolor{blue}{Perceptual Compression} inclueds the human hearing system properties
+  intto compression algorithm
+**** Video Signal of the Day: The first man-made signal from outer space
+#+BEGIN_SRC latex
+\begin{equation*}
+  f = \frac{\omega f_s}{2 \pi} \\
+\end{equation*}
+ #+END_SRC
+- A \textcolor{blue}{multiplication} in time domain corresponds to a
+  \textcolor{blue}{convolution} in frequency domain
+*** The Short-Time Fourier Transform STFT
+- STFT is a clever way of using DFT
+- Spectrogram, is a graphical way to represent the STFT data 
+***** The short-time Fourier transform
+- DTMF Dual-Tone Multi Frequency dialing
+- Time representation obfuscates frequency
+- Frequency representation obfuscates time
+
+#+BEGIN_SRC latex
+\begin{equation*}
+  x[m;k] = \sum_{n=0}^{L-1} x[m+n]e^{-j\frac{2\pi}{L}nk} 
+\end{equation*}
+ #+END_SRC
+- *m*  Starting point of the localiced DFT
+- *k*  Is the DFT index
+***** The spectrogram
+- color-code the magnitued: dark is small, white is large
+- use $10 log_{10}(|X[m,k]|$ to see better (powr in dBs)
+- plot spectral slices one after another
+***** Time-frequency tiling
+
+** Discrete Fourier Series DFS
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=green!10, barre=snake, arrondi=0.1]{Discrete Fourier Series}
+ #+BEGIN_bclogo
+DFS = DFT with periodicity explicit
+$\tilde{X}[k] = DFS\{x[n]\}$
+ #+END_bclogo
+- The DFS maps an N-Periodic signal onto an N-Periodic sequence of Fourier coeffients
+- The inverse DFS maps n_periodic sequence of Fourier coeffiencts a set onto an N-periodic
+  signal
+- DFS is an extension of the DFT for periodic sequencies
+- A circular time-shift is an natural extension of a shift fo finite length signals.
+*** Finite-length time shifts revisted
+- The DFS helps us understand how to define time shifts for finite-lenght signals.
+test
+- For an N-periodic sequence $\tilde{x}[n]$ ::
+  #+BEGIN_SRC latex
+  \begin{align*}
+  &\tilde{x}[n-M] \text{ is well-defined for all } M \in \mathbb{N} \\
+  &DFS  \left\{ \tilde{x}[n-M] \right\}               = \tikzmarkin{a}(0.1,-0.2)(-0.1,0.5)e^{-j\frac{2\pi}{N}Mk} \tikzmarkend{a}\text{ }\tilde{X}[k] \text{ delay factor}\\
+  &IDFS \left\{\text{ } \tikzmarkin{b}(0.1,-0.2)(-0.1,0.5)e^{-j\frac{2\pi}{N}Mk} \tikzmarkend{b} \text{ }\tilde{X}[k] \text{ }\right\} = \tilde{x}[n-M] \text{ delay factor}\\
+  \end{align*}
+  #+END_SRC
+
+- For an N-length signal $x[n]$ ::
+   #+BEGIN_SRC latex
+  \begin{align*}
+  &\tilde{x}[n-M] \text{ not  well-defined for all } M \in \mathbb{N} \\
+  &build \text{ } \tilde{x}[n] = x[n\text{ } mod\text{ } N] \Rightarrow \text{ }\tilde{X}[k] = X[k]\\
+  &IDFT \left\{\text{ } \tikzmarkin{d}(0.1,-0.2)(-0.1,0.5)e^{-j\frac{2\pi}{N}Mk} \tikzmarkend{d} \text{ }X[k] \text{ }\right\} 
+  = IDFS \left\{\text{ } \tikzmarkin{e}(0.1,-0.2)(-0.1,0.5)e^{-j\frac{2\pi}{N}Mk} \tikzmarkend{e} \text{ }\tilde{X}[k] \text{ }\right\} 
+  = \tilde{x}[n-M] 
+  = x[(n-M)\text{ }mod\text{ } N]
+  \end{align*}
+  #+END_SRC
+
+#+ATTR_LATEX: :options [logo=\bcinfo,barre=none,noborder=true]{Time Shifts}
+#+BEGIN_bclogo
+\begin{gbar}{yellow}{blue!10}
+Shifts for finite-length signals are "naturally" circular
+\end{gbar}
+#+END_bclogo
+
+**** Analysis Formula for a N-Periodic Signal in the frequency domain
+#+BEGIN_SRC latex
+\begin{equation}
+ \tilde{X}[k] = \sum_{n=0}^{N-1} \tilde{x}[n] e^{-j\frac{2\pi}{N}nk} \text{, } k \in \mathbb{Z}
+\end{equation}
+ #+END_SRC
+- $X[k]$ :: Signal vector in the frequency domain 
+- $x[n]$ :: Signal vector in the (discrete) time domain
+- Reminder :: This is the inner Product in explicite form
+\par
+**** Synthesis Formula for a N-Periodic Signal in the time domain
+#+BEGIN_SRC latex
+\begin{equation}
+  \tilde{x}[n] = \frac{1}{N} \sum_{n=0}^{N-1} \tilde{X}[k] e^{j\frac{2\pi}{N}nk} \text{, } k \in \mathbb{Z}
+\end{equation}
+ #+END_SRC
+  - $x[n]$ :: Signal vector in the (discrete) time domain
+  - $X[k]$ :: Signal vector in the frequency domain 
+  - $\frac{1}{N}$ :: Normalisation coeficent
+  - Reminder :: This is the inner Product in explicite fashion  
+
+** The Discret-Time Fourier Transform (DTFT)
+*** Overview Fourier Transform
+- N-Point finite-length siganls: DFT
+- N-Point periodic signals: DFS
+- Infinite length (non periodic) signals: DTF T
+*** Formal Definition of the DTFT
+- $x[n] \in \ell_2(\mathbb{Z})$, the space of square summable infinity sequneces
+- define the function of $\omega \in \mathbb{R}$ \\
+  #+BEGIN_SRC latex
+  \begin{equation}
+   F(\omega) = \sum_{n=-\infty}^{\infty} x[n]e^{-j \omega n}  \text{, with } \omega = \frac{2\pi}{N} \text{ and } N \rightarrow \infty
+  \end{equation}
+   #+END_SRC
+
+- inversion (when $F(\omega)$ exists):
+  #+BEGIN_SRC latex
+    \begin{equation}
+     x[n] = \frac{1}{2\;\pi}\int_{-\pi}^{\pi}F(\omega);e^{j\;\omega\;n}\mathrm{d}\omega \text{, with } n \in \mathbb{Z}
+    \end{equation}
+   #+END_SRC
+
+*** Properties of the DTFT
+#+ATTR_LATEX: :options [leftmargin=5cm,labelwidth=4.7cm,itemindent=-2pt]
+- linearity ::
+  $\displaystyle DTFT \{\alpha x[n] + \beta y[n]\} = \alpha X(e^{j \omega}) + \beta Y(e^{j\omega})$
+- timeshift ::
+  $\displaystyle DTFT \{x[n-M]\} = e^{-j \omega M}\;X(e^{j \omega})$
+- modulation ::
+  $\displaystyle DTFT \{e^{-j \omega_0 M}\;x[n]\} = X(e^{j\;(\omega - \omega_0)})$
+- time reversal ::
+  $\displaystyle DTFT\{x[-n]\} = X(e^{-jw})$
+- conjugation ::
+  $\displaystyle DTFT\{x^*[n] \} = X^*X(e^{-j\;\omega})$
+*** Some particular cases
+- if $\displaystyle x[n]$ is symmetric, the DTFT is symmetric: $\displaystyle x[n] = x[-n] \iff X(e^{j \omega}) = X(e^{-j \omega})$ 
+- if $\displaystyle x[n]$ is real, the DTFT is Hemitian-symmetric: $\displaystyle x[n] = x^*[n] \iff X(e^{j \omega}) =X^*(e^{-j \omega})$
+- if $\displaystyle x[n]$ is real, the magnitude of th eDTFT is symmetric $\displaystyle x[n] \in \mathbb{R} \implies |X(e^{j \omega}) | = |X(e^{-j \omega})|$
+- if $\displaystyle x[n]$ is real and symmetric, $\displaystyle X(e^{j \omega})$  is also real and symmetric
+ 
+*** DTFT Unit Step
+- [[http://www.phys.nsu.ru/cherk/fft.pdf][FFT Tutorial University Rhode Island]]
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: DTFT Unit Step
+#+BEGIN_SRC octave :exports results :results file
+  N=64;             # Samples
+  n=0:N-1;          # Discrete Time Vector
+  time_shift=0;    # Time shift of the step signal
+  F=[-N/2:N/2-1]/N; #Frequency Vector in Radians the spectrum goes from -fs/2 to fs/2
+
+  x0=zeros(time_shift,1);
+  x1=ones(N-time_shift,1);
+  X=[x0;x1];
+  X1=fft(X,N);                                # Compute the dft of X1 using FFT algorithm
+  # Graphik
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  subplot(2,2,[1,2]), stem(n,X, "filled", "linewidth", 2), axis([-2 N+2 0 1.2]), title 'Unit Step';
+  grid on;
+  xlabel("Discrete Time Vector");
+  ylabel("Hight");
+
+  F=[-N/2:N/2-1]/N;                           #Frequency Vector in Radians the spectrum goes from -fs/2 to fs/2
+  subplot(2,2,3),plot(F,fftshift(abs(X1)), "linewidth", 2);
+  grid minor;
+  xlabel("Discrete Frequency omega");
+  ylabel("Magnitude");
+
+  subplot(2,2,4),plot(F,fftshift(angle(X1)), "linewidth", 2)
+  grid minor;
+  xlabel("Discrete Frequency omega");
+  ylabel("Phase [radiants]");
+
+                                  # Org-Mode speci
+  print -dpng ./image/dtft_unit_step.png;
+  ans = "./image/dtft_unit_step.png";
+#+END_SRC
+
+*** DTFT Pulse Function
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Step Function
+#+BEGIN_SRC octave :exports results :results file
+   pkg load signal
+   N=64;
+     fo1=8;
+     n=0:N-1;
+
+     x1=rectpuls(2*pi*fo1*n/N,10);
+     X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+
+     # Graphik  
+     figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+     ## subplot(6,2,[1,2])
+     ## plot(x1), axis([-5 N+5 -1 1])
+     ## grid on;
+
+     subplot(3,2,[1,2])
+     stem(x1, "filled", "linewidth", 2), axis([-5 N+5 -1 1])
+     grid on;
+
+     subplot(3,2,3),plot(n-N/2, real(X1), "linewidth", 2);  axis([-N/2-5 N/2+5 -1 10]) 
+     grid on;
+     xlabel("Sample");
+     ylabel("X_1[k]");
+     title("Real Part");
+
+     subplot(3,2,4),plot(n-N/2, imag(X1), "linewidth", 2), axis([-N/2-5 N/2+5 -5 5])
+     grid on;
+     xlabel("Sample");
+     ylabel("X_1[k]");
+     title("Imaginary Part");
+
+     subplot(3,2,5),plot(n-N/2,fftshift(abs(X1)), "linewidth", 2);  axis([-N/2-5 N/2+5 -1 10]) 
+     grid on;
+     xlabel("Sample");
+     ylabel("X_1[k]");
+     title("Magnitude");
+
+     subplot(3,2,6),plot(n-N/2,fftshift(angle(X1)), "linewidth", 2), axis([-N/2-5 N/2+5 -5 5])
+     grid on;
+     xlabel("Sample");
+     ylabel("X_1[k]");
+     title("Phase");
+
+     # Org-Mode specific setting
+     print -dpng ./image/pulse.png;
+     ans = "./image/pulse.png";
+#+END_SRC
+
+*** DTFT Shifted Pulse Function
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: DTFT Shifted Step
+#+BEGIN_SRC octave :exports results :results file
+  N=64;             # Samples
+  n=0:N-1;          # Discrete Time Vector
+  time_shift=58;    # Time shift of the step signal
+  F=[-N/2:N/2-1]/N; #Frequency Vector in Radians the spectrum goes from -fs/2 to fs/2
+
+  x0=zeros(time_shift,1);
+  x1=ones(N-time_shift,1);
+  X=[x0;x1];
+  X1=fft(X,N);                                # Compute the dft of X1 using FFT algorithmw
+
+  # Graphik 
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  subplot(2,2,[1,2]), stem(n,X, "filled", "linewidth", 2), axis([-2 N+2 0 1.2]), title 'Unit Step shifted of 58 Units';
+  grid on;
+  xlabel("Discrete Time Vector");
+  ylabel("Hight");
+
+  subplot(2,2,3),plot(F,fftshift(abs(X1)), "linewidth", 2);
+  grid minor;
+  xlabel("Discrete Frequency omega");
+  ylabel("Magnitude");
+
+  subplot(2,2,4),plot(F,fftshift(angle(X1)), "linewidth", 2);
+  grid minor;
+  xlabel("Discrete Frequency omega");
+  ylabel("Phase [radiants]");
+
+                                  # Org-Mode speci
+  print -dpng ./image/dtft_shifted_step.png;
+  ans = "./image/dtft_shifted_step.png";
+#+END_SRC
+
+*** DTFT Complex Exponential
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: DTFT
+#+BEGIN_SRC octave :exports results :results file
+    pkg load communications signal
+
+    n=-5:5;
+    x = (-0.9).^n;
+    k=-200:200;
+    w=(2*pi/100)*k;
+    X=x*(exp(-j*2*pi/100)).^(n'*k);
+    magX=abs(X);
+    phaseX=angle(X);
+
+    # Graphik 
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+   subplot(2,2,[1,2])
+   stem(x, "filled", "linewidth", 2)
+   grid on;
+
+   subplot(2,2,3); plot(w/(2*pi),magX, "linewidth", 2);  axis([-2  2  0  15]);
+    xlabel('frequency in units of pi'); ylabel('|X|');
+    title('Magnitude Part');
+    grid on;
+
+    subplot(2,2,4); plot(w/(2*pi),phaseX, "linewidth", 2); axis([-2  2  -pi  pi]);
+    xlabel('frequency in units of pi'); ylabel('radians/pi');
+    title('Phase Part');
+    grid on;
+
+    # Org-Mode speci
+    print -dpng ./image/dtft.png;
+    ans = "./image/dtft.png";
+#+END_SRC
+
+*** DTFT Cosine
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Cosine
+#+BEGIN_SRC octave :exports results :results file
+    N=64;
+    fo1=8;
+    n=0:N-1;
+  
+    x1=0.5.*cos(2*pi*fo1*n/N);
+    X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+    
+    # Graphik  
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  
+    subplot(2,2,[1,2])
+    stem(x1, "filled", "linewidth", 2), axis([-5 N+5 -1 1])
+    grid on;
+    #stem(n-N/2,fftshift(x1))
+
+    subplot(2,2,3),stem(n-N/2,fftshift(abs(X1)), "filled", "linewidth", 2), axis([-N/2-5 N/2+5 0 20])  # Move frequency 0 to the center
+    grid minor;
+    xlabel("Sample");
+    ylabel("X_1[k]");
+    title("Real Part");
+
+    subplot(2,2,4), stem(n-N/2, fftshift(imag(X1)), "filled", "linewidth", 2), axis([-N/2-5 N/2+5 -20 20])
+    grid minor;
+    xlabel("Sample");
+    ylabel("X_1[k]");
+    title("Imaginary Part");
+  
+    # Org-Mode specific setting
+    print -dpng ./image/dtft_cosine.png;
+    ans = "./image/dtft_cosine.png"; 
+#+END_SRC
+
+*** DTFT Sinusoid Sine
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Sine
+#+BEGIN_SRC octave :exports results :results file
+  N=64;
+  fo1=8;
+  n=0:N-1;
+  
+  x1=0.5.*sin(2*pi*fo1*n/N);
+  X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+    
+  # Graphik  
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  
+  subplot(2,2,[1,2])
+  stem(x1, "filled", "linewidth", 2), axis([-5 N+5 -1 1])
+  grid on;
+  
+  subplot(2,2,3),stem(n-N/2,fftshift(abs(X1)), "filled", "linewidth", 2), axis([-N/2-5 N/2+5 0 20])  # Move frequency 0 to the center
+  grid minor;
+  xlabel("Sample");
+  ylabel("X_1[k]");
+  title("Real Part");
+
+  subplot(2,2,4),stem(n-N/2,fftshift(imag(X1)), "filled", "linewidth", 2), axis([-N/2-5 N/2+5 -20 20])
+  grid minor;
+  xlabel("Sample");
+  ylabel("X_1[k]");
+  title("Imaginary Part");
+  
+  
+  # Org-Mode specific setting
+  print -dpng ./image/dtft_sine.png;
+  ans = "./image/dtft_sine.png";
+  #ans = X1'
+#+END_SRC
+
+*** Noise
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Noise
+#+BEGIN_SRC octave :exports results :results file
+  pkg load communications signal
+
+    t = (0:0.1:10);
+    x = sawtooth(t);
+    y = awgn(x,10,3,'measured');
+    # Graphik 
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+    plot(t,x,t, y, "linewidth", 2, "linewidth", 2)
+    legend('Original Signal','Signal with AWGN')
+    grid on;
+  
+    # Org-Mode speci
+    print -dpng ./image/step_awgn.png;
+    ans = "./image/step_awgn.png";
+#+END_SRC
+
+*** Normalized
+\omega_s
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: normalized
+#+BEGIN_SRC octave :exports results :results file
+  N = 20;
+  x = [0:100]/100;
+  f = ones(1,101)*1/2;
+  for i = 1:2:N
+    a = 2/pi/i;f = f + a*sin(2*pi*i*x);
+  end
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  plot(x, f, "linewidth", 2), axis([-0.5 1.5 -0.5 1.5])
+  grid on;
+                      # Org-Mode specific setting
+  print -dpng ./image/normalized.png;
+  ans = "./image/normalized.png";
+
+#+END_SRC
+
+#+results: normalized
+[[file:./image/normalized.png]]
+
+\newpage
+* Module 4: Part 1 Introduction to Filtering
+
+** Linearity
+#+begin_export latex
+  \begin{equation}
+  \mathfrak{H}{\alpha\;x_1[n] + \beta\;x_2[n]} = \alpha\;\mathfrak{H}{x_1[n]} + \beta\;\mathfrak{H}{x_2[n]}
+  \end{equation}
+  #+end_export
+
+
+
+** Filtering by Example
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Signal mit Rauschen
+#+BEGIN_SRC octave :exports both :results file
+   N=500                             # Vector lenght
+   n=0:N-1;        # Discrete Time Vector
+   omega0 = 2*pi/N;
+   phi = pi/5;
+
+   x1 = -sin(omega0*1*n + phi );          # The sinusoid
+   x2 = -sin(omega0*2*n + phi );
+   x3 = -sin(omega0*3*n + phi );
+   x4 = -sin(omega0*4*n + phi );
+
+   xn=0.5*rand(1,N);
+   x = (xn+x1+x2+x3)
+
+  y2 = zeros(N,1);
+  M = 2
+  for k = M:N
+    y2(k) = sum( x(k-M+1:k)) / M;
+  end
+
+  y20 = zeros(N,1);
+  K = 20;
+  for k = K:N
+    y20(k) = sum( x(k-K+1:k)) / K;
+  end
+
+                                 # Graphik
+   figure( 1, "visible", "off");     # Do not open the graphic window in org
+
+   subplot(2,2,1)
+   plot(n, x1+x2+x3, 'color', 'red', '--', "linewidth", 1);
+   axis([0 (N-1) -3 3])
+   xlabel('Samples')
+   ylabel('Value')
+   title('Original Signal')
+   grid on ;
+
+   subplot(2,2,2)
+   plot(n, x, "linewidth", 1, n, x1+x2+x3, 'color', 'red', '--', "linewidth", 1);
+   axis([0 (N-1) -3 3])
+   grid on ;
+   xlabel('Samples')
+   ylabel('Value')
+   title('Signal with noise')
+
+   subplot(2,2,3)
+   plot(n, y2, "linewidth", 1, n, x1+x2+x3, 'color', 'red', '--', "linewidth", 1);
+   axis([0 (N-1) -3 3])
+   grid on ;
+   xlabel('Samples')
+   ylabel('Value')
+   title('Moving Average 2')
+
+   subplot(2,2,4)
+   plot(n, y20, "linewidth", 1, n, x1+x2+x3, 'color', 'red', '--', "linewidth", 1);
+   axis([0 (N-1) -3 3])
+   grid on ;
+   xlabel('Samples')
+   ylabel('Value')
+   title('Moving Average 20')
+
+                                       # Org-Mode specific output
+   print -dpng ./image/signal_mit_rauschen.png;        # Set print device
+   ans = "./image/signal_mit_rauschen.png";            # The mandtory return value
+#+END_SRC
+
+
+** COMMENT Programing Assignment 1
+
+#+begin_src python :results file
+  import matplotlib
+  import numpy as np
+  matplotlib.use('Agg')
+  import matplotlib.pyplot as plt
+
+
+  def scaled_fft_db(x):
+       """ ASSIGNMENT 1:
+           Module 4 Part 1:
+           Apply a hanning window to len(x[n]) = 512
+       """
+
+       N = len(x)             # number of samples
+       n = np.arange(N)       # time vector
+       # a) Compute a 512-point Hann window and use it to weigh the input data.
+       sine_sqr = np.sin((np.pi*n)/(N-1))**2    # sin(x)^2 = 1/2*(1 - cos(2x))
+       c = np.sqrt(511/np.sum(sine_sqr))
+       w = c/2 * (1 - np.cos((2 * np.pi * n)/(N - 1)))
+       # b) Compute the DFT of the weighed input, take the magnitude in dBs and
+       #    normalize so that the maximum value is 96dB.
+       y = w * x
+       Y = np.fft.fft(y) / N
+       # c) Return the first 257 values of the normalized spectrum
+       Y = Y[0: np.int(N/2+1)]
+       # Take the magnitude of X
+       Y_mag = np.abs(Y)
+       nonzero_magY = np.where(Y_mag != 0)[0]
+
+       # Convert the magnitudes to dB
+       Y_db = -100 * np.ones_like(Y_mag)    # Set the default dB to -100
+       Y_db[nonzero_magY] = 20*np.log10(Y_mag[nonzero_magY])  # Compute the dB for nonzero magnitude indices
+
+       # Rescale to amx of 96 dB
+       max_db = np.amax(Y_db)
+       Y_db = 96 - max_db + Y_db
+
+       return Y_db
+
+  def test():
+       N = 512
+       n = np.arange(N)
+       x = np.cos(2*np.pi*n/10)
+
+       # Y = scaled_fft_db(x)
+       Y = scaled_fft_db(x)
+
+       fig=plt.figure(figsize=(6,3))
+       plt.semilogy(abs(Y))
+
+       fig.tight_layout()
+       plt.savefig('image/ass_module-04_part-01.png')
+      
+       plt.savefig('image/python-matplot-fig-04.png')
+       return 'image/python-matplot-fig-04.png' # return filename to org-mode
+
+  return test()
+#+end_src
+
+#+results:
+[[file:image/python-matplot-fig-04.png]]
+
+
+
+* Module 4: Part 2 Filter Design
+
+** The Gibbs Phenomenon
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Gibbs Phenomenon
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal
+  omegac = pi/2
+  n1 = linspace(-pi, pi, 1000);
+  H1 = rectpuls(n1,2*omegac);
+
+  ## n2 = -pi : pi/100 : pi
+  ## h2 = sinc(omega_c * n2);
+  ## H2 = fft(h2);
+
+  N2 = 1024
+  L2 = 50;                           # Filter order
+  M2 = (L2-1)/2                      # M
+  n2 = 0:2*M2;
+  h2 = omegac/pi*sinc(omegac*n2/pi); # Compute coefficents
+  omega = -pi/2:pi/200:pi;              # Frequency range
+  H2 = abs(fft(h2,1024));
+  F2 = linspace(0, (N2-1)/N2, N2);
+                                      # Graphik  
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  plot(n1, H1, "linewidth", 2)
+  hold on
+  plot(F2/pi, fftshift(H2), "linewidth", 2)
+  set(gca,'XTick',-pi:pi/2:pi)
+  set(gca,'XTickLabel',{'-pi','-pi/2','0','pi/2','pi'})
+  grid on;
+                                  # Org-Mode specific setting
+  print -dpng ./image/gibbs1.png;
+  ans = "./image/gibbs1.png";
+                                  # ans = f'
+
+#+END_SRC
+
+
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal
+
+
+  t=linspace(-2,2,2000);
+  u=linspace(-2,2,2000);
+  sq=[zeros(1,500),2*ones(1,1000),zeros(1,500)];
+  k=2;
+  N=[1,3,7,19,49,70];                     # number of samples
+  for n=1:6;
+    an=[];
+    for  m=1:N(n)
+      # an=[an,2*k*sin(m*pi/2)/(m*pi)];      # sinc
+      an=[an,2*sinc(m/2)];      # sinc
+    end;
+    fN=k/2;
+    for m=1:N(n)
+      fN=fN+an(m)*cos(m*pi*t/2);            # frequnecy response
+    end;
+                                            # Graphik  
+    figure( 1, "visible", "off" )           # Do not open the graphic window in org
+    nq=int2str(N(n));
+    subplot(3,2,n),
+    plot(u,sq,'r','LineWidth',2);
+    hold on;
+    plot(t,fN,'LineWidth',2);
+    hold off; axis([-2 2 -0.5 2.5]);
+    ## set(gca,'XTick',-pi:pi/2:pi)
+    ## set(gca,'XTickLabel',{'-pi','-pi/2','0','pi/2','pi'})
+    grid;
+    xlabel('Time'), ylabel('y_N(t)');title(['N= ',nq]);
+  end;                                      # ans = f'
+
+  print -dpng ./image/gibbs2.png;
+  ans = "./image/gibbs2.png";
+#+END_SRC
+
+#+results:
+[[file:./image/gibbs2.png]]
+
+
+#+BEGIN_SRC octave :exports results :results file
+    pkg load signal
+
+  clc; clear all; close all;
+
+  % Specification
+  A = 1;                                       % Peak-to-peak amplitude of square wave
+  Tau = 10;                                    % Total range in which the square wave is defined (here -5 to 5)
+  T0 = 20;                                     % Period (time of repeatation of square wave), here 10 
+  C = 30;                                      % Coefficients (sinusoids) to retain 
+  N = 1001;                                    % Number of points to consider
+  t = linspace(-(T0-Tau),(T0-Tau),N);          % Time axis
+  X = zeros(1,N); X(t>=-Tau/2 & t<=Tau/2) = A; % Original signal
+  R = 0;                                       % Initialize the approximated signal
+  k = -C:C;                                    % Fourier coefficient number axis  
+  f = zeros(1,2*C+1);                          % Fourier coefficient values
+
+  % Loop for plotting approximated signals for different retained coeffs.
+  for c = 0:C % Number of retained coefficients
+      for n = -c:c % Summation range (See equation above in comments)
+        
+          % Sinc part of the Fourier coefficients calculated separately 
+          if n~=0
+              Sinc = (sin(pi*n*Tau/T0)/((pi*n*Tau/T0))); % At n NOTEQUAL to 0
+          else
+              Sinc = 1; % At n EQUAL to 0
+          end
+          Cn = (A*Tau/T0)*Sinc; % Actual Fourier series coefficients
+          f(k==n) = Cn; % Put the Fourier coefficients at respective places
+          R = R + Cn*exp(1j*n*2*pi/T0.*t); % Sum all the coefficients
+      end
+    
+      R = real(R); % So as to get rid of 0.000000000i (imaginary) factor
+      Max = max(R); Min = min(R); M = max(abs(Max),abs(Min)); % Maximum error
+      Overshoot = ((M-A)/A)*100; % Overshoot calculation
+      E = sum((X-R).^2); % Error energy calculation
+    
+      % Plots:
+      % Plot the Fourier coefficients
+     figure( 1, "visible", "off" )           # Do not open the graphic window in org
+      subplot(1,2,1); stem(k,f,'m','LineWidth',3); axis tight; grid on;
+      xlabel('Fourier coefficient index');ylabel('Magnitude');
+      title('Fourier coefficients');
+    
+      % Plot the approximated signal
+      subplot(1,2,2); plot(t,X,t,R,'m','LineWidth',3); axis tight; grid on; 
+      xlabel('Time (t)'); ylabel('Amplitude');
+      title(['Approximation for N = ', num2str(c),...
+      '. Overshoot = ',num2str(Overshoot),'%','. Error energy: ',num2str(E)])
+
+      pause(0.1); % Pause for a while
+      R = 0; % Reset the approximation to calculate new one
+  end
+
+    print -dpng ./image/gibbs2.png;
+    ans = "./image/gibbs2.png";
+#+END_SRC
+
+#+results:
+[[file:./image/gibbs2.png]]
+
+#+BEGIN_SRC octave :exports results :results file
+  omegac = pi;                      # Cutoff frequency
+
+  figure( 1, "visible", "off" )         # Do not open the graphic window in org
+
+  N = 64
+  m = (-(N-1)/2:0.1:(N-1)/2);
+  b = sinc(0.3*m);
+  F = linspace(-25, 25, 4096);
+  subplot(2,1,1)
+  plot(m,b);
+  grid on;
+  subplot(2,1,2)
+  plot(F,fftshift(abs(1/N*fft(b,4096))));
+  #axis([-N N -0.4 15])
+  xlabel('Normalized frequency');
+  ylabel('Magnitude');
+  set(gca,'XTick',-pi:pi/4:pi)
+  set(gca,'XTickLabel',{'-pi','-3pi/4','-pi/2','-pi/4','0','-pi/4','pi/2','-3pi/4','pi'})
+  grid on;
+  axis([-pi pi -0.2 1.2]);
+  print -dpng ./image/gibbs2.png;
+  ans = "./image/gibbs2.png";
+#+END_SRC
+
+#+results:
+[[file:./image/gibbs2.png]]
+
+ 
