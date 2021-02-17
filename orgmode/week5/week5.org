@@ -1,0 +1,252 @@
+#+CATEGORY: SP4COMM
+* Week 5 Module 4: Part 1 Introduction to Filtering
+** Linear  time-invariant filters
+*** Linearity
+#+BEGIN_SRC latex
+  \begin{equation}
+  \mathfrak{H}\big\{\alpha\;x_1[n] + \beta\;x_2[n]\big\} = \alpha\;\mathfrak{H}\big\{x_1[n]\big\} + \beta\;\mathfrak{H}\big\{x_2[n]\big\}
+  \end{equation}
+  #+END_SRC
+- Fuzz-Box, example for a none linear device
+**** TODO Add calculation examples 
+*** Time invariance
+- The system behaves the same way independently of when a it's switched on
+  #+BEGIN_SRC latex
+    \begin{equation}
+    y[n] = \mathfrak{H}\big\{x[n]\big\} \Leftrightarrow \mathfrak{H}\big\{x[n-n_o]\big\} = y[n-n_o]
+    \end{equation}
+  #+END_SRC
+- Wah-Pedal, example of a time variant device
+**** TODO Add calculation examples 
+*** Convolution
+   #+BEGIN_SRC latex
+    \begin{equation}
+    h[n] = \mathfrak{H}\big\{\delta[n]\big\}
+    \end{equation}
+   #+END_SRC
+- A fundamental result: Impulse response fully characterize the LTI system!
+**** TODO Add calculation examples 
+** TODO Filtering by Example
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Signal mit Rauschen
+#+BEGIN_SRC octave :exports results :results file
+   N=500                             # Vector lenght
+   n=0:N-1;        # Discrete Time Vector
+   omega0 = 2*pi/N;
+   phi = pi/5;
+
+   x1 = -sin(omega0*1*n + phi );          # The sinusoid
+   x2 = -sin(omega0*2*n + phi );
+   x3 = -sin(omega0*3*n + phi );
+   x4 = -sin(omega0*4*n + phi );
+
+   xn=0.5*rand(1,N);
+   x = (xn+x1+x2+x3)
+
+  y2 = zeros(N,1);
+  M = 2
+  for k = M:N
+    y2(k) = sum( x(k-M+1:k)) / M;
+  end
+
+  y20 = zeros(N,1);
+  K = 20;
+  for k = K:N
+    y20(k) = sum( x(k-K+1:k)) / K;
+  end
+
+                                 # Graphik
+   figure( 1, "visible", "off");     # Do not open the graphic window in org
+
+   subplot(2,2,1)
+   plot(n, x1+x2+x3, 'color', 'red', '--', "linewidth", 1);
+   axis([0 (N-1) -3 3])
+   xlabel('Samples')
+   ylabel('Value')
+   title('Original Signal')
+   grid on ;
+
+   subplot(2,2,2)
+   plot(n, x, "linewidth", 1, n, x1+x2+x3, 'color', 'red', '--', "linewidth", 1);
+   axis([0 (N-1) -3 3])
+   grid on ;
+   xlabel('Samples')
+   ylabel('Value')
+   title('Signal with noise')
+
+   subplot(2,2,3)
+   plot(n, y2, "linewidth", 1, n, x1+x2+x3, 'color', 'red', '--', "linewidth", 1);
+   axis([0 (N-1) -3 3])
+   grid on ;
+   xlabel('Samples')
+   ylabel('Value')
+   title('Moving Average 2')
+
+   subplot(2,2,4)
+   plot(n, y20, "linewidth", 1, n, x1+x2+x3, 'color', 'red', '--', "linewidth", 1);
+   axis([0 (N-1) -3 3])
+   grid on ;
+   xlabel('Samples')
+   ylabel('Value')
+   title('Moving Average 20')
+
+                                       # Org-Mode specific output
+   print -dpng ./image/signal_mit_rauschen.png;        # Set print device
+   ans = "./image/signal_mit_rauschen.png";            # The mandtory return value
+#+END_SRC
+
+** TODO Filter Stability
+** TODO Frequency Response
+*** TODO The convolution theorem
+** Ideal Filters
+*** Ideal Lowpass Filter
+#+BEGIN_SRC latex
+  \begin{align*}
+    H(e^{j\omega})  &=
+       \begin{cases}
+          1  & \text{for } |\omega| \leq \omega_c\\
+          0                  & \text{otherwise}
+        \end{cases}  
+  \end{align*}
+#+END_SRC
+- perfectly flat passband
+- infinite attenuation in stopband
+- zero-phase (no delay)
+
+  #+BEGIN_SRC latex
+    \text{Impulse Respones}
+    \begin{align*}
+      h[n]  &= IDFT\{H(e^{j\omega})\} \\
+            &= \frac{1}{2\pi}\int_{-\pi}^{\pi}H(e^{j\omega}) e^{j\omega\;n} d\omega \\
+            &= \frac{1}{2\pi}\int_{-\omega_c}^{\omega_c}e^{j\omega\;n} d\omega \\
+            &= \frac{1}{\pi\;n}\frac{e^{j\omega_c\;n}-e^{-j\omega_c\;n}}{2j} \\
+            &= \frac{sin(\omega_c\;n)}{\pi\;n}
+     \end{align*}
+#+END_SRC
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Impulse Response ideal low pass filter
+#+BEGIN_SRC octave :exports results :results file
+  N=64                           # Vector lenght
+  n=-N:pi/4:N;        # Discrete Time Vector
+  omegaC = pi/4;
+
+  h = sin(omegaC*n)./(pi*n);          # The sinusoid
+
+                                 # Graphik
+  figure(1, "visible", "off");     # Do not open the graphic window in org
+  clf
+  stem(n,h, "filled", "linewidth", 0.5)
+  axis([-30 30 -0.1 0.3])
+  xlabel('Samples')
+  ylabel('Value')
+  title('Impulse Response Ideal Low Pass Filter')
+  grid on ;
+
+                                      # Org-Mode specific output
+  print -dpng "-S800,300" ./image/impulse_response_lp.png;        # Set print device
+  ans = "./image/impulse_response_lp.png";            # The mandtory return value
+#+END_SRC
+
+#+results: Impulse Response ideal low pass filter
+[[file:./image/impulse_response_lp.png]]
+
+- The impulse response has infinite support to the right and to the left
+- Independant of how the convolution is computed, it will always take an inifintie number
+  of operations.
+- The impulse response decays slowly in time $\displaystyle \Big(\frac{1}{n}\Big)$, we need a lot
+  of samples for a good approximation.
+**** The sinc-rect pair:
+#+BEGIN_SRC latex
+  \begin{align*}
+     rect(x)  &=
+       \begin{cases}
+          1  & |x| \leq \frac{1}{2}\\
+          0  & |x|  > \frac{1}{2}
+        \end{cases}  
+  \end{align*}
+#+END_SRC
+
+#+BEGIN_SRC latex
+  \begin{align*}
+    sinc(x)  &=
+               \begin{cases}
+          \frac{ sin(\pi\;x) }{\pi\;x}  & x \neq 0 \\
+          1                            & x = 0
+        \end{cases}  
+  \end{align*}
+#+END_SRC
+
+- rect is the indicator function from $\displaystyle -\frac{1}{2}$ to $\displaystyle \frac{1}{2}$
+**** Canonical form of the ideal low pass filter
+#+BEGIN_SRC latex
+  \begin{equation*}
+    H(e^{j\;\omega}) = rect\Bigg(\frac{\omega}{2\;\omega_c}\Bigg) \xleftrightarrow{DTFT} \frac{\omega_c}{\pi}\;sinc\Bigg(\frac{\omega_c}{\pi}\;n\Bigg) = h[n]
+  \end{equation*}
+#+END_SRC
+*** TODO Ideal filters derived from the ideal low pass filter
+*** TODO Demodulation revisted
+** Programing Assignment 1
+
+#+begin_src python :results file 
+  import matplotlib
+  import numpy as np
+  matplotlib.use('Agg')
+  import matplotlib.pyplot as plt
+
+
+  def scaled_fft_db(x):
+       """ ASSIGNMENT 1:
+           Module 4 Part 1:
+           Apply a hanning window to len(x[n]) = 512
+       """
+
+       N = len(x)             # number of samples
+       n = np.arange(N)       # time vector
+       # a) Compute a 512-point Hann window and use it to weigh the input data.
+       sine_sqr = np.sin((np.pi*n)/(N-1))**2    # sin(x)^2 = 1/2*(1 - cos(2x))
+       c = np.sqrt(511/np.sum(sine_sqr))
+       w = c/2 * (1 - np.cos((2 * np.pi * n)/(N - 1)))
+       # b) Compute the DFT of the weighed input, take the magnitude in dBs and
+       #    normalize so that the maximum value is 96dB.
+       y = w * x
+       Y = np.fft.fft(y) / N
+       # c) Return the first 257 values of the normalized spectrum
+       Y = Y[0: np.int(N/2+1)]
+       # Take the magnitude of X
+       Y_mag = np.abs(Y)
+       nonzero_magY = np.where(Y_mag != 0)[0]
+
+       # Convert the magnitudes to dB
+       Y_db = -100 * np.ones_like(Y_mag)    # Set the default dB to -100
+       Y_db[nonzero_magY] = 20*np.log10(Y_mag[nonzero_magY])  # Compute the dB for nonzero magnitude indices
+
+       # Rescale to amx of 96 dB
+       max_db = np.amax(Y_db)
+       Y_db = 96 - max_db + Y_db
+
+       return Y_db
+
+  def test():
+       N = 512
+       n = np.arange(N)
+       x = np.cos(2*np.pi*n/10)
+
+       # Y = scaled_fft_db(x)
+       Y = scaled_fft_db(x)
+
+       fig=plt.figure(figsize=(6,3))
+       plt.semilogy(abs(Y))
+
+       fig.tight_layout()
+       plt.savefig('image/ass_module-04_part-01.png')
+      
+       plt.savefig('image/python-matplot-fig-04.png')
+       return 'image/python-matplot-fig-04.png' # return filename to org-mode
+
+  return test()
+#+end_src
+
+#+results:
+[[file:image/python-matplot-fig-04.png]]
+

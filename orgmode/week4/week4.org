@@ -1,0 +1,112 @@
+#+CATEGORY: SP4COMM
+* Week 4 Module 3: Part 2 - Advanced Fourier Analysise
+** Discrete Fourier Series DFS
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=green!10, barre=snake, arrondi=0.1]{Discrete Fourier Series}
+ #+BEGIN_bclogo
+DFS = DFT with periodicity explicit
+$\tilde{X}[k] = DFS\{x[n]\}$
+ #+END_bclogo
+- The DFS maps an N-Periodic signal onto an N-Periodic sequence of Fourier coeffients
+- The inverse DFS maps n_periodic sequence of Fourier coeffiencts a set onto an N-periodic
+  signal
+- DFS is an extension of the DFT for periodic sequencies
+- A circular time-shift is an natural extension of a shift fo finite length signals.
+*** Finite-length time shifts revisted
+- The DFS helps us understand how to define time shifts for finite-lenght signals.
+test
+- For an N-periodic sequence $\tilde{x}[n]$ ::
+  #+BEGIN_SRC latex
+  \begin{align*}
+  &\tilde{x}[n-M] \text{ is well-defined for all } M \in \mathbb{N} \\
+  &DFS  \left\{ \tilde{x}[n-M] \right\}               = \tikzmarkin{a}(0.1,-0.2)(-0.1,0.5)e^{-j\frac{2\pi}{N}Mk} \tikzmarkend{a}\text{ }\tilde{X}[k] \text{ delay factor}\\
+  &IDFS \left\{\text{ } \tikzmarkin{b}(0.1,-0.2)(-0.1,0.5)e^{-j\frac{2\pi}{N}Mk} \tikzmarkend{b} \text{ }\tilde{X}[k] \text{ }\right\} = \tilde{x}[n-M] \text{ delay factor}\\
+  \end{align*}
+  #+END_SRC
+
+- For an N-length signal $x[n]$ ::
+   #+BEGIN_SRC latex
+  \begin{align*}
+  &\tilde{x}[n-M] \text{ not  well-defined for all } M \in \mathbb{N} \\
+  &build \text{ } \tilde{x}[n] = x[n\text{ } mod\text{ } N] \Rightarrow \text{ }\tilde{X}[k] = X[k]\\
+  &IDFT \left\{\text{ } \tikzmarkin{d}(0.1,-0.2)(-0.1,0.5)e^{-j\frac{2\pi}{N}Mk} \tikzmarkend{d} \text{ }X[k] \text{ }\right\} 
+  = IDFS \left\{\text{ } \tikzmarkin{e}(0.1,-0.2)(-0.1,0.5)e^{-j\frac{2\pi}{N}Mk} \tikzmarkend{e} \text{ }\tilde{X}[k] \text{ }\right\} 
+  = \tilde{x}[n-M] 
+  = x[(n-M)\text{ }mod\text{ } N]
+  \end{align*}
+  #+END_SRC
+
+#+ATTR_LATEX: :options [logo=\bcinfo,barre=none,noborder=true]{Time Shifts}
+#+BEGIN_bclogo
+\begin{gbar}{yellow}{blue!10}
+Shifts for finite-length signals are "naturally" circular
+\end{gbar}
+#+END_bclogo
+
+**** Analysis Formula for a N-Periodic Signal in the frequency domain
+#+BEGIN_SRC latex
+\begin{equation}
+ \tilde{X}[k] = \sum_{n=0}^{N-1} \tilde{x}[n] e^{-j\frac{2\pi}{N}nk} \text{, } k \in \mathbb{Z}
+\end{equation}
+ #+END_SRC
+- $X[k]$ :: Signal vector in the frequency domain 
+- $x[n]$ :: Signal vector in the (discrete) time domain
+- Reminder :: This is the inner Product in explicite form
+\par
+**** Synthesis Formula for a N-Periodic Signal in the time domain
+#+BEGIN_SRC latex
+\begin{equation}
+  \tilde{x}[n] = \frac{1}{N} \sum_{n=0}^{N-1} \tilde{X}[k] e^{j\frac{2\pi}{N}nk} \text{, } k \in \mathbb{Z}
+\end{equation}
+ #+END_SRC
+  - $x[n]$ :: Signal vector in the (discrete) time domain
+  - $X[k]$ :: Signal vector in the frequency domain 
+  - $\frac{1}{N}$ :: Normalisation coeficent
+  - Reminder :: This is the inner Product in explicite fashion  
+** The Discret-Time Fourier Transform (DTFT)
+*** Overview Fourier Transform
+- N-Point finite-length siganls: DFT
+- N-Point periodic signals: DFS
+- Infinite length (non periodic) signals: DTFT
+ 
+*** Karplus Strong revisted and the DTFT
+**** Plotting the DTFT
+- Frequencies go from $-\pi$ to $\pi$
+- Positive frequencies are on the right hand side of the x-axis
+- Negative frequencies are on the left hand side of the x-axis
+- Low frequencies are centered around 0
+- High frequnecies will be on the extreme of the bound
+
+*** Formal Definition of the DTFT
+- $x[n] \in \ell_2(\mathbb{Z})$, the space of square summable infinity sequneces
+- define the function of $\omega \in \mathbb{R}$ \\
+  #+BEGIN_SRC latex
+  \begin{equation}
+   F(\omega) = \sum_{n=-\infty}^{\infty} x[n]e^{-j \omega n}  \text{, with } \omega = \frac{2\pi}{N} \text{ and } N \rightarrow \infty
+  \end{equation}
+   #+END_SRC
+
+- inversion (when $F(\omega)$ exists):
+  #+BEGIN_SRC latex
+    \begin{equation}
+     x[n] = \frac{1}{2\;\pi}\int_{-\pi}^{\pi}F(\omega);e^{j\;\omega\;n}\mathrm{d}\omega \text{, with } n \in \mathbb{Z}
+    \end{equation}
+   #+END_SRC
+
+*** Properties of the DTFT
+#+ATTR_LATEX: :options [leftmargin=5cm,labelwidth=4.7cm,itemindent=-2pt]
+- linearity ::
+  $\displaystyle DTFT \{\alpha x[n] + \beta y[n]\} = \alpha X(e^{j \omega}) + \beta Y(e^{j\omega})$
+- timeshift ::
+  $\displaystyle DTFT \{x[n-M]\} = e^{-j \omega M}\;X(e^{j \omega})$
+- modulation ::
+  $\displaystyle DTFT \{e^{-j \omega_0 M}\;x[n]\} = X(e^{j\;(\omega - \omega_0)})$
+- time reversal ::
+  $\displaystyle DTFT\{x[-n]\} = X(e^{-jw})$
+- conjugation ::
+  $\displaystyle DTFT\{x^*[n] \} = X^*X(e^{-j\;\omega})$
+*** Some particular cases
+- if $\displaystyle x[n]$ is symmetric, the DTFT is symmetric: $\displaystyle x[n] = x[-n] \iff X(e^{j \omega}) = X(e^{-j \omega})$ 
+- if $\displaystyle x[n]$ is real, the DTFT is Hemitian-symmetric: $\displaystyle x[n] = x^*[n] \iff X(e^{j \omega}) =X^*(e^{-j \omega})$
+- if $\displaystyle x[n]$ is real, the magnitude of th eDTFT is symmetric $\displaystyle x[n] \in \mathbb{R} \implies |X(e^{j \omega}) | = |X(e^{-j \omega})|$
+- if $\displaystyle x[n]$ is real and symmetric, $\displaystyle X(e^{j \omega})$  is also real and symmetric
+** TODO Sinusoidal Modulation

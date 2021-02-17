@@ -1,0 +1,581 @@
+#+CATEGORY: SP4COMM
+* Week 1 Module 1: Basics of Digital Signal Processing
+** Introduction to digital signal processing
+*** Signal
+- Description of the evoultion of a physical phenomenon
+  | phenomenon      | signal              |
+  | wehather        | temperature         |
+  | sound           | pressure            |
+  | sound           | magnetic deviation  |
+  | light intensity | gray level on paper |
+*** Processing 
+  - *Analysis:* Understanding the information carried by the signal
+  - *Synthesis:* Creating a signal to contain the given information
+*** Digital
+  - Discrete Time
+    - Splice up time into a series of descrete instance without loosing information
+    - Harry Nyquist and Claude Shannon state with the \textcolor{blue}{Sampling Theorem} that
+      continous time representation and discrete time representation are equivalent.
+    - The Sampling Theorem: Under appropriate "slowness" conditions for x(t) we have
+      #+results:
+      #+begin_export latex
+      \begin{equation}
+       x(t) = \sum_{n=-\infty}^{\infty} x[n]\;sinc(\frac{t - nT_s}{T_s})
+      \end{equation}
+      #+end_export
+
+    - The conditiion under which the Sampling Theorem holds was given by Fourier and it's
+      \textcolor{blue}{Fourier Analysis}.
+    - The fouriere transform will give us a quantitive measure how fast a signal moves
+  - Discrete Amplitude
+    - Through discretisation of ampltitudes only a set of predefined values are possible. 
+    - The set of levels is countable i.e. we can always map the level of a sample to an
+      integer. If our data is represented by integer it becomes complete abstract and general
+      which has very importand consequences in the following three domains:
+      - *Storage* special devices for recoding needed
+      - *Processing* General purpose microprocessor is sufficient 
+      - *Transmission* Reproduction of the original signal and therefore eliminating nois
+        is easy
+*** From Analog to Digital Signal Processing
+ - Analog asks for $\displaystyle f_{(t)} = ?$
+ #+results: Display Speech
+ [[file:./image/speech.png]]
+ 
+ - Digital represnts data as a sequence of numbers (scaled with a factor of 1000)
+ #+results: Represent speach 1
+ | -12 | -12 | -12 | -11 | -11 | -12 | -12 | -11 | -11 | -10 |
+
+ #+results: Represent speach 2
+ | -10 | -10 | -9 | -10 | -10 | -9 | -9 | -9 | -9 | -9 |
+
+ #+results: Represent speach 3
+ | -8 | -8 | -7 | -7 | -8 | -8 | -8 | -7 | -7 | -7 |
+
+** Discrete-Time Signals
+*** Basic Definitions
+- Sequence: defined as \textcolor{blue}{complex-valued function}
+- Discrete-Time Signal: a sequnece of complex numbers
+  - one dimension (for now)
+  - notation: x[n]
+  - two-sides sequencies: $\displaystyle \text{x: } \mathbb{Z} \rightarrow \mathbb{C}$
+  - n is /a-dimensional/ "time", sets an order on the sequence of samples 
+  - analysis: periodic measurement
+  - synthesis: stream of generated samples, reproduce a physical phenomenon
+
+*** Basic Signals
+#+attr_latex: :options {0.4\textwidth} :float 
+#+begin_minipage latex 
+\begin{dspPlot}[width=5cm, xticks=5]{-5, 5}{-1.2, 1.2}
+  \dspSignal[linecolor=blue, xmin=-5, xmax=-1]{0}
+  \dspTaps[linecolor=blue]{0 1}
+  \dspSignal[linecolor=blue, xmin=1, xmax=5]{0}
+\end{dspPlot}
+#+end_minipage                                          
+#+attr_latex: :options [c]{0.5\textwidth} :float right
+#+begin_minipage latex
+\color{blue}Impulse \color{black}
+\begin{equation}
+  \delta[n]=\left\{
+      \begin{array}{ll}
+        1 & n = 0     \\
+        0 & n \neq 0  \\
+      \end{array}\right.
+\end{equation}
+ #+end_minipage
+
+#+attr_latex: :options {0.4\textwidth} :float 
+#+begin_minipage latex
+\begin{dspPlot}[width=5cm, xticks=5]{-5, 5}{-1.2, 1.2}
+  \dspSignal[linecolor=blue, xmin=-5, xmax=-1]{0}
+  \dspSignal[linecolor=blue, xmin=0, xmax=5]{1}
+\end{dspPlot}
+#+end_minipage                                          
+#+attr_latex: :options [c]{0.5\textwidth} :float right
+#+begin_minipage latex
+\color{blue}Unit Step \color{black}
+\begin{equation}
+  \mu[n]=\left\{
+      \begin{array}{ll}
+        1 & n \geq 0     \\
+        0 & n < 0  \\
+      \end{array}\right.
+\end{equation}
+ #+end_minipage
+
+#+attr_latex: :options {0.4\textwidth} :float 
+#+begin_minipage latex
+\begin{dspPlot}[width=5cm, xticks=5]{-5, 5}{-1.2, 1.2}
+  \dspSignal[linecolor=blue, xmin=-5, xmax=-1]{0}
+  \dspSignal[linecolor=blue, xmin=0, xmax=5]{0.7 x exp 1 mul}
+\end{dspPlot}
+#+end_minipage                                          
+#+attr_latex: :options [c]{0.5\textwidth} :float right
+ #+begin_minipage latex
+\textcolor{blue}{Exponential Decay}
+\begin{equation}
+  x[n]= a^n \times \mu[n] \mbox{, } a \in \mathbb{C} \mbox{, } |a| < 1
+\end{equation}
+ #+end_minipage
+
+#+attr_latex: :options {0.4\textwidth} :float 
+#+begin_minipage latex
+\begin{dspPlot}[width=5cm, xticks=5]{-15, 15}{-1.2, 1.2}
+  \dspSignal[linecolor=blue]{5 3.14 mul x mul 3.14 add cos }  % cos (5*3.14*x + 3.14)
+\end{dspPlot}
+#+end_minipage                                          
+#+attr_latex: :options [c]{0.5\textwidth} :float right
+#+begin_minipage latex
+\color{blue}Real value sinus \color{black}
+\begin{equation}
+  x[n]= cos(\omega_0 n + \Phi)
+\end{equation}
+ #+end_minipage
+
+*** Octave Algorithm for some basic Signals
+**** Impulse
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Impulse
+  #+BEGIN_SRC octave :exports code :results file
+  N=33                             # Vector lenght
+  n=-(N-1)/2:(N-1)/2;              # Discrete Time Vector
+
+  for i = 1 : length(n)            # Impulse algorithm
+    if n(i) == 0
+      f(i) = 1;
+    else
+      f(i) = 0;
+    end
+  end
+                                    # Graphik
+  figure( 1, "visible", "off");     #  Do not open the graphic window in org
+
+  stem(n,f, "filled", "linewidth", 2);
+  axis([-(N-1)/2 (N-1)/2 0 1.2])
+  grid on ;
+  xlabel("Discrete Time Vector [n]");
+                                      # Org-Mode specific output
+  print -dpng ./image/impulse.png;  # Set print device
+  ans = "./image/impulse.png";      # The mandtory return value
+  #+END_SRC
+  
+#+attr_latex: :options {0.4\textwidth} :float 
+#+begin_minipage latex 
+\begin{equation*}
+x[n] = \delta[n]
+\end{equation*}
+#+end_minipage                                          
+#+attr_latex: :options [c]{0.5\textwidth} :float right
+#+begin_minipage
+[[file:./image/impulse.png]]
+ #+end_minipage
+
+  
+**** The Unit Step
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Unit Step
+#+BEGIN_SRC octave :exports code :results file
+N=33                             # Vector lenght
+n=-(N-1)/2:(N-1)/2;              # Discrete Time Vector
+
+for i = 1 : length(n)            # Unit Step algorithm
+  if n(i) >= 0
+    f(i) = 1;
+  else
+    f(i) = 0;
+  end
+end
+                                  # Graphik
+figure( 1, "visible", "off");     # Do not open the graphic window in org
+
+stem(n,f, "filled", "linewidth", 2);
+axis([-(N-1+4)/2 (N-1+4)/2 -0.5 1.5])
+grid on ;
+xlabel("Discrete Time Vector [n]");
+                                    # Org-Mode specific output
+print -dpng ./image/unit_step.png;  # Set print device
+ans = "./image/unit_step.png";      # The mandtory return value
+#+END_SRC
+
+#+attr_latex: :options {0.4\textwidth} :float 
+#+begin_minipage latex 
+\begin{equation*}
+ u[n] = x[n] = 1
+\end{equation*}
+#+end_minipage                                          
+#+attr_latex: :options [c]{0.5\textwidth} :float right
+#+begin_minipage
+[[file:./image/unit_step.png]]
+#+end_minipage
+
+**** The exponential decay
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: exponential decay
+#+BEGIN_SRC octave :exports code :results file
+N=33                             # Vector lenght
+n=-(N-1)/2:(N-1)/2;              # Discrete Time Vector
+a = 0.75
+
+for i = 1 : length(n)            # The exponential decay algorithm
+  if n(i) >= 0
+    f(i) = abs(a)^n(i);
+  else
+    f(i) = 0;
+  end
+end
+                                  # Graphik
+figure( 1, "visible", "off");     # Do not open the graphic window in org
+
+stem(n,f, "filled", "linewidth", 2);
+axis([-(N-1+4)/2 (N-1+4)/2 -0.5 1.5])
+grid on ;
+xlabel("Discrete Time Vector [n]");
+                                    # Org-Mode specific output
+print -dpng ./image/exp_decay.png;  # Set print device
+ans = "./image/exp_decay.png";      # The mandtory return value
+#+END_SRC
+
+#+attr_latex: :options {0.4\textwidth} :float 
+#+begin_minipage latex 
+\begin{equation*}
+ x[n] = |a|^n\;u[n] \text{, } |a| < 1 
+\end{equation*}
+  #+end_minipage                                          
+#+attr_latex: :options [c]{0.5\textwidth} :float right
+#+begin_minipage
+[[file:./image/exp_decay.png]]
+#+end_minipage
+
+**** Some Wave form examples
+- [[https://www.youtube.com/watch?v=SMkkBfSdm1E&t=955s][Youtube Introduction to GNU Octave]]
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal
+  N = 64;                        # Samples
+  n = 0:N-1;                     # Discrete Time Vector
+  periode = 4;
+  duty_cycle = 50;
+  square_disc   = square(2*pi/N*n*periode, duty_cycle) + 1;
+  width = 0.5;
+  sawtooth_disc = sawtooth(2*pi/N*n*periode, width) + 1;
+
+  tau = 10;
+  exp_grow_disc  = exp(n/tau);
+  exp_decay_disc = 550*exp(-n/tau);
+
+  A= 2;                         # Amplitude
+  phi = pi/4;                   # Phase shift
+  sinusoid_dis = A*cos(2*pi/N*n*periode + phi);
+  sin_exp_dis  = exp(-n/tau/3) .* cos(2*pi/N*n*periode + phi);
+                                 # Graphik
+  figure( 1, "visible", "off" ); # Do not open the graphic window in org
+  subplot(2,2,1), stem(n, square_disc, "filled", "linewidth", 2), axis([-1 N+1 -0.2 2.4]),  title 'Square Wave'w;
+  grid on
+  subplot(2,2,2), stem(n, sawtooth_disc, "filled", "linewidth", 2), axis([-1 N+1 -0.2 2.4]), title 'Sawtooth';
+  grid on;
+  subplot(2,2,3), stem(n, sinusoid_dis, "filled", "linewidth", 2), title 'Sinusoid';
+  grid on;
+  subplot(2,2,4), stem(n, sin_exp_dis, "filled", "linewidth", 2), title 'Exponential Decay Sinusoid';
+  grid on; 
+                                   # Org-Mode specific setting
+  print -dpng ./image/signals.png;
+  ans = "./image/signals.png";
+#+END_SRC
+
+#+results:
+[[file:./image/signals.png]]
+
+*** Classes of Discrete-Time signals
+**** Finite-Length
+- indicate notation: $\displaystyle x[n] \text{, }n=0.1.2.....N-1$
+- vector notation: $\displaystyle x = [x_0, x_1, ... x_{N-1}]^T$
+- practical entities, good for numerical packages (e.g. numpy)
+**** Infinte-Length
+- sequence notation: $\displaystyle x[n] \text{, n } \in \mathbb{Z}$
+- abstraction, good for theorems
+**** Periodic
+- N-periodic sequence: $\displaystyle \tilde{x}[n] = \tilde{x}[n+kN] \text{, n,k,N } \in \mathbb{Z}$
+- same information as in finite-length of length N
+- \textcolor{blue}{natural bridge} between finite and infinite length
+**** Finite-Support
+#+results:
+#+begin_export latex
+\color{blue}Finite-support sequence \color{black}
+\begin{equation}
+  \overline{x}[n]=\left\{
+      \begin{array}{ll}
+        x[n] & if 0 \leq n < N, n \in \mathbb{Z}     \\
+        0 &  otherwise  \\
+      \end{array}\right.
+\end{equation}
+#+end_export
+
+- same information as in finite-length of length N
+- another bridge between finite and infinite lengths
+
+**** Elementary Operations
+ - Scaling ::
+   #+results:
+   #+begin_export latex
+   \begin{equation}
+     y[n]= ax[n] \rightarrow \left\{
+        \begin{array}{ll}
+          a>0 & amplification     \\
+          a<0 & attenuation       \\
+        \end{array}\right.
+   \end{equation}
+   #+end_export
+
+ - Sum ::
+   #+results:
+   #+begin_export latex
+   \begin{equation} y[n] = x[n] + z[n] \end{equation}
+   #+end_export
+
+- Product ::
+  #+results:
+  #+begin_export latex
+  \begin{equation} y[n] = x[n] * z[n] \end{equation}
+  #+end_export
+
+- Shift ::
+  #+results:
+  #+begin_export latex
+  \begin{equation}
+    y[n]= x[n-k] \rightarrow \left\{
+        \begin{array}{ll}
+          k>0 & deleay     \\
+          k<0 & anticipate \\
+        \end{array}\right.
+  \end{equation}
+  #+end_export
+
+- Integration ::
+  #+results:
+  #+begin_export latex
+  \begin{equation} y[n] = \sum\limits_{k=-\infty}^{n} x[k] \end{equation}
+  #+end_export
+  
+- Differentation ::
+  #+results:
+  #+begin_export latex
+  \begin{equation} y[n] = x[n] - x[n-1] \end{equation}
+  #+end_export
+
+#+ATTR_LATEX: :options [logo=\bcbook,couleur=green!10,barre=snake,arrondi=0.1]{Relation Operator and Signals}
+ #+BEGIN_bclogo
+- The \textcolor{blue}{unit step} can be optained by applying the
+  \textcolor{blue}{integration} operator to the
+  \textcolor{blue}{discrete time pulse}.
+- The \textcolor{blue}{unit impulse} can be optained by applying the
+  \textcolor{blue}{differentation} operator to the \textcolor{blue}{unit step}.
+ #+END_bclogo
+
+*** Shift of finite-length: finite-support
+#+attr_latex: :options {0.4\textwidth} :float 
+ #+begin_minipage latex
+\begin{equation*} 
+\tilde{x}[n] = ..\ 0\ 0\ \textcolor{blue}{x_0\ x_1\ x_2\  \\
+                                   x4\ x_4\ x_5\ x_6\  x_7}\ 0\ 0\ ...
+\end{equation*}
+  \begin{dspPlot}[width=5cm, xticks=1]{0, 7}{-1.2,1.2}
+    \dspSignal[linecolor=blue]{1 x 10 div sub}
+  \end{dspPlot}
+ #+end_minipage                                          
+ #+attr_latex: :options [c]{0.5\textwidth} :float right
+ #+begin_minipage latex
+\begin{equation*}
+\tilde{x}[n-3] = ..\ 0\ \textcolor{blue}{0\ 0\ 0\ x_0\ \\
+                                x_0\ x_1\ x_2\ x_3\ x_4}\ x_5\ x_6\ x_7\ 0...
+\end{equation*}
+\begin{dspPlot}[width=5cm, xticks=1]{0, 7}{-1.2,1.2}
+    \dspSignal[linecolor=blue, xmin=0, xmax=2]{0}
+    \dspSignal[linecolor=blue, xmin=3 ]{1 x 3 sub 10 div sub}
+\end{dspPlot}
+ #+end_minipage
+
+- As we shift, we pull in 0s and we lose data.
+
+*** Shift of finite-length: periodization
+#+attr_latex: :options {0.4\textwidth} :float 
+ #+begin_minipage latex
+\begin{equation*}
+  \tilde{x}[n-3] = \textcolor{blue}{x_1\ x_2\ x_3\ x_4\ x_5\ x_6\ x_7\ x_8}
+\end{equation*}
+\begin{dspPlot}[width=5cm, xticks=1]{0, 7}{-1.2,1.2}
+    \dspSignal[linecolor=blue]{1 x 10 div sub}
+\end{dspPlot}
+ #+end_minipage                                          
+ #+attr_latex: :options [c]{0.5\textwidth} :float right
+ #+begin_minipage latex
+\begin{equation*}
+  \tilde{x}[n-3] = \textcolor{blue}{x_6\ x_7\ x_8\ x_1\ x_2\ x_3\ x_4\ x_5}
+\end{equation*}
+\begin{dspPlot}[width=5cm, xticks=1]{0, 7}{-1.2,1.2}
+    \dspSignal[linecolor=blue, xmin=0, xmax=2]{1 x 5 add 10 div sub }
+    \dspSignal[linecolor=blue, xmin=3 ]{1 x 3 sub 10 div sub}
+\end{dspPlot}
+ #+end_minipage
+
+*** Energy and Power
+- Energy ::
+  Many sequencies have an infinity amount of energy e.g. the unit step u[n],
+#+results:
+#+begin_export latex
+\begin{equation}
+  E_x = \vert\vert x \vert\vert_2^2 = \sum\limits_{k=-\infty}^{\infty} \vert x[n] \vert^2
+\end{equation}
+#+end_export
+
+- Power ::
+  To describe the energetic properties of the sequencies we use the concept of power
+  #+results:
+  #+begin_export latex
+  \begin{equation}
+     P_x = \vert\vert x \vert\vert_2^2 = \frac{1}{N}\sum\limits_{n=0}^{N-1} \vert x[n] \vert^2
+  \end{equation}
+  #+end_export
+
+- Many signals have infi 
+** Basic signal processing
+*** How a PC plays discrete-time sounds
+**** The discrete-time sinusoid
+#+results:
+#+begin_export latex
+\begin{equation*}
+ x[n] = sin(\omega_0\;t + \Theta)
+\end{equation*}
+#+end_export
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: sinusoid
+#+BEGIN_SRC octave
+N=33                             # Vector lenght
+n=-(N-1)/2:pi/10:(N-1)/2;        # Discrete Time Vector
+omega0 = pi/10;
+theta = pi/2
+
+f = sin(omega0+n + theta);          # The sinusoid
+                                  # Graphik
+figure( 1, "visible", "off");     # Do not open the graphic window in org
+
+stem(n,f, "filled", "linewidth", 2);
+axis([-(N-1+4)/2 (N-1+4)/2 -2 2])
+grid on ;
+xlabel("Discrete Time Vector [n]");
+                                    # Org-Mode specific output
+print -dpng ./image/sin.png;        # Set print device
+ans = "./image/sin.png";            # The mandtory return value
+#+END_SRC
+
+#+results: sinusoid
+[[file:./image/sin.png]]
+
+**** Digital vs physical frequency
+- Discrete Time:
+  - Periodicity: how many samples before the pattern repeats (M)
+  - n: no physical dimension
+- Physical World:
+  - Periodicity: hoq many seconds before the pattern repeats
+  - frequency measured in Hz
+- Soundcard T_s System Clock
+  - A sound card takes ever T_s an new sample from the discrete-time sequence.
+  - periodicity of M samples \rightarrow periodicity of $\displaystyle M\;T_s$ seconds
+  - real world frequency
+    #+results:
+    #+begin_export latex
+    \begin{equation}
+     f = \frac{1}{M\;T_s}Hz
+    \end{equation}
+    #+end_export
+
+- Example
+  - usually we choose F_s the number of samples per seconds
+  - T_s = 1/F_s
+    #+results:
+    #+begin_export latex
+    \begin{align*}
+      F_s  &= 48000     \text{e.g. a typical value } \\ 
+      T_s  &= 20.8\mu\;s \\
+       f   &= 440Hz      \text{ , with M = 110}
+    \end{align*}
+    #+end_export
+
+*** The Karplus Strong Algorithm
+**** The Moving Average
+  - simple average (2 point average)
+    #+results:
+    #+begin_export latex
+    \begin{equation}
+     m = \frac{a+b}{2}
+    \end{equation}
+    #+end_export
+
+  - moving average: take a "local" average
+    #+results:
+    #+begin_export latex
+    \begin{equation}
+       y[n]= \frac{x[n] + x[n-1]}{2}
+    \end{equation}
+    #+end_export
+
+  -  Average a sinusoid
+    #+results:
+    #+begin_export latex
+    \begin{align*}
+       x[n] &= cos(\omega\;n) \\
+       y[n] &= \frac{cos(\omega\;n) - cos(\omega\;(n-1)}{2} \\
+       y[n] &= cos(\omega\;n + \theta)  
+    \end{align*}
+    #+end_export
+
+#+results: Moving Average 2
+[[file:./image/ma01.png]]
+
+#+ATTR_LATEX: :options [couleur = brown!20, arrondi = 0.1, logo=\bcbook, ombre=true]{Linear Transformation}
+#+BEGIN_bclogo
+Applying a linear transformation to a sinusoidal input results in a sinusoidal output of
+the same frequency with a phase shift.
+#+END_bclogo
+
+**** Reversing the loop
+    #+results:
+    #+begin_export latex
+    \begin{equation}
+       y[n]= x[n] + \alpha\;y[n-1] \rightarrow \text{ The Karplus Strong Algorithm}
+    \end{equation}
+    #+end_export
+
+- *Zero Initial Conditions:*
+  - set a start time (usually n_0 = 0)
+  - assume input and output are zero for all time before N_0
+***** One-Time Investment
+
+#+results: Karplus Strong 01
+[[file:./image/kas01.png]]
+    
+** Digital Frequency
+#+ATTR_LATEX: :options [logo=\bcbook,couleur=blue!20,barre=snake]{Digital Frequency}
+#+BEGIN_bclogo
+\begin{equation}
+  \begin{split}
+    \sin\bigg(n\big(\omega + 2k\pi\big)\bigg) & = \sin\big(n\omega+\phi\big) \text{, k in }\mathbb{Z} \\
+                                              & = e^{i(\phi + n*2\pi\omega)}
+  \end{split}
+\end{equation} 
+#+END_bclogo
+
+#+ATTR_LATEX: :options [logo=\bcdz, couleur=red!20, barre=snake]{Complex Exponential}
+#+BEGIN_bclogo 
+\begin{equation}
+  \omega = \frac{M}{N} \times 2 \times \pi
+\end{equation}
+#+END_bclogo
+** The Reproduction Formula
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=green!10, barre=snake, arrondi=0.1]{Reproduction Formula}
+ #+BEGIN_bclogo
+\begin{equation}
+x[n] = \sum\limits_{k=-\infty}^{\infty} x[k]\delta[n-k]
+\end{equation}
+Any \textcolor{blue}{signal} can be expressed as a linear combination of wighted and shifted pulses.
+ #+END_bclogo
+

@@ -1,0 +1,3 @@
+#+CATEGORY: SP4COMM
+* Week 8 Module 6: Digital Communication Systems
+* Week 8 Module 7: Image Processing
