@@ -1,4 +1,10 @@
-#+CATEGORY: SP4COMM
+#+CATEGORY: SP4COMM W6
+
+# #+OPTIONS: H:5
+# #+LaTeX_HEADER: \usepackage[tikz]{bclogo}
+# #+LaTeX_HEADER: \usepackage{tcolorbox}
+# #+LATEX: \setcounter{secnumdepth}{5}
+
 * Week 6 Module 4: Part 2 Filter Design
 
 - First strategy of filter design: Imitation
@@ -11,14 +17,19 @@
 - An ideal filter is not realizable in practice because the impulse response is a
   two-sided infinite support sequence.
 *** Approximation by truncation
+
+#+ATTR_LATEX: :options [couleur = brown!20, arrondi = 0.1, logo=\bcbook, ombre=true]{Impulse Truncation}
+#+BEGIN_bclogo
 1. Pick $\omega_c$
-2. Compute ideal impulse response h[n]
+2. Compute ideal impulse response h[n] 
 3. truncate h[n] to a finite-support $\hat{h}[n]$
 4. $\hat{h}[n]$ defines an FIR filter
+#+END_bclogo
+
 
 #+BEGIN_SRC latex
   \text{FIR approximation of lenght M = 2N+1}
-  \begin{align*}
+  \begin{align*}p
     \hat{h}[n]
     &=
       \begin{cases}
@@ -28,9 +39,15 @@
   \end{align*}
 #+END_SRC  
 
-*** The Gibbs Phenomenon
-- The maximum error around the cutoff frequency is around 9% fo the height of the jump
+
+- Why approximation by truncation could be a good idea ::
+  The means square error MSE is minimized by symmetric impulse truncation around zero
+
+**** The Gibbs Phenomenon
+- Why approximation by truncation is not such a good idea ::
+  The maximum error around the cutoff frequency is around 9% fo the height of the jump
   regardless of N.
+
 
 #+BEGIN_SRC octave :exports results :results file
   pkg load signal
@@ -55,9 +72,9 @@
     figure( 1, "visible", "off" )           # Do not open the graphic window in org
     nq=int2str(N(n));
     subplot(3,2,n),
-    plot(u,sq,'r','LineWidth',2);
+    plot(u,sq,'r', "linewidth", 2);
     hold on;
-    plot(t,fN,'LineWidth',2);
+    plot(t,fN, "linewidth", 2);
     hold off; axis([-2 2 -0.5 2.5]);
     ## set(gca,'XTick',-pi:pi/2:pi)
     ## set(gca,'XTickLabel',{'-pi','-pi/2','0','pi/2','pi'})
@@ -65,7 +82,7 @@
     xlabel('Time'), ylabel('y_N(t)');title(['N= ',nq]);
   end;                                      # ans = f'
 
-  print -dpng ./image/gibbs1.png;
+  print -dpng "-S800,600" ./image/gibbs1.png;
   ans = "./image/gibbs1.png";
 #+END_SRC
 
@@ -113,13 +130,13 @@
       % Plots:
       % Plot the Fourier coefficients
      figure( 1, "visible", "off" )           # Do not open the graphic window in org
-      % subplot(1,2,1); stem(k,f,'m','LineWidth',1); axis tight; grid on;
-   subplot(2,1,1);  stem(k,f,'LineWidth',2); axis tight; grid on;
+     % subplot(1,2,1); stem(k,f,'m','LineWidth',1); axis tight; grid on;
+     subplot(2,1,1);  stem(k,f, "filled", "linewidth", 2, "markersize", 6 ); axis tight; grid on;
       xlabel('Fourier coefficient index');ylabel('Magnitude');
       title('Fourier coefficients');
 
       % Plot the approximated signal
-      subplot(2,1,2); plot(t,X,t,R,'LineWidth',2); axis tight; grid on; 
+      subplot(2,1,2); plot(t,X,t,R,"linewidth", 2); axis tight; grid on; 
       xlabel('Time (t)'); ylabel('Amplitude');
       title(['Approximation for N = ', num2str(c),...
       '. Overshoot = ',num2str(Overshoot),'%','. Error energy: ',num2str(E)])
@@ -128,19 +145,63 @@
       R = 0; % Reset the approximation to calculate new one
   end
 
-    print -dpng ./image/gibbs2.png;
+    print -dpng "-S800,400" ./image/gibbs2.png;
     ans = "./image/gibbs2.png";
 #+END_SRC
 
 #+results:
 [[file:./image/gibbs2.png]]
 
-*** Understanding the Gibbs Phenomen
-- Convolution Theorem :: $\displaystyle DTFT\{(x*y)[n]\} = X(e^{j\omega}) \; Y(e^{j\omega})$
-- Modulation Theorem :: $\displaystyle DTFT\{(x \; y)[n]\} = X(e^{j \omega}) *
-  Y(e^{j\omega})$
-*** Convolution of DTFT's
-$\text{in }\mathbb{C}^{\infty}$
+*** Window Method
+
+**** Understanding the Gibbs Phenomen
+We can consider the approximated filter as 
+#+BEGIN_SRC latex 
+  \begin{equation*}
+      \hat{h}[n] = h[n]\,w[n]
+    \end{equation*}
+  #+END_SRC                                          
+
+with the indicator function w[n] 
+#+BEGIN_SRC latex
+   \begin{align*}
+    w[n]
+    &=
+      \begin{cases}
+        1  & |n| \leq N \\
+        0  & \text{otherwise}
+      \end{cases}  
+  \end{align*}
+#+END_SRC  
+
+/The question is how can we express the Fourier Transform $\hat{H}(e^{j\omega}) = ?$ of the
+filter as the product of two sequencies?/
+ For that, we have to study the modulation theorem.
+
+- Convolution Theorem states that the Fourier Transform of the convolution of two
+  sequencies is the product in the frequency domain of the Fourier Transforms.
+#+BEGIN_SRC latex 
+  \begin{tcolorbox}
+      \begin{equation*}
+        DTFT\{(x*y)[n]\} = X(e^{j\omega}) \; Y(e^{j\omega})
+      \end{equation*}
+    \end{tcolorbox}
+#+END_SRC                                          
+
+- Modulation Theorem
+  The modulation theorem states that the Fourier Transform of the product of two
+  sequencies is the convolution in the frequency domain of the Fourier Transform
+#+BEGIN_SRC latex 
+  \begin{tcolorbox}
+      \begin{equation*}
+        DTFT\{(x[n] \; y)[n]\} = (X* Y)(e^{j\omega})
+      \end{equation*}
+    \end{tcolorbox}
+#+END_SRC                                          
+
+- Convolution of DTFT's
+$\text{in }\mathbb{C}^{\infty}$ the space of infinite support signals, the convolution can
+be defined in terms of the inner product of the two sequnecies.
 #+BEGIN_SRC latex
   \begin{align*}
     (x * y)[n] &= \big\langle x^*[k], y[n-k] \big\rangle \\
@@ -148,7 +209,11 @@ $\text{in }\mathbb{C}^{\infty}$
   \end{align*}
 #+END_SRC
 
-$\text{in }\mathbb{L}\Big(\big[-\pi,\pi\big]\Big)$
+We can addapt the same strategie in 
+$\mathbb{L}\Big(\big[-\pi,\pi\big]\Big)$, which is the space where the DTFT
+lifes. So we find the convolution of two Fourier Transforms as the inner product of the
+first Fourier Transform conjugated and the second Fourier Transform frequencie reversed
+and delyed by $\omega$
 #+BEGIN_SRC latex
   \begin{align*}
     (X * Y)(e^{j\;\omega}) &= \big\langle X^*(e^{j\;\sigma}), Y(e^{j\;\omega-\sigma}) \big\rangle \\
@@ -156,7 +221,8 @@ $\text{in }\mathbb{L}\Big(\big[-\pi,\pi\big]\Big)$
   \end{align*}
 #+END_SRC
 
-** Realizable Filters
-** Filter Design Part 2
-** Filter Design Part 3
-** Notes and Supplementary Materials
+*** TODO How is the inner product calculated above?
+** TODO Realizable Filters
+** TODO Filter Design Part 2
+** TODO Filter Design Part 3
+** TODO Notes and Supplementary Materials

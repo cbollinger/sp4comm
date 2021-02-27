@@ -1,0 +1,25 @@
+** Goethe's temperature measurement
+- Key Characteristic of a Digital Signal
+  1. Series of measurements, taken at regular interval
+  2. Each sample has a discrete amplitut
+
+- Moving Average
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+BEGIN_SRC latex
+  \begin{gbar}{yellow!30}{yellow!10}
+    \begin{equation*}
+      \begin{split}
+        y[n] & = \frac{1}{N} \sum\limits_{m=0}^{N-1} x[n-m] \\
+             & = \frac{1}{N} x[n] + \underbrace{\frac{1}{N} \sum\limits_{m=1}^{N-1} x[n-m] + \frac{1}{N} x[n-N]}_{y[n-1]} - \frac{1}{N} x[n-N] \\
+            & = y[n-1] + \frac{1}{N} (x[n] -x[n-N])
+      \end{split}
+    \end{equation*}
+  \end{gbar}  
+#+END_SRC
+
+  - n: average of the last capital N obervations
+  - N: window of observation over which average is computed
+  - Engineers Scientist Guide Chapter 15
+
+
+

@@ -1,0 +1,284 @@
+** DFT Plots
+*** DFT Unit Step
+- [[http://www.phys.nsu.ru/cherk/fft.pdf][FFT Tutorial University Rhode Island]]
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: DTFT Unit Step
+#+BEGIN_SRC octave :exports results :results file
+  N=64;             # Samples
+  n=0:N-1;          # Discrete Time Vector
+  time_shift=0;    # Time shift of the step signal
+  F=[-N/2:N/2-1]/N; #Frequency Vector in Radians the spectrum goes from -fs/2 to fs/2
+
+  x0=zeros(time_shift,1);
+  x1=ones(N-time_shift,1);
+  X=[x0;x1];
+  X1=fft(X,N);                                # Compute the dft of X1 using FFT algorithm
+  # Graphik
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  subplot(2,2,[1,2]), stem(n,X, "filled", "linewidth", 2, "markersize", 6), axis([-2 N+2 0 1.2]), title 'Unit Step';
+  grid on;
+  xlabel("Discrete Time Vector");
+  ylabel("Hight");
+
+  F=[-N/2:N/2-1]/N;                           #Frequency Vector in Radians the spectrum goes from -fs/2 to fs/2
+  subplot(2,2,3),plot(F,fftshift(abs(X1)), "linewidth", 2);
+  grid minor;
+  xlabel("Discrete Frequency omega");
+  ylabel("Magnitude");
+
+  subplot(2,2,4),plot(F,fftshift(angle(X1)), "linewidth", 2)
+  grid minor;
+  xlabel("Discrete Frequency omega");
+  ylabel("Phase [radiants]");
+
+                                  # Org-Mode speci
+  print -dpng "-S800,400" ./image/dtft_unit_step.png;
+  ans = "./image/dtft_unit_step.png";
+#+END_SRC
+
+#+results: DTFT Unit Step
+
+*** DFT Pulse Function
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Step Function
+#+BEGIN_SRC octave :exports results :results file
+   pkg load signal
+   N=64;
+     fo1=8;
+     n=0:N-1;
+
+     x1=rectpuls(2*pi*fo1*n/N,10);
+     X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+
+     # Graphik  
+     figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+     ## subplot(6,2,[1,2])
+     ## plot(x1), axis([-5 N+5 -1 1])
+     ## grid on;
+
+     subplot(3,2,[1,2])
+     stem(x1, "filled", "linewidth", 2, "markersize", 6), axis([-5 N+5 -1 1])
+     grid on;
+
+     subplot(3,2,3),plot(n-N/2, real(X1), "linewidth", 2);  axis([-N/2-5 N/2+5 -1 10]) 
+     grid on;
+     xlabel("Sample");
+     ylabel("X_1[k]");
+     title("Real Part");
+
+     subplot(3,2,4),plot(n-N/2, imag(X1), "linewidth", 2), axis([-N/2-5 N/2+5 -5 5])
+     grid on;
+     xlabel("Sample");
+     ylabel("X_1[k]");
+     title("Imaginary Part");
+
+     subplot(3,2,5),plot(n-N/2,fftshift(abs(X1)), "linewidth", 2);  axis([-N/2-5 N/2+5 -1 10]) 
+     grid on;
+     xlabel("Sample");
+     ylabel("X_1[k]");
+     title("Magnitude");
+
+     subplot(3,2,6),plot(n-N/2,fftshift(angle(X1)), "linewidth", 2), axis([-N/2-5 N/2+5 -5 5])
+     grid on;
+     xlabel("Sample");
+     ylabel("X_1[k]");
+     title("Phase");
+
+     # Org-Mode specific setting
+     print -dpng "-S800,600" ./image/pulse.png;
+     ans = "./image/pulse.png";
+#+END_SRC
+
+*** DFT Shifted Pulse Function
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: DTFT Shifted Step
+#+BEGIN_SRC octave :exports results :results file
+  N=64;             # Samples
+  n=0:N-1;          # Discrete Time Vector
+  time_shift=58;    # Time shift of the step signal
+  F=[-N/2:N/2-1]/N; #Frequency Vector in Radians the spectrum goes from -fs/2 to fs/2
+
+  x0=zeros(time_shift,1);
+  x1=ones(N-time_shift,1);
+  X=[x0;x1];
+  X1=fft(X,N);                                # Compute the dft of X1 using FFT algorithmw
+
+  # Graphik 
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  subplot(2,2,[1,2]), stem(n,X, "filled", "linewidth", 2, "markersize", 6), axis([-2 N+2 0 1.2]), title 'Unit Step shifted of 58 Units';
+  grid on;
+  xlabel("Discrete Time Vector");
+  ylabel("Hight");
+
+  subplot(2,2,3),plot(F,fftshift(abs(X1)), "linewidth", 2);
+  grid minor;
+  xlabel("Discrete Frequency omega");
+  ylabel("Magnitude");
+
+  subplot(2,2,4),plot(F,fftshift(angle(X1)), "linewidth", 2);
+  grid minor;
+  xlabel("Discrete Frequency omega");
+  ylabel("Phase [radiants]");
+
+                                  # Org-Mode speci
+  print -dpng "-S800,400" ./image/dtft_shifted_step.png;
+  ans = "./image/dtft_shifted_step.png";
+#+END_SRC
+
+*** DFT Complex Exponential
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: DTFT
+#+BEGIN_SRC octave :exports results :results file
+    pkg load communications signal
+
+    n=-5:5;
+    x = (-0.9).^n;
+    k=-200:200;
+    w=(2*pi/100)*k;
+    X=x*(exp(-j*2*pi/100)).^(n'*k);
+    magX=abs(X);
+    phaseX=angle(X);
+
+    # Graphik 
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+   subplot(2,2,[1,2])
+   stem(x, "filled", "linewidth", 2, "markersize", 6)
+   grid on;
+
+   subplot(2,2,3); plot(w/(2*pi),magX, "linewidth", 2);  axis([-2  2  0  15]);
+    xlabel('frequency in units of pi'); ylabel('|X|');
+    title('Magnitude Part');
+    grid on;
+
+    subplot(2,2,4); plot(w/(2*pi),phaseX, "linewidth", 2); axis([-2  2  -pi  pi]);
+    xlabel('frequency in units of pi'); ylabel('radians/pi');
+    title('Phase Part');
+    grid on;
+
+    # Org-Mode speci
+    print -dpng "-S800,400" ./image/dtft.png;
+    ans = "./image/dtft.png";
+#+END_SRC
+
+*** DFT Cosine
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Cosine
+#+BEGIN_SRC octave :exports results :results file
+    N=64;
+    fo1=8;
+    n=0:N-1;
+  
+    x1=0.5.*cos(2*pi*fo1*n/N);
+    X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+    
+    # Graphik  
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  
+    subplot(2,2,[1,2])
+    stem(x1, "filled", "linewidth", 2, "markersize", 6), axis([-5 N+5 -1 1])
+    grid on;
+    #stem(n-N/2,fftshift(x1))
+
+    subplot(2,2,3),stem(n-N/2,fftshift(abs(X1)), "filled", "linewidth", 2, "markersize", 6), axis([-N/2-5 N/2+5 0 20])  # Move frequency 0 to the center
+    grid minor;
+    xlabel("Sample");
+    ylabel("X_1[k]");
+    title("Real Part");
+
+    subplot(2,2,4), stem(n-N/2, fftshift(imag(X1)), "filled", "linewidth", 2, "markersize", 6), axis([-N/2-5 N/2+5 -20 20])
+    grid minor;
+    xlabel("Sample");
+    ylabel("X_1[k]");
+    title("Imaginary Part");
+  
+    # Org-Mode specific setting
+    print -dpng "-S800,400" ./image/dtft_cosine.png;
+    ans = "./image/dtft_cosine.png"; 
+#+END_SRC
+
+*** DFT Sinusoid Sine
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Sine
+#+BEGIN_SRC octave :exports results :results file
+  N=64;
+  fo1=8;
+  n=0:N-1;
+  
+  x1=0.5.*sin(2*pi*fo1*n/N);
+  X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+    
+  # Graphik  
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  
+  subplot(2,2,[1,2])
+  stem(x1, "filled", "linewidth", 2, "markersize", 6), axis([-5 N+5 -1 1])
+  grid on;
+  
+  subplot(2,2,3),stem(n-N/2,fftshift(abs(X1)), "filled", "linewidth", 2, "markersize", 6), axis([-N/2-5 N/2+5 0 20])  # Move frequency 0 to the center
+  grid minor;
+  xlabel("Sample");
+  ylabel("X_1[k]");
+  title("Real Part");
+
+  subplot(2,2,4),stem(n-N/2,fftshift(imag(X1)), "filled", "linewidth", 2, "markersize", 6), axis([-N/2-5 N/2+5 -20 20])
+  grid minor;
+  xlabel("Sample");
+  ylabel("X_1[k]");
+  title("Imaginary Part");
+  
+  
+  # Org-Mode specific setting
+  print -dpng "-S800,400" ./image/dtft_sine.png;
+  ans = "./image/dtft_sine.png";
+#+END_SRC
+
+*** Noise
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Noise
+#+BEGIN_SRC octave :exports results :results file
+  pkg load communications signal
+
+    t = (0:0.1:10);
+    x = sawtooth(t);
+    y = awgn(x,10,3,'measured');
+    # Graphik 
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+    plot(t,x,t, y, "linewidth", 2)
+    legend('Original Signal','Signal with AWGN')
+    grid on;
+  
+    # Org-Mode speci
+    print -dpng "-S800,200" ./image/step_awgn.png;
+    ans = "./image/step_awgn.png";
+#+END_SRC
+
+#+results: Noise
+[[file:./image/step_awgn.png]]
+
+*** Normalized Pulse
+\omega_s
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: normalized
+#+BEGIN_SRC octave :exports results :results file
+  N = 20;
+  x = [0:100]/100;
+  f = ones(1,101)*1/2;
+  for i = 1:2:N
+    a = 2/pi/i;f = f + a*sin(2*pi*i*x);
+  end
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  plot(x, f, "linewidth", 2), axis([-0.5 1.5 -0.5 1.5])
+  grid on;
+                      # Org-Mode specific setting
+  print -dpng "-S800,200" ./image/normalized.png;
+  ans = "./image/normalized.png";
+
+#+END_SRC
+
+#+results: normalized
+[[file:./image/normalized.png]]

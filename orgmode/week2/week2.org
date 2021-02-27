@@ -1,4 +1,13 @@
-#+CATEGORY: SP4COMM
+#+CATEGORY: SP4COMM W2:
+
+# #+OPTIONS: H:5
+# #+LATEX_HEADER: \usepackage[table]{xcolor}
+# #+LATEX_HEADER: \definecolor{contiYellow}{RGB}{255,165,0}
+# #+LaTeX_HEADER: \usepackage[tikz]{bclogo}
+# #+LaTeX_HEADER: \usepackage{tcolorbox}
+# #+LATEX_HEADER: \usepackage{enumitem}
+# #+LATEX: \setcounter{secnumdepth}{5}
+
 * Week 2 Module 2: Vector Spaces
 #+ATTR_LATEX: :options [logo=\bcbook, couleur=brown!20, barre=snake, arrondi=0.1]{Vector Space}
 #+BEGIN_bclogo
@@ -16,27 +25,44 @@ square-summabe $\sum_{n=-\infty}^{\infty} |x[n]|^2$
 
 #+ATTR_LATEX: :options [leftmargin=5cm, labelwidth=4.7cm, itemindent=-2pt]
 - $\displaystyle \mathbb{R}^2$, $\mathbb{R}^3$ :: Euclidean space, geomtery
-- $\displaystyle \mathbb{R}^n$, $\mathbb{C}^n$  :: Linear algebrag
+- $\displaystyle \mathbb{R}^n$, $\mathbb{C}^n$  :: Linear algebra
 - $\displaystyle \ell_2(\mathbb{Z})$ :: Square-Summable infinite sequences
 - $\displaystyle L_2([a,b])$ :: Square-integrable functions over an interval
 
-** Hilbert Space
-A hilbert space is  an *inner product space* which fulfills completeness. 
-
 *** Operationl Definitions
+
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=brown!10, barre=snake, arrondi=0.1]{Inner Product}
+ #+BEGIN_bclogo
+Measure of similarity between vectors
+ #+END_bclogo
+
 #+ATTR_LATEX: :options [leftmargin=5cm, labelwidth=4.7cm, itemindent=-2pt]
-   - Inner Product :: 
-     - $\displaystyle \langle{\mathbf{p},\mathbf{q}}\rangle := \mathbf{p} \times \mathbf{q}$
-     - In German Scalar Product
-     - A vector space with an inner product is called an *inner product space*
-   - Norm of a Vector :: 
-     - $\displaystyle ||\mathbf{v}|| := \langle{\mathbf{v},\mathbf{v}}\rangle$
-     - self inner product
-   - Orthogonal :: 
-     - $\displaystyle \langle{\mathbf{p},\mathbf{q}}\rangle = 0$
-     - maximal different vectors
-     - inner product = 0
-   - Distance :: $\displaystyle  d(x,y) = ||\mathbf{x} -\mathbf{y}||_2$ 
+- Inner Product :: 
+  $\langle\mathbf{x},\mathbf{y}\rangle := \sum_{n=0}^{N-1}\,x_n\,y_n$ \\
+  A vector space with an inner product is called an *inner product space*
+- Inner Product in $\mathbb{R}^2$ ::
+  $\langle\mathbf{x},\mathbf{y}\rangle = x_0y_0+x_1y_1 = \mathbf{x} + \mathbf{y} cos(\alpha)$
+- Inner Product in $\mathbb{L}_{[-1,1]}$ :: $\langle\mathbf{x},\mathbf{y}\rangle = \int\limits_{-1}^{1} x(t) y(t) dt$
+- Norm of a Vector :: 
+  $\mathbf{v} := \langle\mathbf{v},\mathbf{v}\rangle = ||\mathbf{v}||^2$ \\
+  self inner product 
+- Orthogonal :: 
+  $\langle\mathbf{p},\mathbf{q}\rangle = 0$ \\
+  maximal different vectors\\
+  inner product = 0
+- Distance :: $d(x,y) = \mathbf{x} -\mathbf{y}_2$
+
+
+*** Some Examples
+
+Not all vector spaces have got a graphical representation. The following table shows the
+graphical representation of vector spaces
+#+ATTR_LATEX: :caption \rowcolors[]{1}{contiYellow!5}{} :center nil :align c | c
+| graphical representation | no graphical respresentation |
+| $\mathbb{R}^2$           | $\mathbb{C}^N$ for N>1       |
+| $\mathbb{R}^3$           | $\mathbb{R}^N$ for N>3       |
+| $\mathbb{L}_{[-1,1]}$    |                              |
+
 
 #+BEGIN_SRC gnuplot :exports none :file image/smult.png :eval query-export
 # Reset all plotting variables to their default values.
@@ -62,14 +88,12 @@ f(x) = sin(x)
 # Plot the curve.
 plot f(x)  w l lw 2, 1.3*f(x) w l lw 2 
 #+END_SRC
-
-#+attr_latex: :options {0.4\textwidth} :float 
-#+begin_minipage latex 
+#+attr_latex: :options {0.3\textwidth} :float 
+#+begin_minipage 
 Scalar Multiplication in $\mathbb{L}_2[-1,1]$
 #+end_minipage                                          
-#+attr_latex: :options [c]{0.5\textwidth} :float right
+#+attr_latex: :options [c]{0.7\textwidth} :float right
 #+begin_minipage 
-#+ATTR_LATEX: :width 5cm
 [[file:image/smult.png]]
  #+end_minipage
 
@@ -98,39 +122,14 @@ g(x) = 0.3*f(25*x)
 # Plot the curve.
 plot f(x) w l lw 2 , g(x)  w l lw 2 , f(x) + g(x)  w l lw 2 
 #+END_SRC
-
-#+attr_latex: :options {0.4\textwidth} :float 
+#+attr_latex: :options {0.3\textwidth} :float 
 #+begin_minipage latex 
 Summation of two Vectors in $\mathbb{L}_2[-1,1]$
 #+end_minipage                                          
-#+attr_latex: :options [c]{0.5\textwidth} :float right
+#+attr_latex: :options [c]{0.7\textwidth} :float right
 #+begin_minipage 
-#+ATTR_LATEX: :width 5cm
 [[file:image/vadd.png]]
  #+end_minipage
-
-#+attr_latex: :options {0.4\textwidth} :float 
-#+begin_minipage latex 
-General Definition of the inner Product
-#+end_minipage                                          
-#+attr_latex: :options [c]{0.5\textwidth} :float right
-#+begin_minipage latex
-\begin{equation}
- \langle{\mathbf{x},\mathbf{y}}\rangle = x_0y_0+x_1y_1 =||\mathbf{x}|| + ||\mathbf{y}|| cos(\alpha)
-\end{equation}
- #+end_minipage
-
-#+attr_latex: :options {0.4\textwidth} :float 
-#+begin_minipage latex 
-Inner Product in $\displaystyle\mathbb{R}^2$
-#+end_minipage                                          
-#+attr_latex: :options [c]{0.5\textwidth} :float right
-#+begin_minipage latex
-\begin{equation*}
- \langle{\mathbf{x},\mathbf{y}}\rangle = \int\limits_{-1}^{1} x(t) y(t) dt
-\end{equation*}
-#+end_minipage
-
 
 #+BEGIN_SRC gnuplot :exports none :file image/iproduct_sin.png :eval query-export
  Reset all plotting variables to their default values.
@@ -157,28 +156,25 @@ g(x) = sin(x) * sin(x)
 # Plot the curve.
 plot f(x) w l lw 2 , g(x)  w filledcurve l lw 2
 #+END_SRC
-
-#+attr_latex: :options {0.4\textwidth} :float 
+#+attr_latex: :options {0.3\textwidth} :float 
 #+begin_minipage latex
-Example Inner Product \\
-in $\displaystyle\mathbb{L}_2[-1,1]$: The Norm \\
+Inner Product in $\mathbb{L}_2[-1,1]$ - The Norm: \\
 \begin{equation*}
     \begin{split}
-      x                                     &= sin(\pi) \\
+      x                                     &= sin(\pi\,t) \\
       \langle{\mathbf{x},\mathbf{x}}\rangle &= ||\mathbf{x}||^2 = \int\limits_{-1}^{1} sin^2(\pi)dt = 1
     \end{split}
 \end{equation*}
 #+end_minipage                                          
-#+attr_latex: :options [c]{0.5\textwidth} :float right
+#+attr_latex: :options [c]{0.7\textwidth} :float right
 #+begin_minipage latex
-#+ATTR_LATEX: :width 5cm
 [[file:image/iproduct_sin.png]]
 #+end_minipage
 
-#+ATTR_LATEX: :options [logo=\bcbook, couleur=green!10, barre=snake, arrondi=0.1]{Inner Product}
- #+BEGIN_bclogo
-Measure of similarity between vectors
- #+END_bclogo
+
+** Hilbert Space
+A hilbert space is  an *inner product space* which fulfills completeness. 
+
 
 ** Signal Spaces
 Finite length signal live in $\mathbb{C}^{N}$

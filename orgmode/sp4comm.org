@@ -2,7 +2,7 @@
 #+DATE: <2020-07-20 Mo>
 #+AUTHOR: Ch. Bollinger
 #+EMAIL: christian.bollinger@hispeed.ch
-#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: ':nil *:t -:t ::t <:t H:5 \n:nil ^:t arch:headline
 #+OPTIONS: author:t c:nil creator:comment d:(not "LOGBOOK") date:t
 #+OPTIONS: e:t email:nil f:t inline:t num:t p:nil pri:nil stat:t
 #+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:t title:t todo:t |:t
@@ -29,24 +29,30 @@
 # fontpsec: enables UTF8 with more than 256 characters. (pdftex requiers fontenc instead)
 #+LATEX_COMPILER: xelatex                                    
 #+LATEX_CLASS: koma-article                                    
-#+LATEX_CLASS_OPTIONS: [a4paper,12pt,DIV=15,draft=false]      
+#+LATEX_CLASS_OPTIONS: [a4paper,10pt,DIV=15,draft=false]      
 
 #+LATEX_HEADER_EXTRA: \usepackage{fontspec}                     
 
 #+LATEX_HEADER_EXTRA: \usepackage{lmodern}                     
-#+LATEX_HEADER_EXTRA: \usepackage{rotfloat}                    
+#+LATEX_HEADER_EXTRA: \usepackage{rotfloat}
 
-# Miscellaneous setting
+# Miscellaneous settingy
 #+LATEX_HEADER: \hypersetup{colorlinks=true, linkcolor=blue}   
 #+LATEX_HEADER_EXTRA: \usepackage{units}                       
 #+LATEX_HEADER_EXTRA: \usepackage{comment}                     
 #+LaTeX_HEADER_EXTRA: \usepackage{lipsum} 
 
-# Graphic Packages
+# Colored Tables
+#+LATEX_HEADER: \usepackage[table]{xcolor}
+#+LATEX_HEADER: \definecolor{contiYellow}{RGB}{255,165,0}
 # bclogo
 #+LaTeX_HEADER: \usepackage[tikz]{bclogo}
-#+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz} 
+# Highlight Formulas
+#+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}
 #+OPTIONS: tex:imagemagick
+# Colored text box and frames
+#+LATEX_HEADER: \usepackage{tcolorbox}
+
 # Math Packages
 #+LaTeX_HEADER: \usepackage{amsmath}
 #+LaTeX_HEADER: \usepackage{amsxtra}
@@ -59,12 +65,12 @@
 # Gray Header around everything
 #+LATEX_HEADER: \newenvironment{gbar}[2]{\def\FrameCommand{{\color{#1}\vrule width 3pt}\colorbox{#2}}\MakeFramed{\advance\hsize-\width\FrameRestore}}{\endMakeFramed}
 
-# Konfiguration Dokumentelemente
 # Enumeration releated configuration
 #+LATEX_HEADER: \usepackage{enumitem}
-#+LATEX_HEADER: \setlist{nolistsep}
+# #+LATEX_HEADER: \setlist{nolistsep}
 #+LATEX: \setlength\parindent{0pt}
-# Table related configuration
+# subsubsub section for latex export 
+# #+LATEX: \setcounter{secnumdepth}{5}
 
 # Koma-Script Document Layout
 #+LATEX_HEADER: \newcommand{\versiondate}{\today}
@@ -98,8 +104,21 @@
 \newpage
 #+INCLUDE: "./week6/week6.org"
 
-# # #+INCLUDE: "./week7/week7.org"
-# # #+INCLUDE: "./week8/week8.org"
+# #+INCLUDE: "./week7/week7.org"
+# #+INCLUDE: "./week8/week8.org"
 
-# \newpage
-# #+INCLUDE: "./plots/plots.org"
+\newpage
+* Appendix
+#+INCLUDE: "./appendix/plots.org"
+\newpage
+#+INCLUDE: "./appendix/dft-plot.org"
+\newpage
+#+INCLUDE: "./appendix/dual-tone.org"
+\newpage
+#+INCLUDE: "./appendix/Goethes_Temp_Measurement.org"
+\newpage
+#+INCLUDE: "./appendix/Karplus-Strong.org"
+\newpage
+#+INCLUDE: "./appendix/HW-Module-3.org"
+\newpage
+#+INCLUDE: "./appendix/appendix-a.org"

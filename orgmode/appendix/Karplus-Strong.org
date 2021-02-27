@@ -1,0 +1,441 @@
+** Karplus-Strong Algorithm
+The Karplus-Strong algorithm is a simple digital feedback loop with an internal buffer of
+𝑀 samples. The buffer is filled with a set of initial values and the loop, when running,
+produces an arbitraryly long output signal. Although elementary, the K-S loop can be used
+to synthesize interesting musical sounds.
+Let's start with a basic implementation of K-S loop:
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: KS1 Algorithm
+#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+def KS_1(x, N):
+    # given the initial buffer x, produce a N-sample output
+    #  by concatenating identical copies of the buffer
+    y = x
+    while len(y) < N:
+        # keep appending until we reach or exceed the required length
+        y = np.append(y, x)
+    # trim the excess
+    y = y[0:N+1]
+    return y
+#+END_SRC
+
+First we need to include the necessary Python libraries: 
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Initialisation
+#+BEGIN_SRC ipython :session dspKS :exports code :results: raw drawer :python python3
+%matplotlib inline
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+import IPython
+from scipy.io.wavfile import write
+#+end_src
+
+#+results: Initialisation
+: # Out[23]:
+
+
+Set the size of the output plots
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Figure_Size
+#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+plt.rcParams["figure.figsize"] = (14,4)
+#+END_SRC
+
+#+results: Figure_Size
+:results:
+# Out[24]:
+:end:
+
+Then, since we're playing audio, we need to set the internal "clock" of the system, aka
+the sampling rate:
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Sampling_Rate
+#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+Fs = 16000 # 16 KHz sampling rate
+#+END_SRC
+
+#+results: Sampling_Rate
+:results:
+# Out[25]:
+:end:
+
+With this sampling rate, since the period of the generated signal is equal to the length
+of the inital buffer, we will be able to compute the fundamental frequency of the
+resulting sound. For instance, if we init the K-S algorithm with a vector of 50 values,
+the buffer will fit 16000/50=320 times in a second's worth of samples or, in other words,
+the resulting frequency will be 320Hz, which corresponds roughly to a E4 on a piano.
+
+We still haven't talked about what to use as the initial values for the buffer. Well, the
+cool thing about K-S is that we can use pretty much anything we want; as a matter of fact,
+using random values will give you a totally fine sound. As a proof, consider this initial
+data set:
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Buffer
+#+BEGIN_SRC ipython :session dspKS :exports both :results raw drawer :python python3
+b = np.random.randn(50)
+
+#draw figure
+plt.stem(b);
+#+END_SRC
+
+#+results: Buffer
+:results:
+# Out[27]:
+[[file:./obipy-resources/12440xcY.png]]
+:end:
+
+Let's now generate a 2-second audio clip:
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: KS1
+#+BEGIN_SRC ipython :session dspKS :exports both :results raw drawer :python python3
+y = KS_1(b, Fs * 2)
+
+# we can look at a few periods:
+plt.stem(y[0:500]);
+#+END_SRC
+
+#+results: KS1
+:results:
+# Out[380]:
+[[file:./obipy-resources/3602DEM.png]]
+:end:
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: wave1
+#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+write('./sound/test1.wav', Fs, y)
+#+END_SRC
+
+#+results: wave1
+:results:
+# Out[382]:
+:end:
+
+[[./sound/test1.wav][Play wave 1]]
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: wave2
+#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+# let's play an octave lower: just double the initial buffer's length
+b = np.random.randn(100)
+y = KS_1(b, Fs * 2)
+write('./sound/test2.wav', Fs, y)
+#+END_SRC
+
+#+results: wave2
+:results:
+# Out[20]:
+:end:
+
+[[./sound/test2.wav][Play wave 2]]
+
+\vspace{2em}
+- The Block Diagram ::
+OK, so the K-S algorithm works! From the  signal processing point of view, we can describe
+the system with the following block diagram.
+
+\vspace{1em} \hspace{5em}
+#+BEGIN_SRC latex
+    \begin{dspBlocks}{2}{1}
+  % first row:
+  %        2         3              4           5         6              7         
+  %--------------------------------------------------------------------------
+  $x[n]$   & \BDadd  &              & \BDsplit & $y[n]$   & \vspace{3em} & \\
+  %
+  % second row:
+           &         & \BDdelayN{M} &          &          & \vspace{3em} &         
+  %
+  % connections:
+    \ncline{1,1}{1,2}
+    \ncline{1,2}{1,4}
+    \ncline{2,2}{2,3} \tlput{$a$}
+    \ncline{1,4}{2,4}
+
+    \BDConnH{1}{1}{2}{$$}
+    \BDConnH{1}{4}{5}{}
+    \BDConnV{2}{2}{1}{}
+    \BDConnH{2}{4}{3}{}
+  \end{dspBlocks}
+#+END_SRC
+\vspace{2em}
+
+The output can be expressed as
+#+BEGIN_SRC latex
+  \begin{gbar}{yellow!30}{yellow!10}
+    \begin{equation*}
+      \begin{split}
+        y[n] & = x[n] + x[n-M]
+      \end{split}
+    \end{equation*}
+  \end{gbar}  
+#+END_SRC
+
+assuming that the signal is the finite support signal
+#+BEGIN_SRC latex
+  \begin{gbar}{yellow!30}{yellow!10}
+    \begin{equation*}
+      \begin{split}
+        x[n] = 
+        \begin{cases} 
+          0   & \text{ for } n < 0    \\
+          b_n & \text{ for } 0 \leq n \leq M \\
+          0  &  \text{ for } n \geq M 
+        \end{cases}
+      \end{split}
+    \end{equation*}
+  \end{gbar}  
+#+END_SRC
+
+Let's implement the K-S algorithm as a signal processing loop
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Karplus Strong Algorithm 2
+#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+  def KS_2(x, N):
+      # length of the input
+      M = len(x)
+      # prepare the output
+      y = np.zeros(N)
+      # this is NOT an efficient implementation, but it shows the general principle
+      # we assume zero initial conditions (y[n]=0 for n < 0)
+      for n in range(0, N):
+          y[n] = (x[n] if n < M else 0) + (y[n-M] if n-M >= 0 else 0)
+      return y
+#+END_SRC
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: wave2
+#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+# let's play an octave lower: just double the initial buffer's length
+b = np.random.randn(50)
+y = KS_2(b, Fs * 2)
+write('./sound/test3.wav', Fs, y)
+#+END_SRC
+
+[[./sound/test3.wav][Play wave 3]]
+
+By looking at block diagram we can see a simple modification that adds a lot of realism to
+the sound: by setting 𝛼 to a value close to but less that one, we can introuce a decay in
+the note that produces guitar-like sounds:
+
+#+BEGIN_SRC latex
+  \begin{gbar}{yellow!30}{yellow!10}
+    \begin{equation*}
+        y[n] = x[n] + \alpha y[n-M]
+    \end{equation*}
+  \end{gbar}  
+#+END_SRC
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Karplus Strong Algorithm 2
+#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+  def KS_3(x, N, alpha = 0.99):
+    M = len(x)
+    y = np.zeros(N)
+    # 
+    for n in range(0, N):
+        y[n] = (x[n] if n < M else 0) + alpha * (y[n-M] if n-M >= 0 else 0)
+    return y
+#+END_SRC
+
+#+results: Karplus Strong Algorithm 2
+:results:
+# Out[17]:
+:end:
+
+If we now plot the resulting K-S output, we can see the decaying envelope:
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: KS_3
+#+BEGIN_SRC ipython :session dspKS :exports both :results raw drawer :python python3
+y = KS_3(b, Fs * 2)
+
+# we can look at a few periods:
+plt.stem(y[0:2000]);
+#+END_SRC
+
+#+results: KS_3
+:results:
+# Out[19]:
+[[file:./obipy-resources/6828cUF.png]]
+:end:
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: wave4
+#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+# let's play an octave lower: just double the initial buffer's length
+write('./sound/test4.wav', Fs, y)
+#+END_SRC
+
+[[./sound/test4.wav][Play wave 4]]
+
+
+There is just one last detail (the devil's in the details, here as everywhere
+else). Consider the output of a dampened K-S loop; every time the initial buffer goes
+through the loop, it gets multiplied by 𝛼 so that we can write
+
+#+BEGIN_SRC latex
+  \begin{gbar}{yellow!30}{yellow!10}
+    \begin{equation*}
+        y[n] = \alpha^{\frac{n}{M}} x[n] + \alpha y[n-M]
+    \end{equation*}
+  \end{gbar}  
+#+END_SRC
+
+
+(think about it and it will make sense). What that means is that the decay envelope is
+dependent on both 𝛼 and 𝑀 or, in other words, the higher the pitch of the note, the faster
+its decay. For instance:
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: wave5
+#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+write('./sound/test5.wav', Fs, KS_3(np.random.rand(50), Fs*2))
+#+END_SRC
+
+[[./sound/test5.wav][Play wave 5]]
+
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: wave6
+#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+write('./sound/test6.wav', Fs, KS_3(np.random.rand(10), Fs*2))
+#+END_SRC
+
+[[./sound/test5.wav][Play wave 6]]
+
+This is no good and therefore we need to compensate so that, if \alph is the same, the
+decay rate is the same. This leads us to the last implementation of the K-S algorithm:
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Final Implementation of Karplus Strong Algorithm
+#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+def KS(x, N, alpha = 0.99):
+    # we will adjust alpha so that all notes have a decay
+    #  comparable to that of a buf len of 50 samples
+    REF_LEN = 50
+    M = len(x)
+    a = alpha ** (float(M) / REF_LEN)
+    y = np.zeros(N)
+    # 
+    for n in range(0, N):
+        y[n] = (x[n] if n < M else 0) + a * (y[n-M] if n-M >= 0 else 0)
+    return y
+#+END_SRC
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: wave7
+#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+write('./sound/test7.wav', Fs, KS(np.random.rand(50), Fs*2))
+#+END_SRC
+
+#+results: wave7
+:results:
+# Out[58]:
+:end:
+
+[[./sound/test7.wav][Play wave 7]]
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: wave8
+#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+write('./sound/test8.wav', Fs, KS(np.random.rand(10), Fs*2))
+#+END_SRC
+
+#+results: wave8
+:results:
+# Out[59]:
+:end:
+
+[[./sound/test8.wav][Play wave 8]]
+
+** Playing Music
+
+Let's now play some cool guitar and, arguably, no guitar chord is as cool as the
+[[https://en.wikipedia.org/wiki/A_Hard_Day%27s_Night_%28song%29#Opening_chord][opening chord of "A Hard Day's Night", by The Beatles]].
+
+#+ATTR_LATEX: :width 7cm
+[[./image/hdn.jpg]]
+
+Much has been written about the chord (which, in fact, is made up of 2 guitars, one of
+which a 12-string, a piano and a bass) but to keep things simple, we will accept the most
+prevalent thesis which states that the notes are D_3,F_3,G_3,G_4,A_4,C_5 and G_5. To give
+it a "wider" feeling we will add another D_2 below. \\
+
+In Western music, where equal temperament is used, A_4 is the reference pitch at a
+frequency at 440Hz. All other notes can be computed using the formula $f(n) = A_4 \times
+2{n/12}$ where  is the number of half-tones between A_4 and the desired note. The exponent
+n is positive if the note is above A_4 and negative otherwise. \\
+
+Each note is generated using a separate Karplus-Strong algorithm. We try to mix the
+different "instruments" by assigning a different gain to each note. Also, we sustain
+Paul's D note on the bass a bit longer by changing the corresponding decay factor.
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Playing Music
+#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+  def freq(note):
+    # general purpose function to convert a note  in standard notation 
+    #  to corresponding frequency
+    if len(note) < 2 or len(note) > 3 or \
+        note[0] < 'A' or note[0] > 'G':
+        return 0
+    if len(note) == 3:
+        if note[1] == 'b':
+            acc = -1
+        elif note[1] == '#':
+            acc = 1
+        else:
+            return 0
+        octave = int(note[2])
+    else:
+        acc = 0
+        octave = int(note[1])
+    SEMITONES = {'A': 0, 'B': 2, 'C': -9, 'D': -7, 'E': -5, 'F': -4, 'G': -2}
+    n = 12 * (octave - 4) + SEMITONES[note[0]] + acc
+    f = 440 * (2 ** (float(n) / 12.0))
+    #print note, f
+    return f
+
+
+def ks_chord(chord, N, alpha):
+    y = np.zeros(N)
+    # the chord is a dictionary: pitch => gain
+    for note, gain in chord.items():
+        # create an initial random-filled KS buffer the note
+        x = np.random.randn(int(np.round(float(Fs) / freq(note))))
+        y = y + gain * KS(x, N, alpha)
+    return y 
+#+END_SRC
+
+#+results: Playing Music
+:results:
+# Out[60]:
+:end:
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: HDN Opening Chord
+#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+  # A Hard Day's Night's chord
+hdn_chord = {
+    'D2' : 2.2, 
+    'D3' : 3.0, 
+    'F3' : 1.0, 
+    'G3' : 3.2, 
+    'F4' : 1.0, 
+    'A4' : 1.0, 
+    'C5' : 1.0, 
+    'G5' : 3.5,
+}
+
+# write('./sound/test4.wav', Fs, y)
+write('./sound/hdn.wav', 2*Fs, ks_chord(hdn_chord, Fs * 4, 0.995))
+#+END_SRC
+
+#+results: HDN Opening Chord
+:results:
+# Out[63]:
+:end:
+
+[[./sound/hdn.wav][A Hard Day's Night openeing chord]]
+

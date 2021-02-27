@@ -62,7 +62,7 @@
   - analysis: periodic measurement
   - synthesis: stream of generated samples, reproduce a physical phenomenon
 
-*** Basic Signals
+*** COMMENT Basic Signals
 #+attr_latex: :options {0.4\textwidth} :float 
 #+begin_minipage latex 
 \begin{dspPlot}[width=5cm, xticks=5]{-5, 5}{-1.2, 1.2}
@@ -132,120 +132,162 @@
  #+end_minipage
 
 *** Octave Algorithm for some basic Signals
-**** Impulse
+
+ #+ATTR_LATEX: :options bgcolor=gray!30
+ #+NAME: Impulse
+ #+BEGIN_SRC octave :exports none :results file
+   N=33                             # Vector lenght
+   n=-(N-1)/2:(N-1)/2;              # Discrete Time Vector
+
+   for i = 1 : length(n)            # Impulse algorithm
+     if n(i) == 0
+       f(i) = 1;
+     else
+       f(i) = 0;
+     end
+   end
+                                     # Graphik
+   figure( 1, "visible", "off");     #  Do not open the graphic window in org
+
+   stem(n,f, "filled", "linewidth", 2, "markersize", 6);
+   axis([-(N-1)/2 (N-1)/2 0 1.2])
+   grid on ;
+   xlabel("Discrete Time Vector [n]");
+                                       # Org-Mode specific output
+   print -dpng "-S400,150" ./image/impulse.png;  # Set print device
+   ans = "./image/impulse.png";      # The mandtory return value
+ #+END_SRC
+
+  #+attr_latex: :options {0.4\textwidth} :float 
+ #+begin_minipage latex 
+\color{blue}Impulse \color{black}
+ \begin{equation*}
+  x[n] = \delta[n]=\left\{
+      \begin{array}{ll}
+        1 & n = 0     \\
+        0 & n \neq 0  \\
+      \end{array}\right.
+\end{equation*}
+ #+end_minipage                                          
+ #+attr_latex: :options [c]{0.5\textwidth} :float right
+ #+begin_minipage
+   [[file:./image/impulse.png]]
+ #+end_minipage
+  
 #+ATTR_LATEX: :options bgcolor=gray!30
-#+NAME: Impulse
-  #+BEGIN_SRC octave :exports code :results file
+#+NAME: Unit Step
+#+BEGIN_SRC octave :exports none :results file
   N=33                             # Vector lenght
   n=-(N-1)/2:(N-1)/2;              # Discrete Time Vector
 
-  for i = 1 : length(n)            # Impulse algorithm
-    if n(i) == 0
+  for i = 1 : length(n)            # Unit Step algorithm
+    if n(i) >= 0
       f(i) = 1;
     else
       f(i) = 0;
     end
   end
-                                    # Graphik
-  figure( 1, "visible", "off");     #  Do not open the graphic window in org
+                                 # Graphik
+  figure( 1, "visible", "off");     # Do not open the graphic window in org
 
-  stem(n,f, "filled", "linewidth", 2);
-  axis([-(N-1)/2 (N-1)/2 0 1.2])
+  stem(n,f, "filled", "linewidth", 2, "markersize", 6);
+  axis([-(N-1+4)/2 (N-1+4)/2 -0.5 1.5])
   grid on ;
   xlabel("Discrete Time Vector [n]");
-                                      # Org-Mode specific output
-  print -dpng ./image/impulse.png;  # Set print device
-  ans = "./image/impulse.png";      # The mandtory return value
-  #+END_SRC
-  
-#+attr_latex: :options {0.4\textwidth} :float 
-#+begin_minipage latex 
-\begin{equation*}
-x[n] = \delta[n]
-\end{equation*}
-#+end_minipage                                          
-#+attr_latex: :options [c]{0.5\textwidth} :float right
-#+begin_minipage
-[[file:./image/impulse.png]]
- #+end_minipage
-
-  
-**** The Unit Step
-#+ATTR_LATEX: :options bgcolor=gray!30
-#+NAME: Unit Step
-#+BEGIN_SRC octave :exports code :results file
-N=33                             # Vector lenght
-n=-(N-1)/2:(N-1)/2;              # Discrete Time Vector
-
-for i = 1 : length(n)            # Unit Step algorithm
-  if n(i) >= 0
-    f(i) = 1;
-  else
-    f(i) = 0;
-  end
-end
-                                  # Graphik
-figure( 1, "visible", "off");     # Do not open the graphic window in org
-
-stem(n,f, "filled", "linewidth", 2);
-axis([-(N-1+4)/2 (N-1+4)/2 -0.5 1.5])
-grid on ;
-xlabel("Discrete Time Vector [n]");
-                                    # Org-Mode specific output
-print -dpng ./image/unit_step.png;  # Set print device
-ans = "./image/unit_step.png";      # The mandtory return value
+                                  # Org-Mode specific output
+  print -dpng "-S400,150" ./image/unit_step.png;  # Set print device
+  ans = "./image/unit_step.png";      # The mandtory return value
 #+END_SRC
-
 #+attr_latex: :options {0.4\textwidth} :float 
 #+begin_minipage latex 
+\textcolor{blue}{Unit Step}
 \begin{equation*}
- u[n] = x[n] = 1
+  X[n] = \mu[n]=\left\{
+      \begin{array}{ll}
+        1 & n \geq 0     \\
+        0 & n < 0  \\
+      \end{array}\right.
 \end{equation*}
 #+end_minipage                                          
 #+attr_latex: :options [c]{0.5\textwidth} :float right
 #+begin_minipage
-[[file:./image/unit_step.png]]
+  [[file:./image/unit_step.png]]
 #+end_minipage
 
-**** The exponential decay
 #+ATTR_LATEX: :options bgcolor=gray!30
 #+NAME: exponential decay
-#+BEGIN_SRC octave :exports code :results file
-N=33                             # Vector lenght
-n=-(N-1)/2:(N-1)/2;              # Discrete Time Vector
-a = 0.75
+#+BEGIN_SRC octave :exports none :results file
+  N=33                             # Vector lenght
+  n=-(N-1)/2:(N-1)/2;              # Discrete Time Vector
+  a = 0.75
 
-for i = 1 : length(n)            # The exponential decay algorithm
-  if n(i) >= 0
-    f(i) = abs(a)^n(i);
-  else
-    f(i) = 0;
+  for i = 1 : length(n)            # The exponential decay algorithm
+    if n(i) >= 0
+      f(i) = abs(a)^n(i);
+    else
+      f(i) = 0;
+    end
   end
-end
-                                  # Graphik
-figure( 1, "visible", "off");     # Do not open the graphic window in org
+                                 # Graphik
+  figure( 1, "visible", "off");     # Do not open the graphic window in org
 
-stem(n,f, "filled", "linewidth", 2);
-axis([-(N-1+4)/2 (N-1+4)/2 -0.5 1.5])
-grid on ;
-xlabel("Discrete Time Vector [n]");
-                                    # Org-Mode specific output
-print -dpng ./image/exp_decay.png;  # Set print device
-ans = "./image/exp_decay.png";      # The mandtory return value
+  stem(n,f, "filled", "linewidth", 2, "markersize", 6);
+  axis([-(N-1+4)/2 (N-1+4)/2 -0.5 1.5])
+  grid on ;
+  xlabel("Discrete Time Vector [n]");
+                                  # Org-Mode specific output
+  print -dpng "-S400,150" ./image/exp_decay.png;  # Set print device
+  ans = "./image/exp_decay.png";      # The mandtory return value
 #+END_SRC
-
 #+attr_latex: :options {0.4\textwidth} :float 
-#+begin_minipage latex 
+#+begin_minipage latex
+\textcolor{blue}{Exponential Decay}
 \begin{equation*}
- x[n] = |a|^n\;u[n] \text{, } |a| < 1 
+  x[n]= a^n \times \mu[n] \mbox{, } a \in \mathbb{C} \mbox{, } |a| < 1
 \end{equation*}
   #+end_minipage                                          
 #+attr_latex: :options [c]{0.5\textwidth} :float right
 #+begin_minipage
-[[file:./image/exp_decay.png]]
+  [[file:./image/exp_decay.png]]
 #+end_minipage
 
-**** Some Wave form examples
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Weeek1 Sinusoid
+#+BEGIN_SRC octave :exports none :results file
+  N=33                             # Vector lenght
+  n=-(N-1)/2:(N-1)/2;              # Discrete Time Vector
+  a = 0.75
+
+  A= 1.2;                         # Amplitude
+  phi = pi/4;                   # Phase shift
+  periode = 4;
+
+  f = A*cos(2*pi/N*n*periode + phi);
+                                 # Graphik
+  figure( 1, "visible", "off");     # Do not open the graphic window in org
+
+  stem(n,f, "filled", "linewidth", 2, "markersize", 6);
+  axis([-(N-1+4)/2 (N-1+4)/2 -2 2])
+  grid on ;
+  xlabel("Discrete Time Vector [n]");
+                                  # Org-Mode specific output
+  print -dpng "-S400,150" ./image/w1_sinusoid.png;  # Set print device
+  ans = "./image/w1_sinusoid.png";      # The mandtory return value
+#+END_SRC
+#+attr_latex: :options {0.4\textwidth} :float 
+#+begin_minipage latex
+\textcolor{blue}{Real Value Sinusoid}
+\begin{equation*}
+  x[n]= A\,cos(\omega_0 n + \Phi)
+\end{equation*}
+  #+end_minipage                                          
+#+attr_latex: :options [c]{0.5\textwidth} :float right
+#+begin_minipage
+  [[file:./image/w1_sinusoid.png]]
+#+end_minipage
+
+*** COMMENT Some Wave form examples
+
 - [[https://www.youtube.com/watch?v=SMkkBfSdm1E&t=955s][Youtube Introduction to GNU Octave]]
 #+ATTR_LATEX: :options bgcolor=gray!30
 #+BEGIN_SRC octave :exports results :results file
@@ -268,16 +310,16 @@ ans = "./image/exp_decay.png";      # The mandtory return value
   sin_exp_dis  = exp(-n/tau/3) .* cos(2*pi/N*n*periode + phi);
                                  # Graphik
   figure( 1, "visible", "off" ); # Do not open the graphic window in org
-  subplot(2,2,1), stem(n, square_disc, "filled", "linewidth", 2), axis([-1 N+1 -0.2 2.4]),  title 'Square Wave'w;
+  subplot(2,2,1), stem(n, square_disc, "filled", "linewidth", 2, "markersize", 6), axis([-1 N+1 -0.2 2.4]),  title 'Square Wave'w;
   grid on
-  subplot(2,2,2), stem(n, sawtooth_disc, "filled", "linewidth", 2), axis([-1 N+1 -0.2 2.4]), title 'Sawtooth';
+  subplot(2,2,2), stem(n, sawtooth_disc, "filled", "linewidth", 2, "markersize", 6), axis([-1 N+1 -0.2 2.4]), title 'Sawtooth';
   grid on;
-  subplot(2,2,3), stem(n, sinusoid_dis, "filled", "linewidth", 2), title 'Sinusoid';
+  subplot(2,2,3), stem(n, sinusoid_dis, "filled", "linewidth", 2, "markersize", 6), title 'Sinusoid';
   grid on;
-  subplot(2,2,4), stem(n, sin_exp_dis, "filled", "linewidth", 2), title 'Exponential Decay Sinusoid';
+  subplot(2,2,4), stem(n, sin_exp_dis, "filled", "linewidth", 2, "markersize", 6), title 'Exponential Decay Sinusoid';
   grid on; 
                                    # Org-Mode specific setting
-  print -dpng ./image/signals.png;
+  print -dpng "-S800,600" ./image/signals.png;
   ans = "./image/signals.png";
 #+END_SRC
 
@@ -458,17 +500,17 @@ f = sin(omega0+n + theta);          # The sinusoid
                                   # Graphik
 figure( 1, "visible", "off");     # Do not open the graphic window in org
 
-stem(n,f, "filled", "linewidth", 2);
+stem(n,f, "filled", "linewidth", 2, "markersize", 6);
 axis([-(N-1+4)/2 (N-1+4)/2 -2 2])
 grid on ;
 xlabel("Discrete Time Vector [n]");
                                     # Org-Mode specific output
-print -dpng ./image/sin.png;        # Set print device
+print -dpng "-S800,150" ./image/sin.png;        # Set print device
 ans = "./image/sin.png";            # The mandtory return value
 #+END_SRC
 
 #+results: sinusoid
-[[file:./image/sin.png]]
+[[file:./image/w1_sinusoid.png]]
 
 **** Digital vs physical frequency
 - Discrete Time:

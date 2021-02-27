@@ -1,0 +1,255 @@
+
+** Homework Module 3
+
+*** Excersice 4
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Ex 4a
+#+BEGIN_SRC octave :exports both :results file
+  N=64;
+  fo1=4*60/64;
+  n=0:N-1;
+  
+  x1=(-1) n
+  X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+    
+  # Graphik  
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  
+  subplot(2,2,[1,2])
+  plot(x1);
+  grid on;
+  #stem(n-N/2,fftshift(x1))
+
+  subplot(2,2,3),stem(n-N/2,fftshift(abs(X1)))  # Move frequency 0 to the center
+  grid minor;
+  xlabel("Sample");
+  ylabel("X_1[k]");
+  title("Real Part");
+
+  subplot(2,2,4),stem(n-N/2,fftshift(imag(X1)))
+  grid minor;
+  xlabel("Sample");
+  ylabel("X_1[k]");
+  title("Imaginary Part");
+  
+  
+  # Org-Mode specific setting
+  print -dpng ./image/hw4a_fft.png;
+  ans = "./image/hw4a_fft.png";
+#+END_SRC
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: EX 4b
+#+BEGIN_SRC octave :exports both :results file
+  x1=[1 2 3 4 5]
+  X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+  X2=fft(X1);  
+  
+  
+  ans = X2/5;
+#+END_SRC
+
+#+results: EX 4b
+| 1 | 5 | 4 | 3 | 2 |
+
+
+
+*** Excersice 6
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: EX 6a
+#+BEGIN_SRC octave :exports both :results file
+  N=64;
+  n=0:N-1;
+  
+  x1=ones(N,1);
+  X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+    
+  # Graphik  
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  
+  subplot(2,2,[1,2])
+  plot(x1);
+  grid on;
+  #stem(n-N/2,fftshift(x1))
+
+  subplot(2,2,3),stem(n-N/2,fftshift(abs(X1)))  # Move frequency 0 to the center
+  grid minor;
+  xlabel("Sample");
+  ylabel("X_1[k]");
+  title("Real Part");
+
+  subplot(2,2,4),stem(n-N/2,fftshift(imag(X1)))
+  grid minor;
+  xlabel("Sample");
+  ylabel("X_1[k]");
+  title("Imaginary Part");
+  
+  
+  # Org-Mode specific setting
+  print -dpng ./image/hw6a_fft.png;
+  ans = "./image/hw6a_fft.png";
+#+END_SRC
+
+#+results: EX 6a
+[[file:./image/hw6a_fft.png]]
+
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: EX 6b
+#+BEGIN_SRC octave :exports both :results file
+  N=64;
+  fo1=8;
+  n=0:N-1;
+  
+  x1=0.5.*sin(2*pi*fo1*n/N);
+  X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+    
+  # Graphik  
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  
+  subplot(2,2,[1,2])
+  plot(x1)
+  grid on;
+  #stem(n-N/2,fftshift(x1))
+
+  subplot(2,2,3),stem(n-N/2,fftshift(abs(X1)))  # Move frequency 0 to the center
+  grid minor;
+  xlabel("Sample");
+  ylabel("X_1[k]");
+  title("Real Part");
+
+  subplot(2,2,4),stem(n-N/2,fftshift(imag(X1)))
+  grid minor;
+  xlabel("Sample");
+  ylabel("X_1[k]");
+  title("Imaginary Part");
+  
+  
+  # Org-Mode specific setting
+  print -dpng ./image/hw6d_fft.png;
+  ans = "./image/hw6d_fft.png";
+  #ans = X1'
+#+END_SRC
+
+#+results: EX 6b
+[[file:./image/hw6d_fft.png]]
+
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: EX 6d
+#+BEGIN_SRC octave :exports both :results file
+  N=64;
+  fo1=8;
+  n=0:N-1;
+  
+  x1=0.5*sin(2*pi/N*fo1*n);
+  X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+    
+  # Graphik  
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  
+  subplot(2,2,[1,2])
+  plot(x1);
+  grid on;
+  #stem(n-N/2,fftshift(x1))
+
+  subplot(2,2,3),stem(n-N/2,fftshift(abs(X1)))  # Move frequency 0 to the center
+  grid minor;
+  xlabel("Sample");
+  ylabel("X_1[k]");
+  title("Real Part");
+
+  subplot(2,2,4),stem(n-N/2,fftshift(imag(X1)))
+  grid minor;
+  xlabel("Sample");
+  ylabel("X_1[k]");
+  title("Imaginary Part");
+  
+  
+  # Org-Mode specific setting
+  print -dpng ./image/hw6b_fft.png;
+  ans = "./image/hw6b_fft.png";
+#+END_SRC
+
+#+results: EX 6d
+[[file:./image/hw6b_fft.png]]
+
+
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: Norm
+#+BEGIN_SRC octave :exports both :results file
+  N=64;
+  fo1=8;
+  fo2=4;
+  n=0:N-1;
+  
+  f1 = @(n) 0.5*sin(2*pi/N*fo1*n);
+  f2 = @(n) 2*cos(2*pi/N*fo1*n);
+  f3 = @(n) 1 
+  
+  norm1 = sum( f1([0:63]) .* f1([0:63]));
+  norm2 = sum( f2([0:63]) .* f2([0:63]));
+  norm3 = sum( f3([0:63]) .* f2([0:63]));
+  
+  # ans = norm1;
+  # ans = norm2;
+  # ans = norm3;
+  ans = (norm1 + norm2 + norm3);
+
+#+END_SRC
+
+#+results: Norm
+135.9999999999999
+135.9999999999999
+511.9999999999997
+31.99999999999998
+127.9999999999999
+8.000000000000004
+32.00000000000001
+32
+
+
+
+
+#+ATTR_LATEX: :options bgcolor=gray!30
+#+NAME: EX 7
+#+BEGIN_SRC octave :exports both :results file
+  N=64;
+  L=8;
+  M=8
+  n=0:N-1;
+  
+  fo = L/M
+  x1=cos(2*pi/N*fo*n);
+  X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+    
+  # Graphik  
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  
+  subplot(2,2,[1,2])
+  plot(x1);
+  grid on;
+  #stem(n-N/2,fftshift(x1))
+
+  subplot(2,2,3),stem(n-N/2,fftshift(abs(X1)))  # Move frequency 0 to the center
+  grid minor;
+  xlabel("Sample");
+  ylabel("X_1[k]");
+  title("Real Part");
+
+  subplot(2,2,4),stem(n-N/2,fftshift(imag(X1)))
+  grid minor;
+  xlabel("Sample");
+  ylabel("X_1[k]");
+  title("Imaginary Part");
+  
+  
+  # Org-Mode specific setting
+  print -dpng ./image/hw6b_fft.png;
+  ans = "./image/hw6b_fft.png";
+#+END_SRC
+
+#+results: EX 7
+[[file:./image/hw6b_fft.png]]

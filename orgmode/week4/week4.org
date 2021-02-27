@@ -1,4 +1,4 @@
-#+CATEGORY: SP4COMM
+#+CATEGORY: SP4COMM w4
 * Week 4 Module 3: Part 2 - Advanced Fourier Analysise
 ** Discrete Fourier Series DFS
 #+ATTR_LATEX: :options [logo=\bcbook, couleur=green!10, barre=snake, arrondi=0.1]{Discrete Fourier Series}
@@ -80,16 +80,22 @@ Shifts for finite-length signals are "naturally" circular
 - $x[n] \in \ell_2(\mathbb{Z})$, the space of square summable infinity sequneces
 - define the function of $\omega \in \mathbb{R}$ \\
   #+BEGIN_SRC latex
-  \begin{equation}
-   F(\omega) = \sum_{n=-\infty}^{\infty} x[n]e^{-j \omega n}  \text{, with } \omega = \frac{2\pi}{N} \text{ and } N \rightarrow \infty
-  \end{equation}
-   #+END_SRC
+    \begin{tcolorbox}[colback=red!20]
+      \begin{equation*}
+          F(e^{j\omega}) = \sum_{n=-\infty}^{\infty} x[n]e^{-j \omega n}  \text{, with } \omega = \frac{2\pi}{N} \text{ and } N \rightarrow \infty
+      \end{equation*}
+    \end{tcolorbox}
+
+  #+END_SRC
 
 - inversion (when $F(\omega)$ exists):
   #+BEGIN_SRC latex
-    \begin{equation}
-     x[n] = \frac{1}{2\;\pi}\int_{-\pi}^{\pi}F(\omega);e^{j\;\omega\;n}\mathrm{d}\omega \text{, with } n \in \mathbb{Z}
-    \end{equation}
+    \begin{tcolorbox}[colback=red!20]
+      \begin{equation*}
+       x[n] = \frac{1}{2\;\pi}\int_{-\pi}^{\pi}F(e^{j\omega});e^{j\;\omega\;n}\mathrm{d}\omega \text{, with } n \in \mathbb{Z}   
+      \end{equation*}
+    \end{tcolorbox}
+
    #+END_SRC
 
 *** Properties of the DTFT
