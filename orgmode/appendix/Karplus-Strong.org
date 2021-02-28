@@ -1,3 +1,9 @@
+# DSP Diagrams
+#+LaTex_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
+# Gray Header around everything
+#+LATEX_HEADER: \newenvironment{gbar}[2]{\def\FrameCommand{{\color{#1}\vrule width 3pt}\colorbox{#2}}\MakeFramed{\advance\hsize-\width\FrameRestore}}{\endMakeFramed}
+
+
 ** Karplus-Strong Algorithm
 The Karplus-Strong algorithm is a simple digital feedback loop with an internal buffer of
 𝑀 samples. The buffer is filled with a set of initial values and the loop, when running,
@@ -32,21 +38,12 @@ import IPython
 from scipy.io.wavfile import write
 #+end_src
 
-#+results: Initialisation
-: # Out[23]:
-
-
 Set the size of the output plots
 #+ATTR_LATEX: :options bgcolor=gray!30
 #+NAME: Figure_Size
 #+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
 plt.rcParams["figure.figsize"] = (14,4)
 #+END_SRC
-
-#+results: Figure_Size
-:results:
-# Out[24]:
-:end:
 
 Then, since we're playing audio, we need to set the internal "clock" of the system, aka
 the sampling rate:
@@ -55,11 +52,6 @@ the sampling rate:
 #+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
 Fs = 16000 # 16 KHz sampling rate
 #+END_SRC
-
-#+results: Sampling_Rate
-:results:
-# Out[25]:
-:end:
 
 With this sampling rate, since the period of the generated signal is equal to the length
 of the inital buffer, we will be able to compute the fundamental frequency of the
@@ -80,38 +72,21 @@ b = np.random.randn(50)
 plt.stem(b);
 #+END_SRC
 
-#+results: Buffer
-:results:
-# Out[27]:
-[[file:./obipy-resources/12440xcY.png]]
-:end:
-
 Let's now generate a 2-second audio clip:
 #+ATTR_LATEX: :options bgcolor=gray!30
 #+NAME: KS1
 #+BEGIN_SRC ipython :session dspKS :exports both :results raw drawer :python python3
-y = KS_1(b, Fs * 2)
+  y = KS_1(b, Fs * 2)
 
-# we can look at a few periods:
-plt.stem(y[0:500]);
+  # we can look at a few periods:
+  plt.stem(y[0:500]);
 #+END_SRC
-
-#+results: KS1
-:results:
-# Out[380]:
-[[file:./obipy-resources/3602DEM.png]]
-:end:
 
 #+ATTR_LATEX: :options bgcolor=gray!30
 #+NAME: wave1
 #+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
 write('./sound/test1.wav', Fs, y)
 #+END_SRC
-
-#+results: wave1
-:results:
-# Out[382]:
-:end:
 
 [[./sound/test1.wav][Play wave 1]]
 
@@ -123,11 +98,6 @@ b = np.random.randn(100)
 y = KS_1(b, Fs * 2)
 write('./sound/test2.wav', Fs, y)
 #+END_SRC
-
-#+results: wave2
-:results:
-# Out[20]:
-:end:
 
 [[./sound/test2.wav][Play wave 2]]
 
@@ -239,11 +209,6 @@ the note that produces guitar-like sounds:
     return y
 #+END_SRC
 
-#+results: Karplus Strong Algorithm 2
-:results:
-# Out[17]:
-:end:
-
 If we now plot the resulting K-S output, we can see the decaying envelope:
 #+ATTR_LATEX: :options bgcolor=gray!30
 #+NAME: KS_3
@@ -253,12 +218,6 @@ y = KS_3(b, Fs * 2)
 # we can look at a few periods:
 plt.stem(y[0:2000]);
 #+END_SRC
-
-#+results: KS_3
-:results:
-# Out[19]:
-[[file:./obipy-resources/6828cUF.png]]
-:end:
 
 #+ATTR_LATEX: :options bgcolor=gray!30
 #+NAME: wave4
@@ -304,7 +263,7 @@ write('./sound/test6.wav', Fs, KS_3(np.random.rand(10), Fs*2))
 
 [[./sound/test5.wav][Play wave 6]]
 
-This is no good and therefore we need to compensate so that, if \alph is the same, the
+This is no good and therefore we need to compensate so that, if \alpha is the same, the
 decay rate is the same. This leads us to the last implementation of the K-S algorithm:
 
 #+ATTR_LATEX: :options bgcolor=gray!30
@@ -329,11 +288,6 @@ def KS(x, N, alpha = 0.99):
 write('./sound/test7.wav', Fs, KS(np.random.rand(50), Fs*2))
 #+END_SRC
 
-#+results: wave7
-:results:
-# Out[58]:
-:end:
-
 [[./sound/test7.wav][Play wave 7]]
 
 #+ATTR_LATEX: :options bgcolor=gray!30
@@ -342,11 +296,6 @@ write('./sound/test7.wav', Fs, KS(np.random.rand(50), Fs*2))
 write('./sound/test8.wav', Fs, KS(np.random.rand(10), Fs*2))
 #+END_SRC
 
-#+results: wave8
-:results:
-# Out[59]:
-:end:
-
 [[./sound/test8.wav][Play wave 8]]
 
 ** Playing Music
@@ -354,7 +303,6 @@ write('./sound/test8.wav', Fs, KS(np.random.rand(10), Fs*2))
 Let's now play some cool guitar and, arguably, no guitar chord is as cool as the
 [[https://en.wikipedia.org/wiki/A_Hard_Day%27s_Night_%28song%29#Opening_chord][opening chord of "A Hard Day's Night", by The Beatles]].
 
-#+ATTR_LATEX: :width 7cm
 [[./image/hdn.jpg]]
 
 Much has been written about the chord (which, in fact, is made up of 2 guitars, one of
@@ -408,11 +356,6 @@ def ks_chord(chord, N, alpha):
     return y 
 #+END_SRC
 
-#+results: Playing Music
-:results:
-# Out[60]:
-:end:
-
 #+ATTR_LATEX: :options bgcolor=gray!30
 #+NAME: HDN Opening Chord
 #+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
@@ -431,11 +374,6 @@ hdn_chord = {
 # write('./sound/test4.wav', Fs, y)
 write('./sound/hdn.wav', 2*Fs, ks_chord(hdn_chord, Fs * 4, 0.995))
 #+END_SRC
-
-#+results: HDN Opening Chord
-:results:
-# Out[63]:
-:end:
 
 [[./sound/hdn.wav][A Hard Day's Night openeing chord]]
 
