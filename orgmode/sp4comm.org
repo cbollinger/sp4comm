@@ -1,4 +1,4 @@
- #+TITLE: Signal Processing for Communication
+#+TITLE: Signal Processing for Communication
 #+DATE: <2020-07-20 Mo>
 #+AUTHOR: Ch. Bollinger
 #+EMAIL: christian.bollinger@hispeed.ch
@@ -11,47 +11,34 @@
 #+EXCLUDE_TAGS: noexport
 #+KEYWORDS:
 #+LANGUAGE: de
+#+STARTUP: hideblocks 
 #+bind: org-export-publishing-directory "./exports"
 #+SELECT_TAGS: export
-#+TODO: TODO(t) OPEN(o) | DONE(d) FIXED(f)
-# By default I do not want that source code blocks are evaluated on export. Usually
-# I want to evaluate them interactively and retain the original results.
 
-# This option causes problems with Block Diagrams!!!!!
-# #+PROPERTY: header-args :eval never-export
-
-# #+OPTIONS: texht:t
-
-# Org and LaTeX exporter Configuration
-# NOTE: LATEX_HEADER_EXTRA lines will not be loaded when previewing
-# LaTeX snippets while LATEX_HEADER lines will be evaluated even for
-# rendering snippetsg
-# fontpsec: enables UTF8 with more than 256 characters. (pdftex requiers fontenc instead)
 #+LATEX_COMPILER: xelatex                                    
-#+LATEX_CLASS: koma-article                                    
+#+LATEX_CLASS: koma-article                                   
 #+LATEX_CLASS_OPTIONS: [a4paper,10pt,DIV=15,draft=false]      
 
 #+LATEX_HEADER_EXTRA: \usepackage{fontspec}                     
-
 #+LATEX_HEADER_EXTRA: \usepackage{lmodern}                     
 #+LATEX_HEADER_EXTRA: \usepackage{rotfloat}
 
-# Miscellaneous settingy
-#+LATEX_HEADER: \hypersetup{colorlinks=true, linkcolor=blue}   
+# Miscellaneous setting
+# show hyperlinks in blue font
+#+LATEX_HEADER: \hypersetup{colorlinks=true, linkcolor=blue}
 #+LATEX_HEADER_EXTRA: \usepackage{units}                       
 #+LATEX_HEADER_EXTRA: \usepackage{comment}                     
 #+LaTeX_HEADER_EXTRA: \usepackage{lipsum} 
 
 # Colored Tables
 #+LATEX_HEADER: \usepackage[table]{xcolor}
-#+LATEX_HEADER: \definecolor{contiYellow}{RGB}{255,165,0}
+# Colored text box and frames
+#+LATEX_HEADER: \usepackage{tcolorbox}
 # bclogo
 #+LaTeX_HEADER: \usepackage[tikz]{bclogo}
 # Highlight Formulas
 #+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}
 #+OPTIONS: tex:imagemagick
-# Colored text box and frames
-#+LATEX_HEADER: \usepackage{tcolorbox}
 
 # Math Packages
 #+LaTeX_HEADER: \usepackage{amsmath}
@@ -87,8 +74,8 @@
 #+LATEX_HEADER: \cfoot*{page \thepage}
 #+LATEX_HEADER: \ofoot*{\today}
 
-#+STARTUP: hideblocks 
 
+\renewcommand{\arraystretch}{2.0}
 
 \newpage
 
@@ -104,7 +91,7 @@
 \newpage
 #+INCLUDE: "./week6/week6.org"
 
-# #+INCLUDE: "./week7/week7.org"
+# #+INCLUDE: "./week7/week7.org"yy
 # #+INCLUDE: "./week8/week8.org"
 
 \newpage

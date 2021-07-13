@@ -1,2 +1,6 @@
 * Links
 - [[https://greatscottgadgets.com/sdr/][Software Defined Radio with HackRF]]
+- [[https://de.wikipedia.org/wiki/VSB-Modulation][VSB - Modulation (MVB)]]
+- [[https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7553559][Phase-Shift Method-Based Optical VSB]]
+- [[https://www.dsprelated.com/showarticle/176.php][Understanding the "Phasing Method" of Single Sideband Demodulation]]
+- [[https://de.wikipedia.org/wiki/Einseitenbandmodulation][Einseitenbandmodulation]]

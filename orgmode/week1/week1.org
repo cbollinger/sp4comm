@@ -4,7 +4,7 @@
 *** Signal
 - Description of the evoultion of a physical phenomenon
   | phenomenon      | signal              |
-  | wehather        | temperature         |
+  | weather        | temperature         |
   | sound           | pressure            |
   | sound           | magnetic deviation  |
   | light intensity | gray level on paper |
@@ -38,10 +38,8 @@
         is easy
 *** From Analog to Digital Signal Processing
  - Analog asks for $\displaystyle f_{(t)} = ?$
- #+results: Display Speech
- [[file:./image/speech.png]]
- 
- - Digital represnts data as a sequence of numbers (scaled with a factor of 1000)
+
+ - Digital represents data as a sequence of numbers (scaled with a factor of 1000)
  #+results: Represent speach 1
  | -12 | -12 | -12 | -11 | -11 | -12 | -12 | -11 | -11 | -10 |
 
@@ -132,35 +130,37 @@
  #+end_minipage
 
 *** Octave Algorithm for some basic Signals
+- Unit Impulse ::
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+NAME: impseq
+#+BEGIN_SRC octave :exports code :session sp4comm
+  function [x,n] = impseq(n0,n1,n2)
+  % Generates x(n) = delta(n-n0); n1 <= n0 <= n2
+  % ----------------------------------------------
+  % [x,n] = impseq(n0,n1,n2)
+  %
+    n = [n1:n2]; x = [(n-n0) == 0];
+  end
+#+END_SRC
+#+NAME: impseq-test
+#+BEGIN_SRC octave :exports none :results file :session sp4comm
+  N=21;
+  n0=3; n1=-(N-1)/2; n2=(N-1)/2;
+  [x,n] = impseq(n0,n1,n2);
 
- #+ATTR_LATEX: :options bgcolor=gray!30
- #+NAME: Impulse
- #+BEGIN_SRC octave :exports none :results file
-   N=33                             # Vector lenght
-   n=-(N-1)/2:(N-1)/2;              # Discrete Time Vector
-
-   for i = 1 : length(n)            # Impulse algorithm
-     if n(i) == 0
-       f(i) = 1;
-     else
-       f(i) = 0;
-     end
-   end
-                                     # Graphik
-   figure( 1, "visible", "off");     #  Do not open the graphic window in org
-
-   stem(n,f, "filled", "linewidth", 2, "markersize", 6);
-   axis([-(N-1)/2 (N-1)/2 0 1.2])
-   grid on ;
-   xlabel("Discrete Time Vector [n]");
-                                       # Org-Mode specific output
-   print -dpng "-S400,150" ./image/impulse.png;  # Set print device
-   ans = "./image/impulse.png";      # The mandtory return value
- #+END_SRC
-
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  stem(n,x, "filled", "linewidth", 2, "markersize", 6);
+  axis([-(N-1+4)/2 (N-1+4)/2 -0.2 1.2]);
+  xlabel("Sample [n]");
+  title("Unit Sample Sequence");
+  ylabel("x[n]");
+  grid on;
+  set(gca, "fontsize", 24);
+  print -dpng "-S350,250" ./image/impseq_test.png;
+  ans = "./image/impseq_test.png";
+#+END_SRC
   #+attr_latex: :options {0.4\textwidth} :float 
- #+begin_minipage latex 
-\color{blue}Impulse \color{black}
+#+begin_minipage latex 
  \begin{equation*}
   x[n] = \delta[n]=\left\{
       \begin{array}{ll}
@@ -169,127 +169,158 @@
       \end{array}\right.
 \end{equation*}
  #+end_minipage                                          
- #+attr_latex: :options [c]{0.5\textwidth} :float right
+#+attr_latex: :options [c]{0.5\textwidth} :float right
  #+begin_minipage
-   [[file:./image/impulse.png]]
- #+end_minipage
-  
-#+ATTR_LATEX: :options bgcolor=gray!30
-#+NAME: Unit Step
-#+BEGIN_SRC octave :exports none :results file
-  N=33                             # Vector lenght
-  n=-(N-1)/2:(N-1)/2;              # Discrete Time Vector
+ [[file:./image/impseq_test.png]]
+#+end_minipage
 
-  for i = 1 : length(n)            # Unit Step algorithm
-    if n(i) >= 0
-      f(i) = 1;
-    else
-      f(i) = 0;
+- Unit Step ::
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+NAME: stepseq
+#+BEGIN_SRC octave :exports code :session sp4comm-1
+  function [x,n] = stepseq(n0,n1,n2)
+  % Generates x(n) = delta(n-n0); n1 <= n0 <= n2
+  % ----------------------------------------------
+  % [x,n] = stepseq(n0,n1,n2)
+  %
+    n = [n1:n2]; x = [(n-n0) >= 0];
+  end
+#+END_SRC
+#+NAME: stepseq-test
+#+BEGIN_SRC octave :exports none :results file :session sp4comm-1
+    N=21;
+    n0=3; n1=-(N-1)/2; n2=(N-1)/2;
+    [x,n] = stepseq(n0,n1,n2);
+
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+    stem(n,x, "filled", "linewidth", 2, "markersize", 6);
+    axis([-(N-1+4)/2 (N-1+4)/2 -0.2 1.2]);
+    xlabel("Sample [n]");
+    ylabel("x[n]");
+    title("Step Sample Sequence");
+    grid on;
+    set(gca, "fontsize", 24);
+    print -dpng "-S350,250" ./image/stepseq_test.png;
+    ans = "./image/stepseq_test.png";
+#+END_SRC
+  #+attr_latex: :options {0.4\textwidth} :float 
+#+begin_minipage latex 
+  \begin{equation*}
+   x[n] = u[n]=\left\{
+       \begin{array}{ll}
+         1 & n \geq 0     \\
+         0 & n < 0  \\
+       \end{array}\right.
+ \end{equation*}
+ #+end_minipage                                          
+#+attr_latex: :options [c]{0.5\textwidth} :float right
+ #+begin_minipage
+ [[file:./image/stepseq_test.png]]
+#+end_minipage
+
+- Real-valued exponential Sequence ::
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+NAME: expseq
+#+BEGIN_SRC octave :exports code :results file :session sp4comm-2
+  function [x,n] = expseq(n1,n2,a)
+  % Generates x(n) = a^n
+  % ----------------------------------------------
+  % [x,n] = expseq(n1,n2,A,omega,phi)
+  %
+    n = [n1:n2];
+    for (i = 1 : length(n))
+      if (n(i) >= 0)
+        x(i) = (a).^n(i);
+      else
+        x(i) = 0;
+      end
     end
   end
-                                 # Graphik
-  figure( 1, "visible", "off");     # Do not open the graphic window in org
-
-  stem(n,f, "filled", "linewidth", 2, "markersize", 6);
-  axis([-(N-1+4)/2 (N-1+4)/2 -0.5 1.5])
-  grid on ;
-  xlabel("Discrete Time Vector [n]");
-                                  # Org-Mode specific output
-  print -dpng "-S400,150" ./image/unit_step.png;  # Set print device
-  ans = "./image/unit_step.png";      # The mandtory return value
 #+END_SRC
+
+#+results: expseq
+[[file:>]]
+
+#+NAME: expseq-test
+#+BEGIN_SRC octave :exports none :results file :session sp4comm-2
+    N=21;
+    n1=-(N-1)/2; n2=(N-1)/2;
+    a = 0.75;
+
+    [x,n] = expseq(n1,n2,a);
+    figure( 1, "visible", "off");     # Do not open the graphic window in org
+
+    stem(n,x, "filled", "linewidth", 2, "markersize", 6);
+    axis([-(N-1+4)/2 (N-1+4)/2 -0.2 1.2])
+    grid on ;
+    xlabel("Sample [n]");
+    ylabel("x[n]");
+    title("Expoential Decay");
+
+    print -dpng "-S350,250" ./image/expseq_test.png;
+    ans = "./image/expseq_test.png";
+  #+END_SRC
+
+  #+results: expseq-test
+  [[file:./image/expseq_test.png]]
+  
 #+attr_latex: :options {0.4\textwidth} :float 
 #+begin_minipage latex 
-\textcolor{blue}{Unit Step}
-\begin{equation*}
-  X[n] = \mu[n]=\left\{
-      \begin{array}{ll}
-        1 & n \geq 0     \\
-        0 & n < 0  \\
-      \end{array}\right.
-\end{equation*}
-#+end_minipage                                          
+    \begin{equation*}
+     x[n] =a^n \text{, } \forall{n} \; a \in \mathbb{R}
+   \end{equation*}
+ #+end_minipage                                          
 #+attr_latex: :options [c]{0.5\textwidth} :float right
-#+begin_minipage
-  [[file:./image/unit_step.png]]
+ #+begin_minipage
+ [[file:./image/expseq_test.png]]
 #+end_minipage
 
-#+ATTR_LATEX: :options bgcolor=gray!30
-#+NAME: exponential decay
-#+BEGIN_SRC octave :exports none :results file
-  N=33                             # Vector lenght
-  n=-(N-1)/2:(N-1)/2;              # Discrete Time Vector
-  a = 0.75
-
-  for i = 1 : length(n)            # The exponential decay algorithm
-    if n(i) >= 0
-      f(i) = abs(a)^n(i);
-    else
-      f(i) = 0;
-    end
+- Sinusoidal Sequence ::
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+NAME: cosseq
+#+BEGIN_SRC octave :exports code :session sp4comm-3
+  function [x,n] = cosseq(n1,n2,A, omega, phi)
+  % Generates x(n) = A*cos(2*pi*omega*n + phi); n1 <= n2
+  % ----------------------------------------------
+  % [x,n] = cosseq(n1,n2,A,omega,phi)
+  %
+    n = [n1:n2]; x = A*cos(2*pi*omega*n + phi);
   end
-                                 # Graphik
-  figure( 1, "visible", "off");     # Do not open the graphic window in org
-
-  stem(n,f, "filled", "linewidth", 2, "markersize", 6);
-  axis([-(N-1+4)/2 (N-1+4)/2 -0.5 1.5])
-  grid on ;
-  xlabel("Discrete Time Vector [n]");
-                                  # Org-Mode specific output
-  print -dpng "-S400,150" ./image/exp_decay.png;  # Set print device
-  ans = "./image/exp_decay.png";      # The mandtory return value
 #+END_SRC
+#+NAME: cosseq_test
+#+BEGIN_SRC octave :exports none :results file :session sp4comm-3
+  N=21;
+  n1=-(N-1)/2; n2=(N-1)/2;
+  A = 1.2; omega= 0.1; phi = pi/4;
+  [x,n] = cosseq(n1,n2, A, omega, phi);
+
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  stem(n,x, "filled", "linewidth", 2, "markersize", 6);
+  axis([-(N-1+4)/2 (N-1+4)/2 -1.4 1.4]);
+  xlabel("Sample [n]");
+  title("Unit Sample Sequence");
+  ylabel("x[n]");
+  grid on;
+  set(gca, "fontsize", 24);
+  print -dpng "-S350,250" ./image/cosseq_test.png;
+  ans = "./image/cosseq_test.png";
+#+END_SRC
+
 #+attr_latex: :options {0.4\textwidth} :float 
 #+begin_minipage latex
-\textcolor{blue}{Exponential Decay}
-\begin{equation*}
-  x[n]= a^n \times \mu[n] \mbox{, } a \in \mathbb{C} \mbox{, } |a| < 1
-\end{equation*}
-  #+end_minipage                                          
-#+attr_latex: :options [c]{0.5\textwidth} :float right
-#+begin_minipage
-  [[file:./image/exp_decay.png]]
-#+end_minipage
-
-#+ATTR_LATEX: :options bgcolor=gray!30
-#+NAME: Weeek1 Sinusoid
-#+BEGIN_SRC octave :exports none :results file
-  N=33                             # Vector lenght
-  n=-(N-1)/2:(N-1)/2;              # Discrete Time Vector
-  a = 0.75
-
-  A= 1.2;                         # Amplitude
-  phi = pi/4;                   # Phase shift
-  periode = 4;
-
-  f = A*cos(2*pi/N*n*periode + phi);
-                                 # Graphik
-  figure( 1, "visible", "off");     # Do not open the graphic window in org
-
-  stem(n,f, "filled", "linewidth", 2, "markersize", 6);
-  axis([-(N-1+4)/2 (N-1+4)/2 -2 2])
-  grid on ;
-  xlabel("Discrete Time Vector [n]");
-                                  # Org-Mode specific output
-  print -dpng "-S400,150" ./image/w1_sinusoid.png;  # Set print device
-  ans = "./image/w1_sinusoid.png";      # The mandtory return value
-#+END_SRC
-#+attr_latex: :options {0.4\textwidth} :float 
-#+begin_minipage latex
-\textcolor{blue}{Real Value Sinusoid}
 \begin{equation*}
   x[n]= A\,cos(\omega_0 n + \Phi)
 \end{equation*}
   #+end_minipage                                          
 #+attr_latex: :options [c]{0.5\textwidth} :float right
 #+begin_minipage
-  [[file:./image/w1_sinusoid.png]]
+  [[file:./image/cosseq_test.png]]
 #+end_minipage
 
 *** COMMENT Some Wave form examples
 
 - [[https://www.youtube.com/watch?v=SMkkBfSdm1E&t=955s][Youtube Introduction to GNU Octave]]
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+BEGIN_SRC octave :exports results :results file
   pkg load signal
   N = 64;                        # Samples
@@ -317,6 +348,7 @@
   subplot(2,2,3), stem(n, sinusoid_dis, "filled", "linewidth", 2, "markersize", 6), title 'Sinusoid';
   grid on;
   subplot(2,2,4), stem(n, sin_exp_dis, "filled", "linewidth", 2, "markersize", 6), title 'Exponential Decay Sinusoid';
+  set(gca, "fontsize", 24);
   grid on; 
                                    # Org-Mode specific setting
   print -dpng "-S800,600" ./image/signals.png;
@@ -403,7 +435,7 @@
   \begin{equation} y[n] = x[n] - x[n-1] \end{equation}
   #+end_export
 
-#+ATTR_LATEX: :options [logo=\bcbook,couleur=green!10,barre=snake,arrondi=0.1]{Relation Operator and Signals}
+#+ATTR_LATEX: :options [logo=\bcbook,couleur=yellow!10,barre=snake,arrondi=0.1]{Relation Operator and Signals}
  #+BEGIN_bclogo
 - The \textcolor{blue}{unit step} can be optained by applying the
   \textcolor{blue}{integration} operator to the
@@ -435,6 +467,7 @@
 \end{dspPlot}
  #+end_minipage
 
+ 
 - As we shift, we pull in 0s and we lose data.
 
 *** Shift of finite-length: periodization
@@ -488,29 +521,31 @@
 \end{equation*}
 #+end_export
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: sinusoid
-#+BEGIN_SRC octave
-N=33                             # Vector lenght
-n=-(N-1)/2:pi/10:(N-1)/2;        # Discrete Time Vector
-omega0 = pi/10;
-theta = pi/2
+#+BEGIN_SRC octave :exports both :results file
+    N=33                      # Vector lenght
+    n=-(N-1)/2:pi/10:(N-1)/2; # Discrete Time Vector
+    omega0 = pi/10;
+    theta = pi/2
 
-f = sin(omega0+n + theta);          # The sinusoid
-                                  # Graphik
-figure( 1, "visible", "off");     # Do not open the graphic window in org
+    f = 1.6*sin(omega0+n + theta); # The sinusoid
 
-stem(n,f, "filled", "linewidth", 2, "markersize", 6);
-axis([-(N-1+4)/2 (N-1+4)/2 -2 2])
-grid on ;
-xlabel("Discrete Time Vector [n]");
-                                    # Org-Mode specific output
-print -dpng "-S800,150" ./image/sin.png;        # Set print device
-ans = "./image/sin.png";            # The mandtory return value
+   # Do not open the graphic window in org
+    figure( 1, "visible", "off");     
+
+    stem(n,f, "filled", "linewidth", 2, "markersize", 6);
+    axis([-(N-1+4)/2 (N-1+4)/2 -2 2])
+    set(gca, "fontsize", 24);
+    grid on ;
+    xlabel("Discrete Time Vector [n]");
+    print -dpng "-S1400,350" ./image/sin.png;
+    # Org-Mode specific output
+    ans = "./image/sin.png";
 #+END_SRC
 
 #+results: sinusoid
-[[file:./image/w1_sinusoid.png]]
+[[file:./image/sin.png]]
 
 **** Digital vs physical frequency
 - Discrete Time:
@@ -570,10 +605,7 @@ ans = "./image/sin.png";            # The mandtory return value
     \end{align*}
     #+end_export
 
-#+results: Moving Average 2
-[[file:./image/ma01.png]]
-
-#+ATTR_LATEX: :options [couleur = brown!20, arrondi = 0.1, logo=\bcbook, ombre=true]{Linear Transformation}
+#+ATTR_LATEX: :options [couleur=yellow!10, arrondi = 0.1, logo=\bcbook, ombre=true]{Linear Transformation}
 #+BEGIN_bclogo
 Applying a linear transformation to a sinusoidal input results in a sinusoidal output of
 the same frequency with a phase shift.
@@ -590,13 +622,9 @@ the same frequency with a phase shift.
 - *Zero Initial Conditions:*
   - set a start time (usually n_0 = 0)
   - assume input and output are zero for all time before N_0
-***** One-Time Investment
-
-#+results: Karplus Strong 01
-[[file:./image/kas01.png]]
     
 ** Digital Frequency
-#+ATTR_LATEX: :options [logo=\bcbook,couleur=blue!20,barre=snake]{Digital Frequency}
+#+ATTR_LATEX: :options [logo=\bcbook,couleur=yellow!10,barre=snake]{Digital Frequency}
 #+BEGIN_bclogo
 \begin{equation}
   \begin{split}
@@ -606,14 +634,14 @@ the same frequency with a phase shift.
 \end{equation} 
 #+END_bclogo
 
-#+ATTR_LATEX: :options [logo=\bcdz, couleur=red!20, barre=snake]{Complex Exponential}
+#+ATTR_LATEX: :options [logo=\bcdz,couleur=yellow!10, barre=snake]{Complex Exponential}
 #+BEGIN_bclogo 
 \begin{equation}
   \omega = \frac{M}{N} \times 2 \times \pi
 \end{equation}
 #+END_bclogo
 ** The Reproduction Formula
-#+ATTR_LATEX: :options [logo=\bcbook, couleur=green!10, barre=snake, arrondi=0.1]{Reproduction Formula}
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Reproduction Formula}
  #+BEGIN_bclogo
 \begin{equation}
 x[n] = \sum\limits_{k=-\infty}^{\infty} x[k]\delta[n-k]

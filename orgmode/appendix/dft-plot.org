@@ -14,12 +14,12 @@ As a quick reminder, the definition of the DFT for a length-NN signal is:
 \end{equation*}
  #+END_SRC
 
-#+ATTR_LATEX: :options [logo=\bcbook, couleur=green!10, barre=snake, arrondi=0.1]{FFT Module}
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{FFT Module}
  #+BEGIN_bclogo
 In Python, we will use the fft module in Numpy to compute the DFT
  #+END_bclogo
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: Initialisation
 #+BEGIN_SRC python :session DFT-Plot :exports code :results: raw drawer
 # First the usual bookkeeping
@@ -31,7 +31,7 @@ import IPython
 from scipy.io.wavfile import write
 #+end_src
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: Figure_Size
 #+BEGIN_SRC python :session DFT-Plot :exports code :results raw drawer
 # Sets the size of the output plots
@@ -40,7 +40,7 @@ plt.rcParams["figure.figsize"] = (14,4)
 
 Typically, we will take a vector of data points, compute the DFT and plot the magnitude of
 the result. For instance, consider the DFT of a linear ramp:
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: discrete ramp
 #+BEGIN_SRC python :session DFT-Plot :exports both :results raw drawer
 x = np.arange(0, 10.2, 0.2) - 5
@@ -48,7 +48,7 @@ x = np.arange(0, 10.2, 0.2) - 5
 plt.stem(x);
 #+END_SRC
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: dft ramp
 #+BEGIN_SRC python :session DFT-Plot :exports both :results raw drawer
 X = np.fft.fft(x);
@@ -90,7 +90,7 @@ symmetric vector also for even-length signals.
 
 Here is a function that does that:
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: dft shift 1
 #+BEGIN_SRC python :session DFT-Plot :exports both :results raw drawer
 def dft_shift(X):
@@ -103,7 +103,7 @@ def dft_shift(X):
         return np.concatenate((X[int((N+1)/2):], X[:int((N-1)/2)]))
 #+END_SRC
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: dft ramp shifted
 #+BEGIN_SRC python :session DFT-Plot :exports both :results raw drawer
 plt.stem(abs(dft_shift(X)));
@@ -112,7 +112,7 @@ plt.stem(abs(dft_shift(X)));
 While the function does shift the vector, the indices are still from zero to N−1N−1. Let's
 modify it so that we return also the proper values for the indices:
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: dft shift 2
 #+BEGIN_SRC python :session DFT-Plot :exports both :results raw drawer
   def dft_shift(X):
@@ -127,7 +127,7 @@ modify it so that we return also the proper values for the indices:
                   np.concatenate((X[int((N+1)/2):], X[:int((N+1)/2)])))
 #+END_SRC
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: dft ramp shifted frequency vector corrected
 #+BEGIN_SRC python :session DFT-Plot :exports both :results raw drawer
 n, y = dft_shift(X)
@@ -141,7 +141,7 @@ other words, set the "clock" of the system. For audio, this is equivalent to the
 rate of the file.
 
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: piano
 #+BEGIN_SRC python :session DFT-Plot :exports both :results raw drawer
 # import IPython  not used in orgmode
@@ -161,7 +161,7 @@ periods over time, namely $k(F_s/N)$.
 
 Let's remap the DFT coefficients using the sampling rate:
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: map frequency 
 #+BEGIN_SRC python :session DFT-Plot :exports both :results raw drawer
 def dft_map(X, Fs, shift=True):
@@ -176,7 +176,7 @@ def dft_map(X, Fs, shift=True):
 #+END_SRC
 
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: piano dft shift
 #+BEGIN_SRC python :session DFT-Plot :exports both :results raw drawer
 # let's cut the signal otherwise it's too big
@@ -192,7 +192,7 @@ to zoom in in the plot and find the first peak. This is one of the instances in 
 shifting the DFT does not help, since we'll be looking in the low-frequency range. So
 let's re-plot withouth the shift, but still mapping the frequencies:
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: piano dft
 #+BEGIN_SRC python :session DFT-Plot :exports both :results raw drawer
 X = np.fft.fft(x);
@@ -202,7 +202,7 @@ plt.plot(f[:2000], abs(y[:2000]));
 
 We can see that the first peak is in the vicinity of 200Hz; to find the exact frequency
 (to within the resolution afforded by this DFT) let's find the location
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: piano pitch
 #+BEGIN_SRC python :session DFT-Plot :exports both :results output
 dft_resolution = float(Fs)/ len(x)
@@ -216,7 +216,7 @@ print("the note has a pitch of", pitch, "Hz")
 #+END_SRC
 
 
-#+ATTR_LATEX: :options [logo=\bcbook, couleur=green!10, barre=snake, arrondi=0.1]{Concert Pitch}
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Concert Pitch}
  #+BEGIN_bclogo
 So the note is a A, half the frequency of concert pitch.
  #+END_bclogo
@@ -231,7 +231,7 @@ it. This extension is called zero-padding.
 
 The derivation of why zero-padding does not increase the resolution is detailed in the
 book. Here we will just present a simple example.
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: zero padding
 #+BEGIN_SRC python :session DFT-Plot :exports both :results raw drawer
 N = 256
@@ -262,7 +262,7 @@ xzp = np.concatenate((x, np.zeros(2000)))
 plt.plot(abs(np.fft.fft(xzp))[:500]);
 #+END_SRC
 *** With Matlab/Octave
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: Octave Plot
 #+BEGIN_SRC octave :exports both :results file
   N=128;
@@ -276,12 +276,12 @@ plt.plot(abs(np.fft.fft(xzp))[:500]);
   
   # Graphik  
   figure( 1, "visible", "off" )               # Do not open the graphic window in org
-  subplot(121),stem(n-N/2,fftshift(abs(X1)))  # Move frequency 0 to the center
+  subplot(1,2,1),stem(n-N/2,fftshift(abs(X1)))  # Move frequency 0 to the center
   grid on;
   xlabel("Sample");
   ylabel("X_1[k]");
   title("Sepctrum of signal x1");
-  subplot(122),stem(n-N/2,fftshift(abs(X2)))
+  subplot(1,2,2), stem(n-N/2,fftshift(abs(X2)))
   grid on;
   xlabel("Sample");
   ylabel("X_2[k]");
@@ -293,13 +293,13 @@ plt.plot(abs(np.fft.fft(xzp))[:500]);
 #+END_SRC
 
 #+results: Octave Plot
-[[file:./image/hw6b_fft.png]]
+[[file:./image/oct_fft.png]]
 
 
 
 **** Homework 4
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: HW 4a
 #+BEGIN_SRC octave :exports both :results file
   N=64;
@@ -339,7 +339,7 @@ plt.plot(abs(np.fft.fft(xzp))[:500]);
 
 
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: HW 4b
 #+BEGIN_SRC octave :exports both :results file
   x1=[1 2 3 4 5]
@@ -357,14 +357,14 @@ plt.plot(abs(np.fft.fft(xzp))[:500]);
 
 **** Homework 6
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: HW 6a
 #+BEGIN_SRC octave :exports both :results file
   N=64;
   fo1=4*60/64;
   n=0:N-1;
   
-  x1=(-1) n
+  x1=(-1)
   X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
     
   # Graphik  
@@ -396,7 +396,7 @@ plt.plot(abs(np.fft.fft(xzp))[:500]);
 #+results: HW 6a
 
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: HW 6d
 #+BEGIN_SRC octave :exports both :results file
   N=64;
@@ -436,7 +436,7 @@ plt.plot(abs(np.fft.fft(xzp))[:500]);
 [[file:./image/hw6b_fft.png]]
 
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: HW 6b
 #+BEGIN_SRC octave :exports both :results file
   N=64;

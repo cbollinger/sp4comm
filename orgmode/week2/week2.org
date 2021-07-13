@@ -9,7 +9,7 @@
 # #+LATEX: \setcounter{secnumdepth}{5}
 
 * Week 2 Module 2: Vector Spaces
-#+ATTR_LATEX: :options [logo=\bcbook, couleur=brown!20, barre=snake, arrondi=0.1]{Vector Space}
+#+ATTR_LATEX: :options [logo=\bcbook,couleur=yellow!10, barre=snake, arrondi=0.1]{Vector Space}
 #+BEGIN_bclogo
 Vector spaces build among others a common framework to work with the four classes of signals:
 - Finite Length Signal
@@ -31,7 +31,7 @@ square-summabe $\sum_{n=-\infty}^{\infty} |x[n]|^2$
 
 *** Operationl Definitions
 
-#+ATTR_LATEX: :options [logo=\bcbook, couleur=brown!10, barre=snake, arrondi=0.1]{Inner Product}
+#+ATTR_LATEX: :options [logo=\bcbook,couleur=yellow!10, barre=snake, arrondi=0.1]{Inner Product}
  #+BEGIN_bclogo
 Measure of similarity between vectors
  #+END_bclogo
@@ -57,7 +57,7 @@ Measure of similarity between vectors
 
 Not all vector spaces have got a graphical representation. The following table shows the
 graphical representation of vector spaces
-#+ATTR_LATEX: :caption \rowcolors[]{1}{contiYellow!5}{} :center nil :align c | c
+#+ATTR_LATEX: :caption \rowcolors[]{1}{contiYellow!5}{} :center t :align c | c
 | graphical representation | no graphical respresentation |
 | $\mathbb{R}^2$           | $\mathbb{C}^N$ for N>1       |
 | $\mathbb{R}^3$           | $\mathbb{R}^N$ for N>3       |
@@ -88,12 +88,12 @@ f(x) = sin(x)
 # Plot the curve.
 plot f(x)  w l lw 2, 1.3*f(x) w l lw 2 
 #+END_SRC
-#+attr_latex: :options {0.3\textwidth} :float 
+#+attr_latex: :options {0.6\textwidth} :float 
 #+begin_minipage 
 Scalar Multiplication in $\mathbb{L}_2[-1,1]$
 #+end_minipage                                          
-#+attr_latex: :options [c]{0.7\textwidth} :float right
-#+begin_minipage 
+#+attr_latex: :options [c]{0.4\textwidth} :float right
+#+begin_minipage
 [[file:image/smult.png]]
  #+end_minipage
 
@@ -122,11 +122,12 @@ g(x) = 0.3*f(25*x)
 # Plot the curve.
 plot f(x) w l lw 2 , g(x)  w l lw 2 , f(x) + g(x)  w l lw 2 
 #+END_SRC
-#+attr_latex: :options {0.3\textwidth} :float 
+
+#+attr_latex: :options {0.6\textwidth} :float 
 #+begin_minipage latex 
 Summation of two Vectors in $\mathbb{L}_2[-1,1]$
 #+end_minipage                                          
-#+attr_latex: :options [c]{0.7\textwidth} :float right
+#+attr_latex: :options [c]{0.4\textwidth} :float right
 #+begin_minipage 
 [[file:image/vadd.png]]
  #+end_minipage
@@ -156,18 +157,19 @@ g(x) = sin(x) * sin(x)
 # Plot the curve.
 plot f(x) w l lw 2 , g(x)  w filledcurve l lw 2
 #+END_SRC
-#+attr_latex: :options {0.3\textwidth} :float 
+
+#+attr_latex: :options {0.6\textwidth} :float 
 #+begin_minipage latex
 Inner Product in $\mathbb{L}_2[-1,1]$ - The Norm: \\
-\begin{equation*}
-    \begin{split}
-      x                                     &= sin(\pi\,t) \\
-      \langle{\mathbf{x},\mathbf{x}}\rangle &= ||\mathbf{x}||^2 = \int\limits_{-1}^{1} sin^2(\pi)dt = 1
-    \end{split}
-\end{equation*}
+\text{with }x = sin(\pi\,t)
+\begin{align*}
+  \langle{\mathbf{x},\mathbf{x}}\rangle
+  &= ||\mathbf{x}||^2 \\
+  &= \int\limits_{-1}^{1} sin^2(\pi)dt = 1
+\end{align*}
 #+end_minipage                                          
-#+attr_latex: :options [c]{0.7\textwidth} :float right
-#+begin_minipage latex
+#+attr_latex: :options [c]{0.4\textwidth} :float right
+#+begin_minipage
 [[file:image/iproduct_sin.png]]
 #+end_minipage
 

@@ -4,7 +4,7 @@
   2. Each sample has a discrete amplitut
 
 - Moving Average
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+BEGIN_SRC latex
   \begin{gbar}{yellow!30}{yellow!10}
     \begin{equation*}

@@ -2,14 +2,14 @@
 ** Homework Module 3
 
 *** Excersice 4
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: Ex 4a
 #+BEGIN_SRC octave :exports both :results file
   N=64;
   fo1=4*60/64;
   n=0:N-1;
   
-  x1=(-1) n
+  x1=(-1)*n
   X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
     
   # Graphik  
@@ -38,7 +38,10 @@
   ans = "./image/hw4a_fft.png";
 #+END_SRC
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+results: Ex 4a
+[[file:./image/hw4a_fft.png]]
+
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: EX 4b
 #+BEGIN_SRC octave :exports both :results file
   x1=[1 2 3 4 5]
@@ -56,7 +59,7 @@
 
 *** Excersice 6
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: EX 6a
 #+BEGIN_SRC octave :exports both :results file
   N=64;
@@ -95,7 +98,7 @@
 [[file:./image/hw6a_fft.png]]
 
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: EX 6b
 #+BEGIN_SRC octave :exports both :results file
   N=64;
@@ -136,7 +139,7 @@
 [[file:./image/hw6d_fft.png]]
 
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: EX 6d
 #+BEGIN_SRC octave :exports both :results file
   N=64;
@@ -177,7 +180,7 @@
 
 
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: Norm
 #+BEGIN_SRC octave :exports both :results file
   N=64;
@@ -203,6 +206,7 @@
 #+results: Norm
 135.9999999999999
 135.9999999999999
+135.9999999999999
 511.9999999999997
 31.99999999999998
 127.9999999999999
@@ -213,7 +217,7 @@
 
 
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: EX 7
 #+BEGIN_SRC octave :exports both :results file
   N=64;

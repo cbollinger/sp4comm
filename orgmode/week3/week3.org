@@ -1,8 +1,8 @@
 #+CATEGORY: SP4COMM W3
 
-# #+OPTIONS: H:5
-# #+LaTeX_HEADER: \usepackage[tikz]{bclogo}
-# #+LaTeX_HEADER: \usepackage{tcolorbox}
+#+OPTIONS: H:5
+#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
+#+LaTeX_HEADER: \usepackage{tcolorbox}
 # #+LATEX: \setcounter{secnumdepth}{4}
 
 
@@ -30,50 +30,60 @@
 - Frequency Domain semms to be as good a the time domain
 *** Fundamental Questions: Can we decompse any signal into sinusoidal elements?
 - Yes, Fourier showed us how to do it exactely
-- Analysis 
+- Analysis
   - From time domain to frequency domain
   - Find the contribution of different frequencies
   - Discover "hidden" signal properties
-- Synthesis 
+- Synthesis
   - From frequency domain to time domain
   - Create signals with known frequency content
   - Fit signals to specific frequency regions
 ** The Discrete Fourier Transform (DFT)
 *** The DFT as a change of basis
-*** The Fourier Basis
-*** The Fourier Basis for
-$\displaystyle\mathbb{C}^N$ in "Signal" Notation
+*** The Fourier Basis for $\displaystyle\mathbb{C}^N$ in "Signal" Notation
+
 #+BEGIN_SRC latex
-\begin{equation}
-  w_k[n] = e^{j\frac{2\pi}{N}nk} \text{with } n,k = 0,1,...,N-1
-\end{equation}
- #+END_SRC
+  \begin{tcolorbox}
+    \begin{equation}
+      w_k[n] = e^{j\frac{2\pi}{N}nk} \text{with } n,k = 0,1,...,N-1
+    \end{equation}
+  \end{tcolorbox}
+#+END_SRC
 *** The Fourier Basis in Vector Notation
 #+BEGIN_SRC latex
-\begin{equation}
-  \{ \mathbf{w}^{(k)} \}_{k=0,1...N-1} \text{with } w_n^{(k)} = e^{j\frac{2\pi}{N}nk} \text{, } n=0,1,...N-1
-\end{equation}
- #+END_SRC
+  \begin{tcolorbox}
+    \begin{equation}
+      \{ \mathbf{w}^{(k)} \}_{k=0,1...N-1} \text{with } w_n^{(k)} = e^{j\frac{2\pi}{N}nk} \text{, } n=0,1,...N-1
+    \end{equation}
+  \end{tcolorbox}
+#+END_SRC
 - N ::  N Dimension of vector space
 - k :: Index for different vectors and goes from 0..N-1
 - n :: Index of element in each vector goes from 0...N-1
 *** Definition of the DFT
-*** Basis Expansion Vector Notation
-**** Analysis Formula:
+**** Basis Expansion Vector Notation
+***** Analysis Formula
+$~$ \\
 #+BEGIN_SRC latex
-  \begin{equation}
-    X_k = \langle \mathbf{w}^{(k)}, \mathbf{x} \rangle \text{ k = 0,...N-1}
-  \end{equation}
- #+END_SRC
+  \begin{tcolorbox}
+    \begin{equation}
+      X_k = \langle \mathbf{w}^{(k)}, \mathbf{x} \rangle \text{ k = 0,...N-1}
+    \end{equation}
+  \end{tcolorbox}
+#+END_SRC
+
 - $X_k$ :: Coefficent for the new basis. Inner Product of $\mathbf{x}$ with each vector $\mathbf{w}^{(k)}$
 - $\mathbf{x}$ :: An arbitrary vector of $\mathbb{C}^N$
 - $\mathbf{w}^{(k)}$ :: New basis
 ***** Synthesis Formula
+$~$ \\
 #+BEGIN_SRC latex
-\begin{equation}
-  \mathbf{x} = \frac{1}{N} \sum_{k=0}^{N-1} X_k\mathbf{w}^{(k)} \text{ k = 0,...N-1}
-\end{equation}
- #+END_SRC
+  \begin{tcolorbox}
+    \begin{equation}
+      \mathbf{x} = \frac{1}{N} \sum_{k=0}^{N-1} X_k\mathbf{w}^{(k)} \text{ k = 0,...N-1}
+    \end{equation}
+  \end{tcolorbox}
+#+END_SRC
 
 **** TODO Basis Expansion Matrix Form
 **** Basis Expansion Signal Notation
@@ -81,85 +91,135 @@ $\displaystyle\mathbb{C}^N$ in "Signal" Notation
 - This notion is particulary useful if you want to consider the algorithmic nature of the
   transform
 \par
-
 ***** Analysis Formula N-point signal in the frequency domain
-
+$~$ \\
 #+BEGIN_SRC latex
-  \begin{equation*}
+  \begin{tcolorbox}
+    \begin{equation*}
       X[k] = \sum_{n=0}^{N-1} x[n] e^{-j\frac{2\pi}{N}nk} \text{, } k = 0,1,..N-1
     \end{equation*}
- #+END_SRC
-- $X[k]$ :: Signal vector in the frequency domain 
+  \end{tcolorbox}
+#+END_SRC
+- $X[k]$ :: Signal vector in the frequency domain
 - $x[n]$ :: Signal vector in the (discrete) time domain
 - Reminder :: This is the inner Product in explicite form
 
 ***** Synthesis Formula N-point signal in the time domain
+$~$ \\
 #+BEGIN_SRC latex
+  \begin{tcolorbox}
     \begin{equation*}
-        x[n] = \frac{1}{N} \sum_{n=0}^{N-1} X[k] e^{j\frac{2\pi}{N}nk} \text{, } k = 0,1,..N-1
+      x[n] = \frac{1}{N} \sum_{n=0}^{N-1} X[k] e^{j\frac{2\pi}{N}nk} \text{, } k = 0,1,..N-1
     \end{equation*}
- #+END_SRC
-  - $x[n]$ :: Signal vector in the (discrete) time domain
-  - $X[k]$ :: Signal vector in the frequency domain 
-  - $\frac{1}{N}$ :: Normalisation coeficent
-  - Reminder :: This is the inner Product in explicite fashion  
+  \end{tcolorbox}
+#+END_SRC
 
-*** DFT of the impulse function
+- $X[k]$ :: Signal vector in the frequency domain
+- $\frac{1}{N}$ :: Normalisation coeficent
+- Reminder :: This is the inner Product in explicite fashion
+
+*** Examples
+**** DFT of the impulse function
 \begin{equation*}
 x[n] = \delta[n]
 \end{equation*}
 
 #+BEGIN_SRC latex
-\begin{equation*}
-  X[k] = \sum_{n=0}^{N-1} \delta[n] e^{-j\frac{2\pi}{N}nk} = 1
-\end{equation*}
- #+END_SRC
+  \begin{equation*}
+    X[k] = \sum_{n=0}^{N-1} \delta[n] e^{-j\frac{2\pi}{N}nk} = 1
+  \end{equation*}
+#+END_SRC
 
-#+attr_latex: :options {0.4\textwidth} :float 
-#+begin_minipage latex 
-\begin{dspPlot}[width=5cm, xticks=5]{0, 10}{-1.2, 1.2}
-  \dspTaps[linecolor=blue]{0 1}  
-  \dspSignal[linecolor=blue, xmin=1, xmax=10]{0}
-\end{dspPlot}
-#+end_minipage                                          
-#+attr_latex: :options [c]{0.5\textwidth} :float right
-#+begin_minipage latex
-   \begin{dspPlot}[width=5cm, xticks=5]{0, 10}{-1.2, 1.2}
-     \dspSignal[linecolor=blue, xmin=0, xmax=10]{1}
-   \end{dspPlot}
- #+end_minipage
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+NAME: DFT Impulse
+#+BEGIN_SRC octave :exports results :results file
+  N=16;
+  n=0:N-1;
+  x1 = [n == 0];
+
+  X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+
+                                  # Graphik
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  subplot(2,1,1)
+  stem(n,x1, "filled", "linewidth", 2, "markersize", 6);
+  axis([0 N 0 1.1]);
+  grid;
+  xlabel("Samples")
+  ylabel("x[n]")
+  set(gca, "fontsize", 24);
+
+  subplot(2,1,2);
+  stem(n, abs(X1), "filled", "linewidth", 2, "markersize", 6);
+  axis([0 N 0 1.1]);
+  grid;
+  xlabel("Samples")
+  ylabel("Magnitude{X[k]}")
+  set(gca, "fontsize", 24);
+
+                                  # Org-Mode specific setting
+  print -dpng "-S800,400" ./image/dft_impulse.png;
+  ans = "./image/dft_impulse.png";
+#+END_SRC
+
+#+results: DFT Impulse
+[[file:./image/dft_impulse.png]]
+
 
 - The delata contains all frequencies over the range of all possible frequencies
-*** DFT of the unit step
+**** DFT of the unit step
 \begin{equation*}
 x[n] = 1
 \end{equation*}
 
 #+BEGIN_SRC latex
-\begin{equation*}
-  X[k] = \sum_{n=0}^{N-1} e^{-j\frac{2\pi}{N}nk} = N\delta[k]
-\end{equation*}
- #+END_SRC
+  \begin{equation*}
+    X[k] = \sum_{n=0}^{N-1} e^{-j\frac{2\pi}{N}nk} = N\delta[k]
+  \end{equation*}
+#+END_SRC
 
-#+attr_latex: :options {0.4\textwidth} :float 
-#+begin_minipage latex 
-\begin{dspPlot}[width=5cm, xticks=5]{0, 10}{-1.2, 1.2}
-  \dspSignal[linecolor=blue, xmin=0, xmax=10]{1}
-\end{dspPlot}
-#+end_minipage                                          
-#+attr_latex: :options [c]{0.5\textwidth} :float right
-#+begin_minipage latex
-\begin{dspPlot}[width=5cm, xticks=5]{0, 10}{-1.2, 1.2}
-  \dspTaps[linecolor=blue]{0 1}  
-  \dspSignal[linecolor=blue, xmin=1, xmax=10]{0}
-\end{dspPlot}
- #+end_minipage
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+NAME: DFT Step
+#+BEGIN_SRC octave :exports results :results file
+  N=16;
+  n=0:N-1;
+  x1 = [n >= 0];
 
-*** DFT Cosine Calculation Problem 1
- #+BEGIN_SRC latex 
-\begin{equation*}
- x[n] = 3\cos(2\pi/16\times{n}) \text{, } x[n] = \mathbb{C}^{64}
-\end{equation*}
+  X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+
+                                  # Graphik
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  subplot(2,1,1)
+  stem(n,x1, "filled", "linewidth", 2, "markersize", 6);
+  axis([0 N 0 1.1])
+  grid;
+  xlabel("Samples")
+  ylabel("x[n]")
+  set(gca, "fontsize", 24);
+
+  subplot(2,1,2);
+  stem(n, abs(X1), "filled", "linewidth", 2, "markersize", 6);
+  axis([0 N 0 20])
+  grid;
+  xlabel("Samples")
+  ylabel("Magnitude{X[k]}")
+  set(gca, "fontsize", 24);
+
+                                  # Org-Mode specific setting
+  print -dpng "-S800,400" ./image/dft_step.png;
+  ans = "./image/dft_step.png";
+#+END_SRC
+
+#+results: DFT Step
+[[file:./image/dft_step.png]]
+
+**** DFT Cosine Calculation Problem 1
+#+BEGIN_SRC latex
+  \begin{equation*}
+    x[n] = 3\cos(2\pi/16\times{n}) \text{, } x[n] = \mathbb{C}^{64}
+  \end{equation*}
 #+END_SRC
 1. Determine dimension and fundamental frequency of the signal
    - Dimension of space  N = 64
@@ -169,126 +229,131 @@ x[n] = 1
      $\omega$. With this in mind we can start by expressing our sinuoid as a muiltiple of
      the fundamental frequenncy in space $\displaystyle\mathbb{C}^{64}$.
 2. Express the signal as a multiple of the fundamental frequency in space.
-   #+BEGIN_SRC latex 
-     \begin{gbar}{gray!15}{gray!15} 
+   #+BEGIN_SRC latex
+     \begin{gbar}{gray!15}{gray!15}
        \begin{align*}
-             X[n] &= 3\cos(\frac{2\pi}{16}n)  \\
-                  &= 3\cos(\frac{2\pi}{64}4n) \\
-                  &= \frac{3}{2} \left[ e^{j\frac{2\pi}{64}4n} + e^{-j\frac{2\pi}{64}4n} \right]   
-                     \text{, with Euler: } cos(\omega) = \frac{e^{j\omega} + e^{-j\omega}}{2} \\ 
-                  &= \frac{3}{2} \left[ e^{j\frac{2\pi}{64}4 n} + e^{j\frac{2\pi}{64}60n} \right]   
-                     \text{, with: } j\frac{2\pi}{64}60n  = -j \frac{2\pi}{64}4n + j 2 \pi n \\           
-                  &= \frac{3}{2} \langle w_{4}[n] + w_{60}[n] \rangle      
+         X[n] &= 3\cos(\frac{2\pi}{16}n)  \\
+              &= 3\cos(\frac{2\pi}{64}4n) \\
+              &= \frac{3}{2} \left[ e^{j\frac{2\pi}{64}4n} + e^{-j\frac{2\pi}{64}4n} \right]
+                \text{, with Euler: } cos(\omega) = \frac{e^{j\omega} + e^{-j\omega}}{2} \\
+              &= \frac{3}{2} \left[ e^{j\frac{2\pi}{64}4 n} + e^{j\frac{2\pi}{64}60n} \right]
+                \text{, with: } j\frac{2\pi}{64}60n  = -j \frac{2\pi}{64}4n + j 2 \pi n \\
+              &= \frac{3}{2} \langle w_{4}[n] + w_{60}[n] \rangle
        \end{align*}
      \end{gbar}
    #+END_SRC
    - $w_4[n]$ Basis vector number 4
    - $w_{60}[n]$ Basis vector number 60
-   
-    \begin{gbar}{gray!15}{blue!10} 
-     Now we don't like this minus. So what we're going to do is exploit the fact that we can
-     always add an integer multiple of 2pi to the exponent of the complex exponential. And the
-     point will not change on the complex plane.
-     \end{gbar}
-    
+
+     \begin{gbar}{gray!15}{blue!10}
+      Now we don't like this minus. So what we're going to do is exploit the fact that we can
+      always add an integer multiple of 2pi to the exponent of the complex exponential. And the
+      point will not change on the complex plane.
+      \end{gbar}
+
    - *The original signal is now expressed as the sum of two fourier basis vectors*
 3. Calculate the DFT with the analysis forumla
-   #+BEGIN_SRC latex 
-     \begin{gbar}{gray!15}{gray!15} 
+   #+BEGIN_SRC latex
+     \begin{gbar}{gray!15}{gray!15}
        \begin{align*}
          X[k] &= \langle w_k[n], x[n] \rangle
-                \text{, with: } k = 0, 1, ..N-1  \\           
+                \text{, with: } k = 0, 1, ..N-1  \\
               &=
                 \begin{cases}
                   96  & \text{for } k = 4, 60 \\
                   0  & \text{otherwise}
-                \end{cases} 
+                \end{cases}
        \end{align*}
      \end{gbar}
    #+END_SRC
    - $w_{k}[n]$ Canonical basis vector number k
-   #+ATTR_LATEX: :options bgcolor=gray!30
+   #+ATTR_LATEX: :options bgcolor=gray!10
    #+NAME: DFT Cosine
    #+BEGIN_SRC octave :exports results :results file
-  N=64;
-  n=0:N-1;
+     N=64;
+     n=0:N-1;
 
-  x1=3*cos(2*pi/16*n);
-  X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+     x1=3*cos(2*pi/16*n);
+     X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
 
-  # Graphik  
-  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+                                     # Graphik
+     figure( 1, "visible", "off" )               # Do not open the graphic window in org
 
-  subplot(3,1,1)
-  stem(x1, "filled", "linewidth", 2, "markersize", 6), axis([0 N -5 5])
-  grid on;
-  #stem(n-N/2,fftshift(x1))
+     subplot(3,1,1)
+     stem(x1, "filled", "linewidth", 2, "markersize", 6), axis([0 N -5 5])
+     grid on;
+                                     #stem(n-N/2,fftshift(x1))
 
-  subplot(3,1,2),stem(n, real(X1), "filled", "linewidth", 2, "markersize", 6), axis([0 N 0 100])  
-  grid minor
-  xlabel("Samples")
-  ylabel("Real{X[k]}")
+     subplot(3,1,2),stem(n, real(X1), "filled", "linewidth", 2, "markersize", 6), axis([0 N 0 100])
+     grid minor
+     xlabel("Samples")
+     ylabel("Real{X[k]}")
+     set(gca, "fontsize", 24);
 
-  subplot(3,1,3), stem(n,  imag(X1), "filled", "linewidth", 2, "markersize", 6), axis([0 N -2 2])
-  grid minor
-  xlabel("Samples")
-  ylabel("Imag{X[k]}")
+     subplot(3,1,3), stem(n,  imag(X1), "filled", "linewidth", 2, "markersize", 6), axis([0 N -2 2])
+     grid minor
+     xlabel("Samples")
+     ylabel("Imag{X[k]}")
+     set(gca, "fontsize", 24);
 
-  # Org-Mode specific setting
-  print -dpng "-S800,600" ./image/dft_cosine.png;
-  ans = "./image/dft_cosine.png"; 
-#+END_SRC
+                                     # Org-Mode specific setting
+     print -dpng "-S800,600" ./image/dft_cosine.png;
+     ans = "./image/dft_cosine.png";
+   #+END_SRC
 
 #+results: DFT Cosine
 [[file:./image/dft_cosine.png]]
 
-*** DFT Cosine Calculation Problem 2
-#+BEGIN_SRC latex 
-\begin{align*}
-   x[n]  &= 3\;cos(2\;pi/16\;n + pi/3) \text{, } x[n] \in \mathbb{C}^{64} \\
-   X[k]  &=
-     \begin{cases}
-        96e^{j\frac{\pi}{3}}  & \text{for } k = 4 \\
-        96e^{-j\frac{\pi}{3}} & \text{for } k = 96 \\
-        0                  & \text{otherwise}
-      \end{cases}  
-\end{align*}
+**** DFT Cosine Calculation Problem 2
+#+BEGIN_SRC latex
+  \begin{align*}
+    x[n]  &= 3\;cos(2\;pi/16\;n + pi/3) \text{, } x[n] \in \mathbb{C}^{64} \\
+    X[k]  &=
+            \begin{cases}
+              96e^{j\frac{\pi}{3}}  & \text{for } k = 4 \\
+              96e^{-j\frac{\pi}{3}} & \text{for } k = 96 \\
+              0                  & \text{otherwise}
+            \end{cases}
+  \end{align*}
 #+END_SRC
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: DFT Cosine + PHI 1
 #+BEGIN_SRC octave :exports results :results file
-   N=64;
-   n=0:N-1;
-   A=3
+  N=64;
+  n=0:N-1;
+  A=3
 
-   x1=A*cos(2*pi/N*4*n + pi/3);
-   X1=fft(x1);                                # Compute the dft of x1 using FFT algorithmw
+  x1=A*cos(2*pi/N*4*n + pi/3);
+  X1=fft(x1);                                # Compute the dft of x1 using FFT algorithmw
 
-   # Graphik  
-   figure( 1, "visible", "off" )               # Do not open the graphic window in org
-   set(gca, "fontsize", 8)
+                                  # Graphik
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  set(gca, "fontsize", 8)
 
-   # subplot(5,1,1)
-   subplot(3,1,1)
-   stem(x1, "filled", "linewidth", 2, "markersize", 6), axis([0 N -A A])
-   grid on;
+                                  # subplot(5,1,1)
+  subplot(3,1,1)
+  stem(x1, "filled", "linewidth", 2, "markersize", 6), axis([0 N -A A])
+  set(gca, "fontsize", 24);
+  grid on;
 
-   # subplot(5,1,2),stem(n, real(X1), "filled", "linewidth", 1), axis([0 N 0 60])
-  subplot(3,1,2),stem(n, real(X1), "filled", "linewidth", 2, "markersize", 6), axis([0 N 0 60])  
-   grid minor;
-   ylabel("Real X[k]");
+                                  # subplot(5,1,2),stem(n, real(X1), "filled", "linewidth", 1), axis([0 N 0 60])
+  subplot(3,1,2),stem(n, real(X1), "filled", "linewidth", 2, "markersize", 6), axis([0 N 0 60])
+  set(gca, "fontsize", 24);
+  grid minor;
+  ylabel("Real X[k]");
 
-   # subplot(5,1,3), stem(n, imag(X1), "filled", "linewidth", 1), axis([0 N -100 100])
-   subplot(3,1,3), stem(n, imag(X1), "filled", "linewidth", 2, "markersize", 6), axis([0 N -100 100])
-   grid minor;
-     ylabel("Imag X[k]");
+                                  # subplot(5,1,3), stem(n, imag(X1), "filled", "linewidth", 1), axis([0 N -100 100])
+  subplot(3,1,3), stem(n, imag(X1), "filled", "linewidth", 2, "markersize", 6), axis([0 N -100 100])
+  set(gca, "fontsize", 24);
+  grid minor;
+  ylabel("Imag X[k]");
 
-   # Org-Mode specific setting
-   print -dpng "-S800,600" ./image/dft_cosine_phi-1.png;
-   ans = "./image/dft_cosine_phi-1.png"; 
+                                  # Org-Mode specific setting
+  print -dpng "-S800,600" ./image/dft_cosine_phi-1.png;
+  ans = "./image/dft_cosine_phi-1.png";
 #+END_SRC
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: DFT Cosine + PHI 2
 #+BEGIN_SRC octave :exports results :results file
   N=64;
@@ -298,41 +363,43 @@ x[n] = 1
   x1=A*cos(2*pi/N*4*n + pi/3);
   X1=fft(x1);                                # Compute the dft of x1 using FFT algorithmw
 
-  # Graphik  
+                                  # Graphik
   figure( 1, "visible", "off" )               # Do not open the graphic window in org
   set(gca, "fontsize", 8)
 
-subplot(2,1,1),stem(n, abs(X1), "filled", "linewidth", 2, "markersize", 6), axis([0 N 0 100])  
-grid minor;
+  subplot(2,1,1),stem(n, abs(X1), "filled", "linewidth", 2, "markersize", 6), axis([0 N 0 100])
+  set(gca, "fontsize", 24);
+  grid minor;
   ylabel("Magn X[k]");
 
-tol = 1e-6;
-X1(abs(X1) < tol) = 0;
-subplot(2,1,2), stem(n, angle(X1)/pi, "filled", "linewidth", 2, "markersize", 6), axis([0 N -0.5 0.5])
-grid minor;
-ylabel("Phase X[k]");
+  tol = 1e-6;
+  X1(abs(X1) < tol) = 0;
+  subplot(2,1,2), stem(n, angle(X1)/pi, "filled", "linewidth", 2, "markersize", 6), axis([0 N -0.5 0.5])
+  set(gca, "fontsize", 24);
+  grid minor;
+  ylabel("Phase X[k]");
 
-  # Org-Mode specific setting
+                                  # Org-Mode specific setting
   print -dpng "-S800,400" ./image/dft_cosine_phi-2.png;
-  ans = "./image/dft_cosine_phi-2.png"; 
+  ans = "./image/dft_cosine_phi-2.png";
 #+END_SRC
 
 
 The calcution of the phase just does not work out of the box with octave.
 
-*** DFT Cosine Calculation Problem 3
- #+BEGIN_SRC latex 
-   \begin{align*}
-      x[n]  &= 3\;cos(2\;pi/10\;n) \text{, } x[n] \in \mathbb{C}^{64} \\
-      X[k]  &=
-     \begin{cases}
-        96e^{j\frac{\pi}{3}}  & \text{for } k = 4 \\
-        96e^{-j\frac{\pi}{3}} & \text{for } k = 96 \\
-        0                  & \text{otherwise}
-      \end{cases}  
-   \end{align*}
- #+END_SRC
-#+ATTR_LATEX: :options bgcolor=gray!30
+**** DFT Cosine Calculation Problem 3
+#+BEGIN_SRC latex
+  \begin{align*}
+    x[n]  &= 3\;cos(2\;pi/10\;n) \text{, } x[n] \in \mathbb{C}^{64} \\
+    X[k]  &=
+            \begin{cases}
+              96e^{j\frac{\pi}{3}}  & \text{for } k = 4 \\
+              96e^{-j\frac{\pi}{3}} & \text{for } k = 96 \\
+              0                  & \text{otherwise}
+            \end{cases}
+  \end{align*}
+#+END_SRC
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: DFT Cosine not periodic
 #+BEGIN_SRC octave :exports results :results file
   N=64;
@@ -341,27 +408,30 @@ The calcution of the phase just does not work out of the box with octave.
   x1=3*cos(2*pi/10*n);
   X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
 
-  # Graphik  
+                                  # Graphik
   figure( 1, "visible", "off" )               # Do not open the graphic window in org
 
   subplot(3,1,1)
   stem(x1, "filled", "linewidth", 2, "markersize", 6), axis([0 N -5 5])
+  set(gca, "fontsize", 24);
   grid on;
-  #stem(n-N/2,fftshift(x1))
+                                  #stem(n-N/2,fftshift(x1))
 
-  subplot(3,1,2),stem(n, abs(X1), "filled", "linewidth", 2, "markersize", 6), axis([-2 N+1 0 80])  
+  subplot(3,1,2),stem(n, abs(X1), "filled", "linewidth", 2, "markersize", 6), axis([-2 N+1 0 80])
+  set(gca, "fontsize", 24);
   grid minor;
   xlabel("Sample");
   ylabel("Mag{X[k]}");
-  
+
   subplot(3,1,3), stem(n, angle(X1), "filled", "linewidth", 2, "markersize", 6), axis([-2 N+1 -2 2])
+  set(gca, "fontsize", 24);
   grid minor;
   xlabel("Sample");
   ylabel("Phase{X[k]}");
-  
-  # Org-Mode specific setting
+
+                                  # Org-Mode specific setting
   print -dpng "-S800,600" ./image/dft_cosine_not_periodic.png;
-  ans = "./image/dft_cosine_not_periodic.png"; 
+  ans = "./image/dft_cosine_not_periodic.png";
 #+END_SRC
 
 #+results: DFT Cosine not periodic
@@ -375,55 +445,55 @@ The calcution of the phase just does not work out of the box with octave.
 - Frequency coefficence $\displaystyle > \pi[ N/2...N-1]$ are interpreted as clock wise rotation in the
   plane
 - The fastest frequency of the signal in the vector space is at N/2
-    
-    [[./image/32c_freqBand.png]]
+
 #+ATTR_LATEX: :options [logo=\bcbook, couleur=green!10, barre=snake, arrondi=0.1]{Energy of a Signal}
- #+BEGIN_bclogo
+#+BEGIN_bclogo
 The square magnitude of the k-th DFT coefficent is proportional to the signal's energy at
 frequency $\omega = (\frac{2\pi}{N})k$
- #+END_bclogo
+#+END_bclogo
 
 - Energy concentrated on single frequency
   (counterclockwise and clockwise combine to give real signal)
- #+BEGIN_SRC latex 
-   \begin{align*}
+  #+BEGIN_SRC latex
+    \begin{align*}
       x1[n]  &= 3\;cos(2\;pi/16\;n) \text{, } x[n] \in \mathbb{C}^{64} \\
       x1[n]  &= u[n] - u[n-4] \\
-   \end{align*}
- #+END_SRC
-#+ATTR_LATEX: :options bgcolor=gray!30
+    \end{align*}
+  #+END_SRC
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: Energy of a sinusoid
 #+BEGIN_SRC octave :exports results :results file
   pkg load specfun
 
-    N=64;
-        n=0:N-1;
+  N=64;
+  n=0:N-1;
 
-        x1=3*cos(2*pi/16*n);
-        X1=fft(x1);                                # Compute the dft of X1 using FFT algorithmw
+  x1=3*cos(2*pi/16*n);
+  X1=fft(x1);                         # Compute the dft of X1 using FFT algorithmw
+                                      # Graphik
+  figure( 1, "visible", "off" )       # Do not open the graphic window in org
 
-        # Graphik  
-        figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  subplot(2,1,1)
+  stem(n, abs(X1), "filled", "linewidth", 2, "markersize", 6), axis([-2 N+1 0 80])
+  set(gca, "fontsize", 24);
+  grid minor;
+  xlabel("Sample");
+  ylabel("Mag{X1}");
+  title('Energy of a sinusoid')
 
-        subplot(2,1,1)
-        stem(n, abs(X1), "filled", "linewidth", 2, "markersize", 6), axis([-2 N+1 0 80])  
-        grid minor;
-        xlabel("Sample");
-        ylabel("Mag{X[k]}");
-        title('Energy of a sinusoid')
-
-        x2 = heaviside(n,1) - heaviside(n-4,1);
-        X2 = fft(x2);
-        subplot(2,1,2)
-        stem(n, abs(X2), "filled", "linewidth", 2, "markersize", 6), axis([-2 N+1 0 4])
-        xlabel("Sample");
-        ylabel("Mag{X[k]}");
-        title('Energy of a step function')
+  x2 = heaviside(n,1) - heaviside(n-4,1);
+  X2 = fft(x2);
+  subplot(2,1,2)
+  stem(n, abs(X2), "filled", "linewidth", 2, "markersize", 6), axis([-2 N+1 0 4])
+  set(gca, "fontsize", 24);
+  xlabel("Sample");
+  ylabel("Mag{X2}");
+  title('Energy of a step function')
 
 
-        # Org-Mode specific setting
-        print -dpng "-S800,400" ./image/energy_sinusoid.png;
-        ans = "./image/energy_sinusoid.png"; 
+                                  # Org-Mode specific setting
+  print -dpng "-S800,400" ./image/energy_sinusoid.png;
+  ans = "./image/energy_sinusoid.png";
 #+END_SRC
 
 #+results: Energy of a sinusoid
@@ -436,11 +506,7 @@ frequency $\omega = (\frac{2\pi}{N})k$
 *** DFT Analysis
 **** Daily Temeperature (2920 days)
 - The recorded signal
-  #+ATTR_LATEX: :width 7cm
-  [[./image/33a_dailyTemp.png]] 
-- DFT daily temperature signal
-  #+ATTR_LATEX: :width 7cm
-  [[./image/33a_DFTdailyTemp.png]]
+**** TODO Add dayly temp image
 
 - average value (0-th DFT coefficient: 12.3°
 - DFT main peak for $k = 8$, value 6.4°C
@@ -453,7 +519,7 @@ Since a full revolution of $2\;\pi$ requires N samples,
 the discrete frequency corresponding with $\frac{N}{2}) \text{ is } \pi$.
 
 **** Labeling Frequency Band Axis
-- If "clock" of a System is $T_s$ 
+- If "clock" of a System is $T_s$
   - fastest (positive) frequency is $\omega = \pi$
   - sinosoid at $\omega = \pi$ needs two samples to do a full revolution
   - time between samples: $T_s = \frac{1}{F_s}$ seconds
@@ -466,12 +532,12 @@ the discrete frequency corresponding with $\frac{N}{2}) \text{ is } \pi$.
 - The real world frequency of a siusoid compenent at peak k can be determined as follows:
   \begin{align*}
    \frac{x}{k}      &= \frac{2 \pi}{N} \text{, with k=0...N-1}                \\
-   \frac{f_s}{2}    &= \rightarrow \pi  \text{, } f_s \text{ sampling frequency} \\ 
+   \frac{f_s}{2}    &= \rightarrow \pi  \text{, } f_s \text{ sampling frequency} \\
    \frac{x}{k}      &= \frac{f_s}{N}          \\
-   x                &= \frac{k f_s}{N}        \\ 
+   x                &= \frac{k f_s}{N}        \\
   \end{align*}
 
-***** Example
+***** Example 1
 A DFT analysis of a signal with length $N = 4000$ samples at a frequency $fs = 44.1kHz$
 shows a peak at $k = 500$. What is the corresponding frequency in Hz of this digital
 frequency in Hz.
@@ -483,45 +549,150 @@ frequency in Hz.
     \frac{f_s}{2}       &\rightarrow \pi              \\
     x &= \frac{k}{N}f_s &= 55125.5              \\
   \end{align*}
- #+END_SRC
+#+END_SRC
+
+***** Example 2
+Calculation of the corresponding frequency vector for a signal for which its spectrum is
+analysed with the fourier transform
+- Sampling Period: $T_s=1/1000s$
+- Sampling Frequency: $f_s = 1/T = 1000Hz$
+- Vector Length $N=2^10=1024$
+#+BEGIN_SRC latex
+  \begin{align*}
+    \frac{X}{k}         &= \sum_{n=1}^{N} x[n]e^{-j2\pi(k-1)(\frac{n-1}{N})} \\
+    f(k) &= \frac{k-1}{NT} \text{, corresponding Frequency in Hz}
+  \end{align*}
+#+END_SRC
+
+- [[https://stackoverflow.com/questions/25797670/plotting-fft-on-octave][StackOverflow]]
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+BEGIN_SRC octave :exports both :results file
+  clear all;
+  close all;
+  N  = 1024;   # vector length
+  Fs = 1000;   # Sample Frequency Fs = 1000Hz
+  Ts = 1/Fs;   # Sampling Period  Ts = 0.001s
+  f1 = 60;     # 50Hz
+  f2 = 120;    # 120Hz
+
+  n  = 0:Ts:(N-1)*Ts;                    # time vector
+  x  = sin(2*pi*f1*n) + sin(2*pi*f2*n);  # a sinusoid signal
+  xr = x + 2*randn(size(n));             # a noisy signal
+
+  X  =fft(xr);                           # FFT                                
+  X2 = 1/N*abs(X);                       # FFT magnitude full buffer length   
+  F2 = Fs*(0:(N-1))/N;                   # Frequency vector full buffer length
+
+  X1 = X2(1:N/2+1)/2;                    # FFT magniture half buffer lenght   
+  X1(2:end-1) = 2*X1(2:end-1);           # Arranged values                    
+  F1 = Fs*(0:(N/2))/N;                   # Frequency vector half buffer length
+
+  figure( 1, "visible", "off" )
+
+  subplot(2,1,1)
+  plot(Fs*n(1:100),xr(1:100));
+  title('Zeitbereich')
+  ylabel('Amplitude');
+  xlabel('Zeit [ms]')
+  set(gca, "fontsize", 24);
+
+  subplot(2,1,2)
+  plot(F1,X1)
+  title('Single-Sided Amplitude Spectrum of X(t)')
+  xlabel('f (Hz)')
+  ylabel('|X1(f)|')
+  set(gca, "fontsize", 24);
+
+
+  ## subplot(2,1,3);
+  ## plot(F2,X2);
+  ## title('Two-Sided Amplitude Spectrum of X(t)')
+  ## ylabel('|X2(f)|')
+  ## xlabel('Frequenz [Hertz]')
+  ## set(gca, "fontsize", 24);
+
+                                          # Org-Mode specific setting
+  print -dpng "-S800,600" ./image/eth-example.png;
+  ans = "./image/eth-example.png";
+#+END_SRC
+
+#+results:
+[[file:./image/eth-example.png]]
 
 **** DFT Example - Analysis of Musical Instruments
 - The fundamental note is the \textcolor{blue}{first peak} in the spectrum
 - The relative size of the harmonics gives the timber or the charachter of an instrument
-*** DFT Synthesis
+*** TODO DFT Synthesis
 *** DFT Examples
 **** Tide Prediction in Venice
 **** MP3 Compression
 - MP3 compression approx. factor 20 or more
 - Compression introduces nois from approximation error
-- \textcolor{blue}{Noise Shaping} : Error shaped as the song in the Fourier domain. 
+- \textcolor{blue}{Noise Shaping} : Error shaped as the song in the Fourier domain.
 - \textcolor{blue}{Perceptual Compression} inclueds the human hearing system properties
   intto compression algorithm
 **** Video Signal of the Day: The first man-made signal from outer space
 #+BEGIN_SRC latex
-\begin{equation*}
-  f = \frac{\omega f_s}{2 \pi} \\
-\end{equation*}
- #+END_SRC
+  \begin{equation*}
+    f = \frac{\omega f_s}{2 \pi} \\
+  \end{equation*}
+#+END_SRC
 - A \textcolor{blue}{multiplication} in time domain corresponds to a
   \textcolor{blue}{convolution} in frequency domain
 
-*** The Short-Time Fourier Transform STFT
+** The Short-Time Fourier Transform STFT
 - STFT is a clever way of using DFT
-- Spectrogram, is a graphical way to represent the STFT data 
+- Spectrogram, is a graphical way to represent the STFT data
 **** The short-time Fourier transform
 - DTMF Dual-Tone Multi Frequency dialing
 - Time representation obfuscates frequency
 - Frequency representation obfuscates time
   #+BEGIN_SRC latex
-  \begin{equation*}
-    x[m;k] = \sum_{n=0}^{L-1} x[m+n]e^{-j\frac{2\pi}{L}nk} 
-  \end{equation*}
+    \begin{equation*}
+      x[m;k] = \sum_{n=0}^{L-1} x[m+n]e^{-j\frac{2\pi}{L}nk}
+    \end{equation*}
   #+END_SRC
   - *m*  Starting point of the localiced DFT
   - *k*  Is the DFT index
-**** The spectrogram
+**** ONGOING The spectrogram
 - color-code the magnitued: dark is small, white is large
 - use $10 log_{10}(|X[m,k]|$ to see better (powr in dBs)
 - plot spectral slices one after another
-**** Time-frequency tiling
+*** STFT Example
+#+NAME: w3_stft
+#+BEGIN_SRC octave :exports results :results file
+  Fs = 80e3;
+  FsStart = 0;
+  FsStop = 30e3;
+  Tchirp = 1;
+
+  t = 0:1/Fs:Tchirp - 1/Fs;
+  x = sin(2*pi*(FsStart*t +(FsStop-FsStart)/(2*Tchirp)*t.^2));
+
+  Nfft = length(x);
+  f =(-Nfft/2:Nfft/2-1)*Fs/Nfft;
+  X = fft(x,Nfft);
+
+  figure(1, "visible", "off" )              # Do not open the graphic window in org
+
+  subplot(2,1,1)
+  plot(f, 20*log10(abs(fftshift(X))));
+  grid on;
+  set(gca, "fontsize", 24);
+  xlabel('Frequency in [Hz]');
+  ylabel('Amplitude');
+  title('Frequency Response');
+
+  pkg load signal
+  subplot(2,1,2)
+  specgram(x, 256, Fs);
+  grid on;
+  set(gca, "fontsize", 24);
+  xlabel('Time in [sec]');
+  ylabel('Frequency in [Hz]');
+  title('Short Time Fourier-Analysis');
+
+  set(gca, "fontsize", 24);
+  print -dpng "-S800,400" ./image/w3_stft.png;
+  ans = "./image/w3_stft.png";
+#+END_SRC

@@ -1,68 +1,87 @@
-#+CATEGORY: SP4COMM W6
 
-# #+OPTIONS: H:5
-# #+LaTeX_HEADER: \usepackage[tikz]{bclogo}
-# #+LaTeX_HEADER: \usepackage{tcolorbox}
-# #+LATEX: \setcounter{secnumdepth}{5}
+#+LATEX_HEADER: \usepackage[table]{xcolor}
+#+LaTeX_HEADER: \usepackage{tcolorbox}
 
-* Week 6 Module 4: Part 2 Filter Design
+#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
+#+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}
+
+#+LaTeX_HEADER: \usepackage{amsmath}
+#+LaTeX_HEADER: \usepackage{amsxtra}
+#+LATEX_HEADER: \usepackage{mathtools} 
+#+Latex: \everymath{\displaystyle}
+#+Latex: \renewcommand{\arraystretch}{1.2}
+
+* Week 6 Module 4 Part 2: Filter Design Part 1
 
 - First strategy of filter design: Imitation
-  - Impulse trancation
+  - uuImpulse truncation
   - Window Method
   - Frequency Sampling
   Trying to replicate the structure of either the impulse response or the frequency
   response of ideal filters.
-** Filter Design Part 1
+**  Filter Design Part 1 (FIR Filter)
 - An ideal filter is not realizable in practice because the impulse response is a
   two-sided infinite support sequence.
-*** Approximation by truncation
-
-#+ATTR_LATEX: :options [couleur = brown!20, arrondi = 0.1, logo=\bcbook, ombre=true]{Impulse Truncation}
+*** Reference
+- [[https://www.analog.com/media/en/technical-documentation/dsp-book/dsp_book_Ch19.pdf][The Scientist and Engineers Guide to DSP: Recurscive Filter]]
+*** Impulse truncation
+#+ATTR_LATEX: :options [couleur=yellow!10, arrondi = 0.1, logo=\bcbook, ombre=true]{Impulse Truncation}
 #+BEGIN_bclogo
 1. Pick $\omega_c$
-2. Compute ideal impulse response h[n] 
+2. Compute ideal impulse response h[n] (analytically)
 3. truncate h[n] to a finite-support $\hat{h}[n]$
 4. $\hat{h}[n]$ defines an FIR filter
 #+END_bclogo
 
-
 #+BEGIN_SRC latex
   \text{FIR approximation of lenght M = 2N+1}
-  \begin{align*}p
+  \begin{equation*}
     \hat{h}[n]
-    &=
+    =
       \begin{cases}
         \frac{\omega_c}{\pi} \; sinc(\frac{\omega_c}{\pi} n) & |n| \leq N \\
         0  & \text{otherwise}
       \end{cases}  
-  \end{align*}
+  \end{equation*}
 #+END_SRC  
 
+- *Why approximation by truncation could be a good idea*
+  A justification of this method is the computation of the mean square error:
+  #+BEGIN_SRC latex
+    \begin{align*}
+      MSE &= \frac{1}{2\pi} \int_{-\pi}^\pi|H(e^{j\omega}) - \hat{H}(e^{j\omega})|^2 d\omega \\
+          &= ||H(e^{j\omega}) - \hat{H}(e^{j\omega})||^2 \\
+          &= ||h[n] - \hat{h}[n]||^2 \\
+          &= \sum_{n=-\infty}^{\infty} |h[n] - \hat{h}[n]|^2 \\
+    \end{align*}
+  #+END_SRC  
 
-- Why approximation by truncation could be a good idea ::
-  The means square error MSE is minimized by symmetric impulse truncation around zero
+#+BEGIN_SRC latex 
+  \begin{tcolorbox}
+    The means square error MSE is minimized by symmetric impulse truncation around zero
+  \end{tcolorbox}
+#+END_SRC                                          
+
+
+- *Why approximation by truncation is not such a good idea*
+  The maximum error around the cutoff frequency is around 9% of the height of the jump
+  regardless of N. This is known as the \textcolor{blue}{Gibbs Phenomenon}.
 
 **** The Gibbs Phenomenon
-- Why approximation by truncation is not such a good idea ::
-  The maximum error around the cutoff frequency is around 9% fo the height of the jump
-  regardless of N.
-
 
 #+BEGIN_SRC octave :exports results :results file
   pkg load signal
-
-
   t=linspace(-2,2,2000);
-  u=linspace(-2,2,2000);
   sq=[zeros(1,500),2*ones(1,1000),zeros(1,500)];
   k=2;
-  N=[1,3,7,19,49,70];                     # number of samples
-  for n=1:6;
+  # N=[1,3,7,19,49,70];                     # number of samples
+  N=[3,7,49];                     # number of samples
+  for n=1:3;
     an=[];
     for  m=1:N(n)
-      # an=[an,2*k*sin(m*pi/2)/(m*pi)];      # sinc
-      an=[an,2*sinc(m/2)];      # sinc
+      an=[an,2*k*sin(m*pi/2)/(m*pi)];      # sinc 1
+      # an=[an,2*sinc(m/2)];               # sinc 2
     end;
     fN=k/2;
     for m=1:N(n)
@@ -71,25 +90,29 @@
                                             # Graphik  
     figure( 1, "visible", "off" )           # Do not open the graphic window in org
     nq=int2str(N(n));
-    subplot(3,2,n),
-    plot(u,sq,'r', "linewidth", 2);
+    # subplot(3,2,n);
+    subplot(1,3,n),
+    plot(t,sq,'r', "linewidth", 2);
     hold on;
     plot(t,fN, "linewidth", 2);
-    hold off; axis([-2 2 -0.5 2.5]);
-    ## set(gca,'XTick',-pi:pi/2:pi)
-    ## set(gca,'XTickLabel',{'-pi','-pi/2','0','pi/2','pi'})
+    hold off; axis([0 2 -0.5 2.5]);
     grid;
-    xlabel('Time'), ylabel('y_N(t)');title(['N= ',nq]);
-  end;                                      # ans = f'
+    xlabel('n');
+    #ylabel('y_N(t)');
+    title(['N= ',nq]);
+    set(gca, "fontsize", 18)
+  end;
 
-  print -dpng "-S800,600" ./image/gibbs1.png;
+  print -dpng "-S800,300" ./image/gibbs1.png;
   ans = "./image/gibbs1.png";
 #+END_SRC
 
 #+results:
 [[file:./image/gibbs1.png]]
 
-
+References:
+- [[https://ww2.mathworks.cn/matlabcentral/answers/370067-gibbs-phenomenon-sum-of-squared-differences?s_tid=prof_contriblnk][Matlab Answers]]
+  
 #+BEGIN_SRC octave :exports results :results file
     pkg load signal
 
@@ -132,14 +155,17 @@
      figure( 1, "visible", "off" )           # Do not open the graphic window in org
      % subplot(1,2,1); stem(k,f,'m','LineWidth',1); axis tight; grid on;
      subplot(2,1,1);  stem(k,f, "filled", "linewidth", 2, "markersize", 6 ); axis tight; grid on;
-      xlabel('Fourier coefficient index');ylabel('Magnitude');
-      title('Fourier coefficients');
+      ylabel('h[n]');
+      title('Frequency Response');
+      set(gca, "fontsize", 24)
 
       % Plot the approximated signal
       subplot(2,1,2); plot(t,X,t,R,"linewidth", 2); axis tight; grid on; 
-      xlabel('Time (t)'); ylabel('Amplitude');
+      xlabel('Time (t)');
+      ylabel('H[e^{j\omega}]');
       title(['Approximation for N = ', num2str(c),...
       '. Overshoot = ',num2str(Overshoot),'%','. Error energy: ',num2str(E)])
+      set(gca, "fontsize", 24)
 
       pause(0.1); % Pause for a while
       R = 0; % Reset the approximation to calculate new one
@@ -152,9 +178,25 @@
 #+results:
 [[file:./image/gibbs2.png]]
 
-*** Window Method
+*** Window method
+The impulse truncation can be interpreted as the product of the ideal filter response and
+a rectangular window of N points.
 
-**** Understanding the Gibbs Phenomen
+
+From the modulation theorem, the DTFT of the product
+f two signals is equivalent to the convolution of their DTFTs. Hence, the choice of
+window influences the quality of the approximation results.
+
+#+ATTR_LATEX: :options [couleur=yellow!10, arrondi = 0.1, logo=\bcbook, ombre=true]{Window Method}
+#+BEGIN_bclogo
+The window method is just a generalization of the impulse truncation method where we use a
+different window shape.
+#+END_bclogo
+
+For example, by using a triangular window, we reduce the Gibbs error at the price of a
+longer transition.
+
+**** The modulation theorem revisited.
 We can consider the approximated filter as 
 #+BEGIN_SRC latex 
   \begin{equation*}
@@ -175,11 +217,11 @@ with the indicator function w[n]
 #+END_SRC  
 
 /The question is how can we express the Fourier Transform $\hat{H}(e^{j\omega}) = ?$ of the
-filter as the product of two sequencies?/
+filter as the product of two sequences?/
  For that, we have to study the modulation theorem.
 
 - Convolution Theorem states that the Fourier Transform of the convolution of two
-  sequencies is the product in the frequency domain of the Fourier Transforms.
+  sequences is the product in the frequency domain of the Fourier Transforms.
 #+BEGIN_SRC latex 
   \begin{tcolorbox}
       \begin{equation*}
@@ -190,7 +232,7 @@ filter as the product of two sequencies?/
 
 - Modulation Theorem
   The modulation theorem states that the Fourier Transform of the product of two
-  sequencies is the convolution in the frequency domain of the Fourier Transform
+  sequences is the convolution in the frequency domain of the Fourier Transform
 #+BEGIN_SRC latex 
   \begin{tcolorbox}
       \begin{equation*}
@@ -199,9 +241,9 @@ filter as the product of two sequencies?/
     \end{tcolorbox}
 #+END_SRC                                          
 
-- Convolution of DTFT's
+- Convolution in the Frequency Domain
 $\text{in }\mathbb{C}^{\infty}$ the space of infinite support signals, the convolution can
-be defined in terms of the inner product of the two sequnecies.
+be defined in terms of the inner product of the two sequences.
 #+BEGIN_SRC latex
   \begin{align*}
     (x * y)[n] &= \big\langle x^*[k], y[n-k] \big\rangle \\
@@ -209,20 +251,1573 @@ be defined in terms of the inner product of the two sequnecies.
   \end{align*}
 #+END_SRC
 
-We can addapt the same strategie in 
+We can adapt the same strategie in 
 $\mathbb{L}\Big(\big[-\pi,\pi\big]\Big)$, which is the space where the DTFT
-lifes. So we find the convolution of two Fourier Transforms as the inner product of the
-first Fourier Transform conjugated and the second Fourier Transform frequencie reversed
-and delyed by $\omega$
+life's. So we find the convolution of two Fourier Transforms as the inner product of the
+first Fourier Transform conjugated and the second Fourier Transform frequence reversed
+and delayed by $\omega$
 #+BEGIN_SRC latex
   \begin{align*}
     (X * Y)(e^{j\;\omega}) &= \big\langle X^*(e^{j\;\sigma}), Y(e^{j\;\omega-\sigma}) \big\rangle \\
                          &=  \frac{1}{2\pi}\int_{-\pi}^{pi} X^*(e^{j\;\sigma})\;Y(e^{j\;\omega-\sigma})\;d\sigma
+  \end{align*} 
+#+END_SRC
+
+If we apply the definition of the inner product for $L2([-\pi,\,\pi])$ we get that the
+convolution between two Fourier Transforms.
+
+**** Mainlobe and Sidelobes
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal
+  N=64              # Vector lenght
+  oc=pi/2;          # Cut Off Frequency of LP filter
+  O=-pi:1/N:pi;     # Frequency vector 
+  H=rectpuls(O,oc)  # Generating Square Wave
+
+  # The sinusoid Frequency response of the 0 centered Moving Average Filter
+   W = sin(O*(2*N+1)/2)./sin(O/2);
+
+                                 # Graphik  
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  subplot(2,2,1)
+  plot(O,H, "linewidth", 2 ), axis([-pi pi -0.5 1.5]);
+  ylabel('H(e^{jw})');
+  xlabel('Omega');
+  set(gca,'XTick',-pi:pi/2:pi)
+  set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+  set(gca, "fontsize", 24)
+  title('Frequency Response ideal LP');
+  grid on;
+
+  subplot(2,2,3)
+  plot(O,W, "linewidth", 2 ), axis([-pi pi -50 150]);
+  ylabel('W(e^{jw})');
+  xlabel('Omega');
+  set(gca,'XTick',-pi:pi/2:pi)
+  set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+  set(gca, "fontsize", 24)
+  title('Indicator Function');
+  grid on;
+
+  subplot(1,2,2)
+  plot(O,W, "linewidth", 2 ); 
+  axis([-pi/10 pi/10 -50 150]);
+  hold on
+  # area(O, min([W;]), "Facecolor", "blue");
+
+  x= rectangle ("Position", [1, 1, 9, 9], "Curvature", [0.5, 0.5]);
+  ylabel('W(e^{jw})');
+  xlabel('Omega');
+  set(gca,'XTick',-pi:pi/2:pi)
+  set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+  set(gca, "fontsize", 24)
+  title('Indicator Function');
+  text(0,  140, '\fontsize{18}\itMainlobe   ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "center");
+  text(0.06,  -32, '\fontsize{18}\itSidelobe   ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "left");
+  text(-0.01,  -32, '\fontsize{18}\itSidelobe   ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "right");
+  grid
+
+                                  # Org-Mode specific setting
+  print -dpng "-S800,400" ./image/lobe.png;
+  ans = "./image/lobe.png";
+#+END_SRC
+
+#+results:
+[[file:./image/lobe.png]]
+
+*We want:*
+- narrow mainlobe $\Rightarrow$ to have sharp transition
+- small sidelobe $\Rightarrow$ gibbs error is small
+- short window $\Rightarrow$ FIR is efficient
+  
+**** COMMENT Convolution of the unit step function and t
+
+Find convolution of $f(t) &= t$ and $g(t) &= u(t-1)$
+#+BEGIN_SRC latex
+  \begin{equation*}
+    h(t) = (f*g)(t) = \int_0^tf(\tau)(t-\tau)d\tau \\
+  \end{equation*} 
+#+END_SRC
+
+#+BEGIN_SRC latex
+  \begin{equation*}
+    h(t) = t*1      = \int_1^t 1\cdot (t-\tau)d\tau = \frac{t^2}{2}-\frac{1}{2}
+  \end{equation*} 
+#+END_SRC
+
+
+#+BEGIN_SRC octave :exports results :results file
+  pkg load symbolic
+  syms x
+  figure( 1, "visible", "off")           # Do not open the graphic window in org
+  fplot("sinint(x)",[-4*pi 4*pi],"linewidth", 3)
+  grid on
+                                                      # Graphik
+  title("sinint(t)")
+  xlabel("Time t")
+ ylabel("h(t)")
+  set(gca, "fontsize", 24)
+
+  print -dpng "-S400,200" ./image/sinint.png;
+  ans = "./image/sinint.png";
+#+END_SRC
+
+#+results:
+[[file:./image/sinint.png]]
+
+
+References:
+- [[https://math.stackexchange.com/questions/1158450/calculate-the-convolution-of-the-product-of-a-unit-step-function-and-t-5-6-14][Mathematics StackExchange]]
+- [[https://ch.mathworks.com/help/symbolic/sinint.html#d122e238624][Mathworks]]
+
+Dependencies Octave Symbolic Package:
+- Python 3 select with, \textcolor{blue}{sudo update-alternatives --config python)}
+- SymPy 1.5: downgrade with, pip install \textcolor{blue}{sympy==1.5.1 } 
+- For propere working of the octave symbolic package it was nescessary to downgrade the
+  
+*** Frequency sampling
+#+ATTR_LATEX: :options [couleur=yellow!10, arrondi = 0.1, logo=\bcbook, ombre=true]{Frequency Sampling}
+#+BEGIN_bclogo
+1. Draw desired frequency response $H(e^{j\omega})$
+2. take M values at $\omega_k = \frac{2\pi}{M} \cdot k$ 
+3. compute IDFT of values
+4. use result as M-tap impulse response $\hat{h}[n]$
+#+END_bclogo
+
+
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal
+  N=64;                # Vector lenght
+  oc=pi;               # Cut Off Frequency of LP filter
+  w=-pi:1/N:pi;        # Frequency vector 
+  H=rectpuls(w,oc)     # Generating Square Wave
+
+  M=11;                # M Samples 
+  TS=(M-1)/(2*pi);         # Sample period
+  wk= -pi:1/TS:pi;     # Sample Frequency
+  Hhat=rectpuls(wk,oc);
+
+  n=1:M;               # Discrete time vector
+  Hd = [Hhat(6:11), Hhat(1:5)]; # DFT Samples
+
+  h=ifft(Hd);
+  hshift=fftshift(h);
+  nshift=(-(M-1)/2:(M-1)/2);
+                                  # The sinusoid Frequency respone of the 0 centered Moving Average Filter
+                                  # Graphik  
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  subplot(3,1,1);
+  plot(w,H, "linewidth", 3), axis([-pi pi -0.1 1.1]);
+  ylabel('H(e^{jw})');
+  xlabel('Omega');
+  set(gca,'XTick',-pi:pi/4:pi)
+  set(gca,'XTickLabel',{'-\pi','-3\pi/4','-\pi/2','-\pi/4','0','\pi/4','\pi/2','3\pi/4','\pi'})%
+  set(gca, "fontsize", 24)
+  title('Frequency Response ideal LP');
+  hold on
+  stem(wk,Hhat,"r", "linewidth", 3, "markersize", 6, "filled"  ), axis([-pi pi -0.1 1.1]);
+  grid on;
+  axis([-pi pi 0 1])
+  hold off;
+
+  subplot(3,1,2);
+  stem(n, Hd,"r", "linewidth", 3, "markersize", 6, "filled"  ), axis([0 12 -0.1 1.1]);
+  grid on;
+  axis([0 12 0 1])
+  set(gca, "fontsize", 24)
+  xlabel('samples [n]');
+  title('DFT Samples');
+
+  subplot(3,1,3);
+  stem(nshift,hshift,"r", "linewidth", 3, "markersize", 6, "filled"  );
+  grid on;
+  axis([-6 6 0 0.5])
+  set(gca, "fontsize", 24)
+  xlabel('samples [n]');
+  title('Impulse Response IDFT');
+
+                                  # Org-Mode specific setting
+  print -dpng "-S800,600" ./image/freq_sampling.png;
+  ans = "./image/freq_sampling.png";
+      #+END_SRC
+
+  #+results:
+  [[file:./image/freq_sampling.png]]
+
+- *Why Frequency Sampling is not such a good idea:*
+  - frequency response is DTFT of finite-support, whose DFT we know
+  - frequency response is interpolation of frequency samples
+  - interpolator is transform N-tap rectangular window (no escape from the indicator function)
+  - again no control over main- and sidelobe
+
+
+#+ATTR_LATEX: :options [couleur=yellow!10, arrondi = 0.1, logo=\bcbook, ombre=true]{Summery Imitation}
+#+BEGIN_bclogo
+These methods to approximate ideal filters are certainly very useful when we want to derive
+a quick and dirty prototype, and we don't have time to use more sophisticated filter
+design methods
+#+END_bclogo
+
+**  Signal of the Day:  Camera Resolution and space exploration
+*** Rosettta Mission: Spacecraft
+- Reaching Comet 67P. 10 years to get momentum to get its orbit.
+- Resolution of taken pictures:
+  | Resolution  | at Distance | Year              |                                    |
+  | 1km/pixel  | 86'000km    | 28. June 2014     |                                    |
+  |            | 12'000km    | 14. July 2014     |                                    |
+  | 100m/pixel | 5'500km     | 20. July 2014     |                                    |
+  | 5.3m/pixel | 285km       | 3. August 2014    |                                    |
+  | 11cm/pixel | 6km         | 14. February 2015 | most detailed pictures of a planet |
+
+Is it necessary to send a probe for 10years into space to get high resolution pictures?
+
+*** Image Formation
+  #+BEGIN_SRC latex
+    \begin{align*}
+      i(x,y) &= s(x,y) * h(x,y) \text{, i: image that is formed,} \\
+             &= s(x,y) * t(x,y) * p(x,y) \\
+    \end{align*} 
+  #+END_SRC
+
+- i: image that is formed on the retina or camera
+- s: light sources (source image)
+- h: transfer function of the light
+- t: medium through the light is traveling
+- p: point spread function (PSF), lenses and focal distance
+
+The major enemy to image quality of telescope on earth are the atmospheric disturbances.
+
+- The pinhole camera :: A certain pixel density is required to distinguish light sources
+  on the image plane. We might be tempted to say the maximum achievable resolution is only
+  depend on the *resolution* of the sensor at the back of the camera. In reality the
+  resolution is limited by pixel density resolution is limited by diffraction.
+
+- Diffraction :: (Beugung) The image of an original point light source will appear as a
+  diffraction pattern. The diffraction pattern through a small circular aperture is
+  called *Airy disk*. 
+
+- Rayleigh's criterion ::  Minimum angle $\theta$ between light point sources that guarantees resolution 
+  #+BEGIN_SRC latex
+    \begin{equation*}
+      \theta = 1.22 \frac{\lambda}{D}
+    \end{equation*} 
+  #+END_SRC
+
+  - $\lambda$ : wave length of the light that hits the camera
+  - D : Diameter of the aperture
+
+*** Seeing the Lunar Excursion Module (LEM)
+- size of LEM $\approx$ 5m
+- distance to the Moon $\approx$
+- $Rightarrow$ $\theta$ subtended by the LEM is $\approx 0.003 arcsec$
+- Hubble's aperture: 2.4m
+- visible spectrum $\lambda \approx 550nm$
+- Rayleigh's criterion: $\theta \approx 0.1 arcsec$
+
+  $\Rightarrow$ to see the LEM, Hubble should have an aperture of 80m!!!!
+
+***  Rayleigh's criterion, Spatial Resolution
+
+  #+BEGIN_SRC latex
+    \begin{equation*}
+      \delta x = 1.22 \;f\;\frac{f}{D} = \theta \cdot f
+    \end{equation*} 
+  #+END_SRC
+
+If the \textcolor{blue}{pixel separation} on the camera sensor is not less than $\delta x$ our camera will be resolution limited
+rather than diffraction limited. 
+- f: foco length
+- f/D: f-number
+
+- pixel density :: takes into account the size of the sensor.
+
+*** What about mega pixels?
+How many mega pixels one need on an commercial camera. This actually depends on the size of
+the sensor and on the optics:
+ 
+- f-number of all trades: f/8
+- spatial Rayleigh's criterion: $\delta x \approx 4\mu m$
+- max pixel area $16\cdot10^{-5}$
+  
+ $\Rightarrow$ to opperate at the diffraction limit we need $62'500 pixels/mm^2$
+
+ Highend camera usually have one of the following sensors:
+- APS-C sensor (329mm^2): 20 MP $\Rightarrow$ the camera is operating at the defraction limit
+- 35-mm sensor (864mm^2): 54 MP $\Rightarrow$ the camera is operating at the defraction limit
+  
+** Realizable Filters
+*** The Z-Transform
+**** References
+. [[http://ece.uccs.edu/~mwickert/ece2610/lecture_notes/ece2610_chap7.pdf][Signals and Systems for Dummies: Z-Transform]]
+
+**** Z-Transform 
+maps a discrete-time sequence x[n] onto a function of
+$\sum_{n=-\infty}^{\infty} x[n]\;z^{-n}$.
+
+#+BEGIN_SRC latex
+  \begin{tcolorbox}
+    \begin{equation}
+        x[n] = \sum_{n=-\infty}^{\infty} x[n]\;z^{-n}
+      \end{equation}
+    \end{tcolorbox}
+#+END_SRC
+
+The z-Transform is an extension of the DTFT to the whole complex plane and
+is equal to the DTFT for $z = e^{j\omega}$.
+
+#+BEGIN_SRC latex
+  \begin{equation}
+      X(z)|_{z=e^{j\omega}} = DTFT\big\{x[n]\big\}
+    \end{equation}
+#+END_SRC
+
+Key properties of the z-Transform are:
+- linearity: $\mathcal{Z}\big\{\alpha x[n] + \beta y[n]\big\} = \alpha X(z) + \beta Y(z)$
+- time shift: $\mathcal{Z}\big\{x[n-N]\big\} = z^{-N}X(z)$
+
+Applying the z-transform to CCDE's
+#+BEGIN_SRC latex
+  \begin{tcolorbox}
+    \begin{align*}
+      \sum\limits_{k=0}^{N-1}a_k y[n-k] &= \sum\limits_{k=0}^{M-1}b_k x[n-k] \\
+      Y(z)\sum\limits_{k=0}^{N-1}a_kz^{-k} &= X(z)\sum\limits_{k=0}^{M-1}b_kz^{-k} \\
+      Y(z) &= H(z)X(z)
+    \end{align*}
+  \end{tcolorbox}
+#+END_SRC
+- \textbf{M input values}
+- \textbf{N output values}
+
+**** Constant Difference Equation
+A constant coefficent difference equation (CCDE) expresses the input-, output relationship
+of an LTI system as a linear combination of output samples equal to a linear combination
+of input samples
+
+  #+BEGIN_SRC latex
+    \begin{equation*}
+      \tikzmarkin[set fill color=green!50!lime!30,set border color=green!40!black]
+      {z}(0.1,-0.7)(-0.1,0.8)
+          \sum\limits_{k=0}^{N-1}a_k y[n-k]
+      \tikzmarkend{z}
+      \; = \;
+      \tikzmarkin[set fill color=blue!50,set border color=blue!40!black]
+      {y}(0.1,-0.7)(-0.1,0.8)
+         \sum\limits_{k=0}^{M-1}b_k x[n-k]
+      \tikzmarkend{y}
+    \end{equation*}
+  #+END_SRC
+
+\par
+In the z-domain, a Constant Coefficent Difference Equation
+\textcolor{blue}{CCDE} is represented as a ration $H(z)$ of two polynomials of $z^{-1}$.
+
+
+#+BEGIN_SRC latex
+  \begin{tcolorbox}
+    \begin{equation}
+        H(z) = \frac{\sum\limits_{k=0}^{M-1}b_kz^{-k}}{\sum\limits_{k=0}^{N-1}a_kz^{-k}}
+      \end{equation}
+    \end{tcolorbox}
+#+END_SRC
+
+**** Frequency Response
+The frequency response of a filter is equal to this \textcolor{blue}{transfer function}
+evaluated at $z=^{j\omega}$. 
+
+#+BEGIN_SRC latex
+  \begin{tcolorbox}
+    \begin{equation}
+        H(j\omega) = H(z)|_{Z=e^{j\omega}} = \frac{\sum\limits_{k=0}^{M-1}b_kz^{-k}}{\sum\limits_{k=0}^{N-1}a_kz^{-k}}
+      \end{equation}
+    \end{tcolorbox}
+#+END_SRC
+
+*** Z-Transform of the leaky integrator
+
+#+BEGIN_SRC latex
+  \begin{align*}
+    y[n] &= (1-\lambda)x[n]+ \lambda y[n-1] \\
+    Y(z) &= (1-\lambda) X(z) + \lambda z^{-1} Y(z) \\
+    Y(z) -  \lambda z^{-1} Y(z) &=  (1-\lambda) X(z) \\
+    Y(z) \big( 1 - \lambda z^{-1}\big) &=  (1-\lambda) X(z) \\
+    Y(z)  &=  H(z) X(z) \\
+    H(z)  &= \frac{Y(z)}{X(z)} = \frac{1-\lambda}{1 - \lambda z^{-1}} \\
+    H(e^{j\omega}) &= \frac{1-\lambda}{1 - \lambda e^{-j\omega}} \\
+  \end{align*}
+
+#+END_SRC
+
+
+**** LTI Systems
+
+An LTI system can be represented as the convolution $y[n]=x[n]*h[n]$. From the convolution
+property of the Z-transform, it follows that the z-transform of y[n] is:
+
+#+BEGIN_SRC latex
+  \begin{tcolorbox}
+    \begin{equation}
+        Y(z) = H(z)\;X(z) 
+      \end{equation}
+    \end{tcolorbox}
+#+END_SRC
+
+*** Region of convergence
+Conditions for convergences
+- The zeros/poles are the roots of the numerator/denominator of the rational transfer function
+- the region of convergence is only determined by the magnitude of the poles
+- the z-transform of a causal LTI system extends outwards from the largest magnitude pole
+
+
+#+ATTR_LATEX: :options [couleur = brown!20, arrondi = 0.1, logo=\bcbook, ombre=true]{BIBO-Stable}
+#+BEGIN_bclogo
+An LTI system is stable if its region of convergence includes the unit circle
+#+END_bclogo
+
+** Filter Design Part 2 
+- many signal processing problems can be solved using simple filters
+- we have seen simple lowpass filters already (Moving Average, Leaky Integrator)
+- simplel (low order) transfer functions allow for intuitive design and tuning
+*** Intuitive IIR Designs 
+**** Leaky Integrator
+***** Filter Structure
+#+ATTR_LATEX: :width 8cm
+[[./drawing/leaky-integrator.png]]
+***** Transfer Function
+#+BEGIN_SRC latex
+  \begin{equation*}
+    H(z) = \frac{1-\lambda}{1 - \lambda z^{-1}}
+  \end{equation*}
+#+END_SRC
+
+***** CCDE
+#+BEGIN_SRC latex
+  \begin{equation*}
+    y[n] = (1-\lambda) \; x[n] + \lambda \; y[n-1]
+  \end{equation*}
+#+END_SRC
+
+***** Pole-Zero Plot
+DEADLINE: <2021-06-20 So>
+#+NAME: 4_8_lki_pole-zero-plot
+#+BEGIN_SRC octave :exports results :results file
+    pkg load signal;
+    pkg load control;
+    lambda = 0.8;
+      b = [1];
+      a = [1, -lambda];
+      figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+      zplane(b,a);
+      hm = findobj(gca,'type','line')
+      set(hm, 'markersize', 10, 'linewidth', 3);
+      set (gca, "linewidth",2);
+      set(gca, "fontsize", 36);
+
+      print -dpng "-S300,300" ./image/4_8_lki_pole-zero-plot.png;
+      ans = "./image/4_8_lki_pole-zero-plot.png";
+ #+END_SRC
+#+ATTR_LATEX: :width 6cm
+ #+results: 4_8_lki_pole-zero-plot
+ [[file:./image/4_8_lki_pole-zero-plot.png]]
+ 
+***** Impulse response
+#+NAME: 4_8_lki_impulse_response
+#+BEGIN_SRC octave :exports results :results file
+    pkg load signal;
+    lambda = 0.8;
+    b = [1];
+    a = [1, -lambda];
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+    [h,t] = impz(b,a,50);
+    stem(t,h, "filled", "linewidth", 2);
+    grid;
+    set(gca, "fontsize", 24);
+    print -dpng "-S800,200" ./image/4_8_lki_impulse_response.png;
+    ans = "./image/4_8_lki_impulse_response.png";
+ #+END_SRC
+
+  #+results: 4_8_lki_impulse_response
+  [[file:./image/4_8_lki_impulse_response.png]]
+
+***** Frequency Response
+#+NAME: 4_8_lki_frequency_response
+#+BEGIN_SRC octave :exports results :results file
+    pkg load signal;
+    w = -pi:pi/500:pi;
+    lambda = 0.9;
+    b = [1];
+    a = [1, -lambda];
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+    [H,w] = freqz(b,a,w);
+
+    subplot(2, 1, 1)
+    plot(w, abs(H), "linewidth", 2); % amplitude plot in decibel
+    grid;
+    axis([-pi pi 0 10])
+    title('Leaky Integrator')
+    xlabel('frequency in \pi units');
+    ylabel('Magnitude ');
+    set(gca, "fontsize", 24);
+
+    subplot(2, 1, 2)
+    plot(w, angle(H), "linewidth", 2);      % phase plot
+    grid; axis([-pi pi -1.5 1.5])
+    xlabel('frequency in \pi units');
+    ylabel('Phase');
+    set(gca, "fontsize", 24);
+
+
+    print -dpng "-S800,400" ./image/4_8_lki_frequency_response.png;
+    ans = "./image/4_8_lki_frequency_response.png";
+ #+END_SRC
+
+ #+results: 4_8_lki_frequency_response
+ [[file:./image/4_8_lki_frequency_response.png]]
+
+**** Resonator
+- a resonator is a narrow bandbass filter
+- used to detect presence of a given frequency
+- useful in communication systems and telephone (DTMF)
+- \textcolor{blue}{Idea:} shift passband of the Leaky Integrator
+***** Transfer Function
+#+BEGIN_SRC latex
+  \begin{align*}
+    H(z) &= \frac{G_0}{(1 - p z^{-1}) (1 - p^* z^{-1})} \\
+      p  &= \lambda e^{j\omega_0} \\
+    H(z) &= \frac{G_0}{1 -2\mathcal{R} {p}z^{-1} + |p|^2z^{-2} } \\
+    H(z) &= \frac{G_0}{1 -2\lambda \omega_0 z^{-1} + |\lambda|^2z^{-2} } \\
   \end{align*}
 #+END_SRC
 
-*** TODO How is the inner product calculated above?
-** TODO Realizable Filters
-** TODO Filter Design Part 2
-** TODO Filter Design Part 3
+The coeffience to be used in the CCDE
+#+BEGIN_SRC latex
+  \begin{align*}
+    a_1  &= 2\lambda cos\omega_0\\
+    a_2  &= - |\lambda|^2\\
+  \end{align*}
+#+END_SRC
+
+***** Pole-Zero Plot
+- Move the pole of the leaky integrator radially around the circle of radius lambda to
+  shift the passband at the frequency that we are interested in, i.e. $\omega_0$.
+  interested in selecting. Since we want a real filter, we also have to create a complex
+  conjugate pole at an angle that is $-\omega_0$.
+
+#+NAME: 4_8_resonator_pole-zero-plot
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal;
+  G0 = 1;
+  w0 = pi/3;
+  lambda = 0.8;
+  b = [G0];
+  a = [1, (2*(-lambda)*cos(w0)), (abs(lambda)^2)];
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  zplane(b,a);
+  hm = findobj(gca,'type','line')
+  set(hm, 'markersize', 10, 'linewidth', 3);
+  set (gca, "linewidth",2);
+  set(gca, "fontsize", 36);
+
+  print -dpng "-S300,300" ./image/4_8_resonator_pole-zero-plot.png;
+  ans = "./image/4_8_resonator_pole-zero-plot.png";
+ #+END_SRC
+#+ATTR_LATEX: :width 6cm
+ #+results: 4_8_resonator_pole-zero-plot
+ [[file:./image/4_8_resonator_pole-zero-plot.png]]
+
+***** Impulse response
+#+NAME: 4_8_resonator_impulse_response
+#+BEGIN_SRC octave :exports results :results file
+    pkg load signal;
+    N = 101
+    G0 = 1;
+    w0 = pi/3;
+    lambda = 0.9;
+    b = [G0];
+    a = [1, (2*(-lambda)*cos(w0)), (abs(lambda)^2)];
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+    [h,t] = impz(b,a,50);
+    stem(t,h, "filled", "linewidth", 2);
+    grid;
+    print -dpng "-S800,200" ./image/4_8_resonator_impulse_response.png;
+    ans = "./image/4_8_resonator_impulse_response.png";
+ #+END_SRC
+
+ #+results: 4_8_resonator_impulse_response
+ [[file:./image/4_8_resonator_impulse_response.png]]
+
+***** Frequency Response
+#+NAME: 4_8_resonator_frequency_response
+#+BEGIN_SRC octave :exports results :results file
+    pkg load signal;
+    w = -pi:pi/500:pi;
+    G0 = 1;
+    w0 = pi/3;
+    lambda = 0.9;
+    b = [G0];
+    a = [1, (2*(-lambda)*cos(w0)), (abs(lambda)^2)];
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+    [H,w] = freqz(b,a,w);
+
+    subplot(2, 1, 1)
+    plot(w, abs(H), "linewidth", 2); % amplitude plot in decibel
+    grid; axis([-pi pi 0 7])
+    title('Resonator')
+    xlabel('frequency in \pi units');
+    ylabel('Magnitude ');
+    set(gca, "fontsize", 24);
+
+    subplot(2, 1, 2)
+    plot(w, angle(H), "linewidth", 2);      % phase plot xlabel('frequency in \pi units'); ylabel('Phase in radians/\pi'); title('Phase Response')
+    grid; axis([-pi pi -1.5 1.5])
+    xlabel('frequency in \pi units');
+    ylabel('Phase');
+    set(gca, "fontsize", 24);
+
+    print -dpng "-S800,400" ./image/4_8_resonator_frequency_response.png;
+    ans = "./image/4_8_resonator_frequency_response.png";
+ #+END_SRC
+
+ #+results: 4_8_resonator_frequency_response
+ [[file:./image/4_8_resonator_frequency_response.png]]
+
+***** Filter Structure
+#+ATTR_LATEX: :width 8cm
+[[./drawing/resonator.png]]
+**** DC Removal
+- a DC-balances signal has zero sum:  $\lim\limits_{N \to \infty} \sum_{n=-N}^N x[n] = 0$
+  i.e. there is no Direct Current component
+- its DTFT value at zero is zero for an $\omega = 0$
+- we want to remove the DC bias from a non zero-centered signal
+- we want to kill the frequency component at $\omega = 0$
+
+***** Transfer Function
+#+BEGIN_SRC latex
+  \begin{equation*}
+    H(z) = 1 - Z^{-1}
+  \end{equation*}
+#+END_SRC
+
+***** CCD
+#+BEGIN_SRC latex
+  \begin{equation*}
+    y[n] = x[n] - x[n-1]
+  \end{equation*}
+#+END_SRC
+
+***** Pole-Zero Plot
+- Simply place a zero at $ z = 1$
+#+NAME: 4_8_dc-removal_pole-zero-plot
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal;
+  b = [1 -1];
+  a = [1];
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  zplane(b,a);
+  hm = findobj(gca,'type','line')
+  set(hm, 'markersize', 10, 'linewidth', 3);
+  set (gca, "linewidth",2);
+  set(gca, "fontsize", 36);
+
+  print -dpng "-S300,300" ./image/4_8_dc-removal_pole-zero-plot.png;
+  ans = "./image/4_8_dc-removal_pole-zero-plot.png";
+ #+END_SRC
+#+ATTR_LATEX: :width 6cm
+ #+results: 4_8_dc-removal_pole-zero-plot
+ [[file:./image/4_8_dc-removal_pole-zero-plot.png]]
+
+***** Impulse response
+#+NAME: 4_8_dc-removal_impulse_response
+#+BEGIN_SRC octave :exports results :results file
+    pkg load signal;
+    N = 101
+    b = [1 -1];
+    a = [1];
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+    [h,t] = impz(b,a,50);
+    stem(t,h, "filled", "linewidth", 2);
+    grid;
+    print -dpng "-S800,200" ./image/4_8_dc-removal_impulse_response.png;
+    ans = "./image/4_8_dc-removal_impulse_response.png";
+ #+END_SRC
+
+ #+results: 4_8_dc-removal_impulse_response
+ [[file:./image/4_8_dc-removal_impulse_response.png]]
+
+***** Frequency response
+#+NAME: 4_8_dc-removal_frequency_response
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal;
+  w = -pi:pi/500:pi;
+  N = 101
+  b = [1 -1];
+  a = [1];
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  [H,w] = freqz(b,a,w);
+
+  subplot(2, 1, 1)
+  plot(w, abs(H), "linewidth", 2); % amplitude plot in decibel
+  grid; axis([-pi pi 0 2.2])
+  title('DC-Removal')
+  xlabel('frequency in \pi units');
+  ylabel('Magnitude ');
+  set(gca, "fontsize", 24);
+
+  subplot(2, 1, 2)
+  plot(w, angle(H), "linewidth", 2);      % phase plot xlabel('frequency in \pi units'); ylabel('Phase in radians/\pi'); title('Phase Response')
+  grid; axis([-pi pi -2 2])
+  xlabel('frequency in \pi units');
+  ylabel('Phase');
+  set(gca, "fontsize", 24);
+
+  print -dpng "-S800,400" ./image/4_8_dc-removal_frequency_response.png;
+  ans = "./image/4_8_dc-removal_frequency_response.png";
+ #+END_SRC
+
+ #+results: 4_8_dc-removal_frequency_response
+ [[file:./image/4_8_dc-removal_frequency_response.png]]
+
+This is not an acceptable characteristic because it introduces a very big attenuation over
+almost the entety of the frequency support.
+
+**** DC Removal Improved - DC-Notch Filter
+***** Transfer Function
+#+BEGIN_SRC latex
+  \begin{equation*}
+    H(z) = \frac{1 - z^{-1}}{1 - \lambda z^{-1}}
+  \end{equation*}
+#+END_SRC
+
+***** CCDE
+#+BEGIN_SRC latex
+  \begin{equation*}
+    y[n] = \lambda y[n-1] + x[n] - x[n-1]
+  \end{equation*}
+#+END_SRC
+
+***** Pole-Zero Plot
+- and if we remember the circus tent method, we know that we can push up the z-transform
+  by putting a pole in the vicinity of the 0. So we try and do that and we combine
+  therefore, the effect of a 0 and 1 with the effect of a pole close to one, and inside
+  the unit circle, for obvious reasons of stability.
+#+NAME: 4_8_notch_pole-zero-plot
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal;
+  lambda = 0.9
+  b = [1 -1];
+  a = [1 -lambda];
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  zplane(b,a);
+  hm = findobj(gca,'type','line')
+  set(hm, 'markersize', 10, 'linewidth', 3);
+  set (gca, "linewidth",2);
+  set(gca, "fontsize", 36);
+
+  print -dpng "-S300,300" ./image/4_8_notch_pole-zero-plot.png;
+  ans = "./image/4_8_notch_pole-zero-plot.png";
+ #+END_SRC
+#+ATTR_LATEX: :width 6cm
+ #+results: 4_8_notch_pole-zero-plot
+ [[file:./image/4_8_notch_pole-zero-plot.png]]
+
+***** Impulse response
+#+NAME: 4_8_notch_impulse_response
+#+BEGIN_SRC octave :exports results :results file
+    pkg load signal;
+    N = 101
+    lambda = 0.9
+    b = [1 -1];
+    a = [1 -lambda];
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+    [h,t] = impz(b,a,50);
+    stem(t,h, "filled", "linewidth", 2);
+    grid;
+    print -dpng "-S800,200" ./image/4_8_notch_impulse_response.png;
+    ans = "./image/4_8_notch_impulse_response.png";
+ #+END_SRC
+
+ #+results: 4_8_notch_impulse_response
+ [[file:./image/4_8_notch_impulse_response.png]]
+
+***** Frequency Response
+#+NAME: 4_8_notch_frequency_response
+#+BEGIN_SRC octave :exports results :results file
+    pkg load signal;
+    w = -pi:pi/500:pi;
+    N = 101
+    lambda = 0.98
+    b = [1 -1];
+    a = [1 -lambda];
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+    [H,w] = freqz(b,a,w);
+
+    subplot(2, 1, 1)
+    plot(w, abs(H), "linewidth", 2); % amplitude plot in decibel
+    grid; axis([-pi pi 0 1.2])
+    title('Notch')
+    xlabel('frequency in \pi units');
+    ylabel('Magnitude ');
+    set(gca, "fontsize", 24);
+
+    subplot(2, 1, 2)
+    plot(w, angle(H), "linewidth", 2);      % phase plot xlabel('frequency in \pi units'); ylabel('Phase in radians/\pi'); title('Phase Response')
+    grid; axis([-pi pi -2 2])
+    xlabel('frequency in \pi units');
+    ylabel('Phase');
+    set(gca, "fontsize", 24);
+
+    print -dpng "-S800,400" ./image/4_8_notch_frequency_response.png;
+    ans = "./image/4_8_notch_frequency_response.png";
+ #+END_SRC
+
+ #+results: 4_8_notch_frequency_response
+ [[file:./image/4_8_notch_frequency_response.png]]
+
+***** Filter Structure
+#+ATTR_LATEX: :width 8cm
+[[./drawing/notch.png]]
+**** Hum Removal
+- The hum removal filter is to the dc notch what the resonator is to the leaky integrator
+- similar to DC removal but want to remove a specific nonzero frequency
+- very usful for musicaians amplifiers for electronic guitars pick up the hum from the
+  electronic mains (50Hz in Europe and 60Hz in North America)
+- we need to tune the hum removal according the country
+***** Transfer Function
+#+BEGIN_SRC latex
+  \begin{align*}
+    H(z) &= \frac{(1 - e^{j\omega_0}z^{-1}) (1 - e^{-j\omega_0}z^{-1})}{(1 - \lambda e^{j \omega_0}z^{-1}) (1 - \lambda e^{-j \omega_0}z^{-1})} \\
+      p  &= e^{j\omega_0} \\
+      q  &= \lambda e^{j\omega_0} \\
+      &= \frac{(1 - pz^{-1}) (1 - p*z^{-1})}{(1 - qz^{-1}) (1 - q*z^{-1})} \\
+    H(z) &= \frac{1 -2\mathcal{R} {p}z^{-1} + |p|^2z^{-2} }{1 -2\mathcal{R} {q}z^{-1} + |q|^2z^{-2} } \\
+         &= \frac{1 -2\omega_0 z^{-1} + z^{-2} }{1 -2\lambda \omega_0 z^{-1} + |\lambda|^2z^{-2} } \\
+  \end{align*}
+#+END_SRC
+
+The coeffience to be used in the CCDE
+#+BEGIN_SRC latex
+  \begin{align*}
+    a_1  &= -2\lambda cos\omega_0\\
+    a_2  &= |\lambda|^2\\
+    b_1  &= -2 \omega_0\\
+    b_2  &= 1\\
+  \end{align*}
+#+END_SRC
+
+***** CCDE
+#+BEGIN_SRC latex
+  \begin{equation*}
+    y[n] = 2\lambda\;cos\omega_0\;y[n-1] + |\lambda|^2\;y[n-2] + x[n] - 2\;cos\omega_0\;x[n-1] +\;x[n-2]
+  \end{equation*}
+#+END_SRC
+
+***** Pole-Zero Plot
+- and if we remember the circus tent method, we know that we can push up the z-transform
+  by putting a pole in the vicinity of the 0. So we try and do that and we combine
+  therefore, the effect of a 0 and 1 with the effect of a pole close to one, and inside
+  the unit circle, for obvious reasons of stability.
+#+NAME: 4_8_hum-removal_pole-zero-plot
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal;
+  lambda = 0.9
+  omega =pi/3;
+  b = [1 -2*cos(omega) 1];
+  a = [1 -2*lambda*cos(omega) abs(lambda)*abs(lambda)];
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  zplane(b,a);
+  hm = findobj(gca,'type','line')
+  set(hm, 'markersize', 10, 'linewidth', 3);
+  set (gca, "linewidth",2);
+  set(gca, "fontsize", 36);
+
+  print -dpng "-S300,300" ./image/4_8_hum-removal_pole-zero-plot.png;
+  ans = "./image/4_8_hum-removal_pole-zero-plot.png";
+ #+END_SRC
+#+ATTR_LATEX: :width 6cm
+ #+results: 4_8_hum-removal_pole-zero-plot
+ [[file:./image/4_8_hum-removal_pole-zero-plot.png]]
+ 
+***** Impulse response
+#+NAME: 4_8_hum-removal_impulse_response
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal;
+  N = 101
+  lambda = 0.9
+  omega =pi/3;
+  b = [1 -2*cos(omega) 1];
+  a = [1 -2*lambda*cos(omega) abs(lambda)*abs(lambda)];
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  [h,t] = impz(b,a,50);
+  stem(t,h, "filled", "linewidth", 2);
+  grid;
+  print -dpng "-S800,200" ./image/4_8_hum-removal_impulse_response.png;
+    ans = "./image/4_8_hum-removal_impulse_response.png";
+ #+END_SRC
+
+ #+results: 4_8_hum-removal_impulse_response
+ [[file:./image/4_8_hum-removal_impulse_response.png]]
+
+***** Frequency Response
+#+NAME: 4_8_hum-removal_frequency_response
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal;
+  w = -pi:pi/500:pi;
+  N = 101
+lambda = 0.9
+  omega =pi/3;
+  b = [1 -2*cos(omega) 1];
+  a = [1 -2*lambda*cos(omega) abs(lambda)*abs(lambda)];lambda = 0.98
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  [H,w] = freqz(b,a,w);
+
+  subplot(2, 1, 1)
+  plot(w, abs(H), "linewidth", 2); % amplitude plot in decibel
+  grid; axis([-pi pi 0 1.2])
+  title('Hum-Removal')
+  xlabel('frequency in \pi units');
+  ylabel('Magnitude ');
+  set(gca, "fontsize", 24);
+
+  subplot(2, 1, 2)
+  plot(w, angle(H), "linewidth", 2);      % phase plot xlabel('frequency in \pi units'); ylabel('Phase in radians/\pi'); title('Phase Response')
+  grid; axis([-pi pi -2 2])
+  xlabel('frequency in \pi units');
+  ylabel('Phase');
+  set(gca, "fontsize", 24);
+
+  print -dpng "-S800,400" ./image/4_8_hum-removal_frequency_response.png;
+  ans = "./image/4_8_hum-removal_frequency_response.png";
+ #+END_SRC
+
+ #+results: 4_8_hum-removal_frequency_response
+ [[file:./image/4_8_hum-removal_frequency_response.png]]
+
+***** Filter Structure
+#+ATTR_LATEX: :width 8cm
+[[./drawing/hum-removal.png]]
+  
+*** Matlab
+- Dirichlet :: The Dirichlet or periodic sync function can be used to analyze Moving Average
+  Filters $D_M(j\omega) = diric(\omega,M) = \frac{sin(\frac{\omega}{2}M)}{sin(\frac{\omega}{2}M)}$ 
+- Freqz :: The frequency response can be plotted most easily using freqz() function.
+
+#+NAME: ma z-transform frequency response
+#+BEGIN_SRC octave :exports results :results file
+  w = -pi:pi/500:pi;
+  M = 10;
+  H = freqz(ones(1,M)/M,1,w);
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  subplot(2, 1, 1)
+  plot(w,abs(H),"linewidth", 2)
+  grid; axis([-pi pi 0 1])
+  ylabel('Magnitude Response')
+  set(gca, "fontsize", 24);
+  set(gca,'XTick',-pi:pi/2:pi)
+  set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+
+
+  subplot(2, 1, 2)
+  plot(w,angle(H), "linewidth", 2)
+  grid; axis([-pi pi -pi pi])
+  ylabel('Phase Response (rad)')
+  xlabel('hat(\omega)')
+  set(gca, "fontsize", 24);
+  set(gca,'XTick',-pi:pi/2:pi)
+  set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+
+
+  print -dpng "-S800,400" ./image/ma_z-trans_freqrsp.png;
+  ans = "./image/ma_z-trans_freqrsp.png";
+ #+END_SRC
+
+ #+results: ma z-transform frequency response
+ [[file:./image/ma_z-trans_freqrsp.png]]
+ 
+** Filter Design Part 3
+*** Filter Specification
+*** IIR Design
+Filterdesign was established art long before digital processing appeared 
+- AFD: Analog Filter Design
+- lots of nice analog filters exist
+- methods exist to "translate" the analog design into a rational transfer function
+  - *impulse invariance transformation*, preserves the shape of the impulse response
+  - finite difference approximation, converts a differential equation into a ccde
+  - step invariance, preserves the shape of the step response
+  - matched-z transformation, matches the pole-zero representation
+  - *bilinear transformation*, preserves the system function representation  
+- most numerical packages (Matlab, etc.) provide ready-made routines
+- design involves specifying some parameters and testing that the specs are fulfilled
+
+**** Butterworth lowpass
+
+#+LATEX: \rowcolors[]{1}{yellow!5}{}
+#+ATTR_LATEX: :center :align  p{4cm}  p{4cm} p{4cm} 
+| \rowcolor{yellow!30} \bfseries\textcolor{red}{Magnitude response} | \bfseries\textcolor{red}{Design Parameters} | \bfseries\textcolor{red}{Test values} |
+|-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
+| maximally flat                                                    | order N                                     | width of transition band              |
+| monotonic over [0, $\pi$ ]                                        | cutoff frequency                            | passband error                        |
+|-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
+  
+***** Pole-Zero Plot
+#+NAME: 4_9_butterworth_pole-zero-plot
+ #+BEGIN_SRC octave :exports results :results file
+  pkg load signal;
+  wc = 1/3
+  order = 5;  % Filter order
+  [b,a] = butter(order,wc);    % [0:pi] maps to [0:1] here
+
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  zplane(b,a);
+  hm = findobj(gca,'type','line')
+  set(hm, 'markersize', 10, 'linewidth', 3);
+  set (gca, "linewidth",2);
+  set(gca, "fontsize", 36);
+
+  print -dpng "-S300,300" ./image/4_9_butterworth_pole-zero-plot.png;
+  ans = "./image/4_9_butterworth_pole-zero-plot.png";
+ #+END_SRC
+ #+ATTR_LATEX: :width 6cm
+ #+results: 4_9_butterworth_pole-zero-plot
+ [[file:./image/4_9_butterworth_pole-zero-plot.png]]
+
+***** Impulse Response
+#+NAME: 4_9_butterworth_impulse_response
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal;
+  wc = 1/3
+  order = 5;  % Filter order
+  [b,a] = butter(order,wc);    % [0:pi] maps to [0:1] here
+
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  [h,t] = impz(b,a,50);
+  stem(t,h, "filled", "linewidth", 2);
+  grid;
+  set(gca, "fontsize", 24);
+  print -dpng "-S800,200" ./image/4_9_butterworth_impulse_response.png;
+    ans = "./image/4_9_butterworth_impulse_response.png";
+ #+END_SRC
+
+ #+results: 4_9_butterworth_impulse_response
+ [[file:./image/4_9_butterworth_impulse_response.png]]
+
+***** Frequency Response
+#+NAME: 4_9_butterworth_LP_
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal
+  w = -pi:pi/500:pi;
+  wc = 1/3
+  order = 5;  % Filter order
+  [b,a] = butter(order,wc);    % [0:pi] maps to [0:1] here
+
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  subplot(2, 1, 1)
+  title("Frequency Req")
+  [H,w] = freqz(b,a,w);
+  plot(w, abs(H), "linewidth", 2); % amplitude plot in decibel
+  grid('on');
+  axis([-pi pi 0 1.2])
+  set(gca, "fontsize", 24);
+  set(gca,'XTick',-pi:pi/4:pi)
+  set(gca,'XTickLabel',{'-\pi','-3\pi/4','-\pi/2','-\pi/4','0','\pi/4','\pi/2','3\pi/4','\pi'})%
+
+  subplot(2, 1, 2)  
+  plot(w, angle(H), "linewidth", 2);      % phase plot
+  grid('on');
+  axis([-pi pi -4 4])
+  set(gca, "fontsize", 24);
+  set(gca,'XTick',-pi:pi/4:pi)
+  set(gca,'XTickLabel',{'-\pi','-3\pi/4','-\pi/2','-\pi/4','0','\pi/4','\pi/2','3\pi/4','\pi'})%
+
+  print -dpng "-S800,400" ./image/4_9_butterworth_LP_.png;
+  ans = "./image/4_9_butterworth_LP_.png";
+ #+END_SRC
+
+ #+results: 4_9_butterworth_LP_
+ [[file:./image/4_9_butterworth_LP_.png]]
+ 
+
+**** Chebyshev lowpass
+
+#+LATEX: \rowcolors[]{1}{yellow!5}{}
+#+ATTR_LATEX: :center :align  p{4cm}  p{4cm} p{4cm} 
+| \rowcolor{yellow!30} \bfseries\textcolor{red}{Magnitude response} | \bfseries\textcolor{red}{Design Parameters} | \bfseries\textcolor{red}{Test values} |
+|-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
+| equiripple in passband                                            | order N                                     | width of transition band              |
+| monotonic in stopband                                             | passband max error                          | stopband error                        |
+|                                                                   | cutoff frequency                            |                                       |
+|-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
+
+***** Pole-Zero Plot
+#+NAME: 4_9_chebyshev_pole-zero-plot
+ #+BEGIN_SRC octave :exports results :results file
+  pkg load signal;
+  wc = 1/3;                         % 0.5 pi
+  rp = 1;                           % 1db passband ripple
+  order = 5;                        % Filter orderwc = 1/3;
+  [b,a] = cheby1(order,rp,wc);    % [0:pi] maps to [0:1] here
+
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  zplane(b,a);
+  hm = findobj(gca,'type','line')
+  set(hm, 'markersize', 10, 'linewidth', 3);
+  set (gca, "linewidth",2);
+  set(gca, "fontsize", 36);
+
+  print -dpng "-S300,300" ./image/4_9_chebyshev_pole-zero-plot.png;
+  ans = "./image/4_9_chebyshev_pole-zero-plot.png";
+ #+END_SRC
+ #+ATTR_LATEX: :width 6cm
+ #+results: 4_9_chebyshev_pole-zero-plot
+ [[file:./image/4_9_chebyshev_pole-zero-plot.png]]
+
+***** Impulse Response
+#+NAME: 4_9_chebyshev_impulse_response
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal;
+  wc = 1/3;                         % 0.5 pi
+  rp = 1;                           % 1db passband ripple
+  order = 5;                        % Filter orderwc = 1/3;
+  [b,a] = cheby1(order,rp,wc);    % [0:pi] maps to [0:1] here
+
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  [h,t] = impz(b,a,50);
+  stem(t,h, "filled", "linewidth", 2);
+  grid;
+  set(gca, "fontsize", 24);
+  print -dpng "-S800,200" ./image/4_9_chebyshev_impulse_response.png;
+  ans = "./image/4_9_chebyshev_impulse_response.png";
+ #+END_SRC
+
+ #+results: 4_9_chebyshev_impulse_response
+
+***** Frequency Response
+#+NAME: 4_9_chebyshev_LP_
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal
+  w = -pi:pi/500:pi;
+  wc = 1/3;                         % 0.5 pi
+  rp = 1;                           % 1db passband ripple
+  order = 5;                        % Filter orderwc = 1/3;
+  [b,a] = cheby1(order,rp,wc);    % [0:pi] maps to [0:1] here
+
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  subplot(2, 1, 1)
+  title("Frequency Req")
+  [H,w] = freqz(b,a,w);
+  plot(w, abs(H), "linewidth", 2); % amplitude plot in decibel
+  grid('on');
+  axis([-pi pi 0 1.2])
+  set(gca, "fontsize", 24);
+  set(gca,'XTick',-pi:pi/4:pi)
+  set(gca,'XTickLabel',{'-\pi','-3\pi/4','-\pi/2','-\pi/4','0','\pi/4','\pi/2','3\pi/4','\pi'})%
+
+  subplot(2, 1, 2)  
+  plot(w, angle(H), "linewidth", 2);      % phase plot
+  grid('on');
+  axis([-pi pi -4 4])
+  set(gca, "fontsize", 24);
+  set(gca,'XTick',-pi:pi/4:pi)
+  set(gca,'XTickLabel',{'-\pi','-3\pi/4','-\pi/2','-\pi/4','0','\pi/4','\pi/2','3\pi/4','\pi'})%
+
+  print -dpng "-S800,400" ./image/4_9_chebyshev_LP_.png;
+  ans = "./image/4_9_chebyshev_LP_.png";
+ #+END_SRC
+
+ #+results: 4_9_chebyshev_LP_
+ [[file:./image/4_9_chebyshev_LP_.png]]
+ 
+
+ 
+**** Elliptic lowpass
+
+#+LATEX: \rowcolors[]{1}{yellow!5}{}
+#+ATTR_LATEX: :center :align  p{4cm}  p{4cm} p{4cm} 
+| \rowcolor{yellow!30} \bfseries\textcolor{red}{Magnitude response} | \bfseries\textcolor{red}{Design Parameters} | \bfseries\textcolor{red}{Test values} |
+|-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
+| equiripple in passband                                            | order N                                     | width of transition band              |
+| equiripple in stopband                                            | cutoff frequnecy                            |                                       |
+|                                                                   | passband max error                          |                                       |
+|                                                                   | stopband min attenuation                    |                                       |
+|-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
+
+***** Pole-Zero Plot
+#+NAME: 4_9_elliptic_pole-zero-plot
+ #+BEGIN_SRC octave :exports results :results file
+  pkg load signal;
+  wc = 1/3;                         % 0.5 pi
+  rp = 1;                           % 1db passband ripple
+  rs = 20;                          % 20db stopband ripple
+  order = 5;                        % Filter orderwc = 1/3;
+  [b,a] = ellip(order,rp,rs,wc);    % [0:pi] maps to [0:1] here
+
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  zplane(b,a);
+  hm = findobj(gca,'type','line')
+  set(hm, 'markersize', 10, 'linewidth', 3);
+  set (gca, "linewidth",2);
+  set(gca, "fontsize", 36);
+  print -dpng "-S300,300" ./image/4_9_elliptic_pole-zero-plot.png;
+  ans = "./image/4_9_elliptic_pole-zero-plot.png";
+ #+END_SRC
+ #+ATTR_LATEX: :width 6cm
+ #+results: 4_9_elliptic_pole-zero-plot
+ [[file:./image/4_9_elliptic_pole-zero-plot.png]]
+
+***** Impulse Response
+#+NAME: 4_9_elliptic_impulse_response
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal;
+  wc = 1/3;                         % 0.5 pi
+  rp = 1;                           % 1db passband ripple
+  rs = 20;                          % 20db stopband ripple
+  order = 5;                        % Filter orderwc = 1/3;
+  [b,a] = ellip(order,rp,rs,wc);    % [0:pi] maps to [0:1] here
+
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  [h,t] = impz(b,a,50);
+  stem(t,h, "filled", "linewidth", 2);
+  grid;
+  set(gca, "fontsize", 24);
+  print -dpng "-S800,200" ./image/4_9_elliptic_impulse_response.png;
+    ans = "./image/4_9_elliptic_impulse_response.png";
+ #+END_SRC
+
+ #+results: 4_9_elliptic_impulse_response
+ [[file:./image/4_9_elliptic_impulse_response.png]]
+
+***** Frequency Response
+#+NAME: 4_9_elliptic_LP_
+#+BEGIN_SRC octave :exports results :results file
+    pkg load signal
+    w = -pi:pi/500:pi;
+    wc = 1/3;                         % 0.5 pi
+    rp = 1;                           % 1db passband ripple
+    rs = 20;                          % 20db stopband ripple
+    order = 5;                        % Filter order
+    [b,a] = ellip(order,rp,rs,wc);    % [0:pi] maps to [0:1] here
+
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+    subplot(2, 1, 1)
+    title("Frequency Req")
+    [H,w] = freqz(b,a,w);
+    plot(w, abs(H), "linewidth", 2); % amplitude plot in decibel
+    grid('on');
+    axis([-pi pi 0 1.2])
+    set(gca, "fontsize", 24);
+    set(gca,'XTick',-pi:pi/4:pi)
+    set(gca,'XTickLabel',{'-\pi','-3\pi/4','-\pi/2','-\pi/4','0','\pi/4','\pi/2','3\pi/4','\pi'})%
+
+    subplot(2, 1, 2)   
+    plot(w, angle(H), "linewidth", 2);      % phase plot
+    grid on;
+    axis([-pi pi -4 4])
+    set(gca, "fontsize", 24);
+    set(gca,'XTick',-pi:pi/4:pi)
+    set(gca,'XTickLabel',{'-\pi','-3\pi/4','-\pi/2','-\pi/4','0','\pi/4','\pi/2','3\pi/4','\pi'})%
+
+    print -dpng "-S800,400" ./image/4_9_elliptic_LP_.png;
+    ans = "./image/4_9_elliptic_LP_.png";
+ #+END_SRC
+
+ #+results: 4_9_elliptic_LP_
+ [[file:./image/4_9_elliptic_LP_.png]]
+ 
+*** FIR Design
+**** Optimal minmax design
+FIR filters are =digital= signal processing "exclusivity". In the 70s Parks and McClellan
+developed an algorithm to design optimal FIR filters:
+- linear phase
+- equiripple error in passband and stopband
+algorithm proceeds by *minimizing* the maximum error in passpand and stopband
+***** Linear Phase
+Linear phase derives from a symmetric or antisymmetric impulse respones
+
+#+NAME: 4_9_fir_linear_phase
+#+BEGIN_SRC octave :exports results :results file
+     N = 5;
+     n1 =-(N-1)/2;
+     n2 = (N-1)/2;
+     n = [n1:n2];
+     y1 = [ 0 0.5 1 0.5 0]
+     y3 = [ 0 -0.5 0 0.5 0]
+
+     E = 6;
+     e =[1:6];
+     y2 = [0 0 0.75 0.75 0 0]
+
+
+     figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+     subplot(2, 2, 1)   
+     stem(n, y1, "filled", "linewidth", 2, "markersize", 6);
+     axis([n1 n2 -0.2 1.2]);
+     ylabel("Type I");
+     grid on;
+     set(gca, "fontsize", 24);
+
+     subplot(2, 2, 2)   
+     stem(e, y2, "filled", "linewidth", 2, "markersize", 6);
+     axis([1, 6, -0.2, 1.2], "nolabel");
+   
+     ylabel("Type II");
+     grid off;
+     set(gca, "fontsize", 24);
+
+     subplot(2, 2, 3)   
+     stem(n, y3, "filled", "linewidth", 2, "markersize", 6);
+     axis([n1 n2 -0.6 0.6]);
+     ylabel("Type III");
+     grid on;
+     set(gca, "fontsize", 24);
+     print -dpng "-S800,400" ./image/4_9_fir_linear_phase.png;
+     ans = "./image/4_9_fir_linear_phase.png";
+#+END_SRC
+
+#+results: 4_9_fir_linear_phase
+[[file:./image/4_9_fir_linear_phase.png]]
+
+
+- Type I-Filters :: Odd length impulse response, and are symmetric
+- Type II-Filters :: Even length impulse response, and are symmetric
+- Type III-Filters :: Odd length impulse response, and are antisymmetric
+- Type IV-Filters :: Even length impulse response, and are antisymmetric
+
+Type-II and Type-IV Filters are symmetric and antisymmetric filters, respectively, both of
+which have an even number of taps. That means that the center symmetry of these filters
+fall in between samples. And so they both introduce a non integer linear phase factor, of
+one half sample.
+
+*** The Park McMellon Design Algorithm
+#+LATEX: \rowcolors[]{1}{yellow!5}{}
+#+ATTR_LATEX: :center :align  p{4cm}  p{4cm} p{4cm} 
+| \rowcolor{yellow!30} \bfseries\textcolor{red}{Magnitude response} | \bfseries\textcolor{red}{Design Parameters}                    | \bfseries\textcolor{red}{Test values} |
+|-------------------------------------------------------------------+----------------------------------------------------------------+---------------------------------------|
+| equiripple in passband and stopband                               | order N                                                        | passband max error                    |
+|                                                                   | passband edge $\omega_p$                                       | stopband max error                    |
+|                                                                   | stopband edge $\omega_s$                                       |                                       |
+|                                                                   | ratio of passband to stopband error $\frac{\delta_p}{delta_s}$ |                                       |
+|-------------------------------------------------------------------+----------------------------------------------------------------+---------------------------------------|
+
+#+NAME: 4_9_fir_park_mcmellon
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal
+
+  f = [0 0.3 0.4 0.6 0.7 1];
+  a = [0 0 1 1 0 0];
+  b = remez(17,f,a);
+  [h,w] = freqz(b,1,512);
+
+
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  plot(f,a,w/pi,abs(h), "linewidth", 2)
+  legend('Ideal','remez Design')
+  set(gca, "fontsize", 24);
+  grid on;
+  set(gca, "fontsize", 24);
+  print -dpng "-S800,400" ./image/4_9_fir_park_mcmellon.png;
+  ans = "./image/4_9_fir_park_mcmellon.png";
+#+END_SRC
+
+#+results: 4_9_fir_park_mcmellon
+[[file:./image/4_9_fir_park_mcmellon.png]]
+
+
 ** TODO Notes and Supplementary Materials
+*** The Fractional Delay Filter (FDF)
+#+ATTR_LATEX: :width 8cm
+[[./drawing/fractional_delay.png]]
+
+
+The transfer function of a simple delay $z^{-d}$ is:
+#+BEGIN_SRC latex
+  \begin{equation*}
+    H(e^{j\omega}) = e^{-j\omega d} \text{, } d \in \mathbb{Z}
+  \end{equation*}
+#+END_SRC
+
+what happens if, in $H(e^{j \omega}$ we use a non-integer $d \in \mathbb{R}$?
+
+**** Impulse Response
+#+BEGIN_SRC latex
+  \begin{align*}
+    h[n] &= IDFT \left\{e^{j \omega d}  \right\} \\
+         &= \frac{1}{2 \pi} \int_{-\pi}^{\pi} e^{j \omega d} e^{j \omega n} d\omega \\
+         &= \frac{1}{2 \pi} \int_{-\pi}^{\pi} e^{j \omega(n-d)} d\omega \\
+         &= \frac{1}{\pi (n-d)} \frac{e^{j \pi(n- d)} - e^{-j \pi(n- d)}}{2j} \\
+         &= \frac{sin \pi(n-d)}{\pi(n-d)} \\
+         &= sinc(n-d)
+  \end{align*}
+#+END_SRC
+
+
+#+NAME: 4_8b_fractional_delay_impulse
+#+BEGIN_SRC octave :exports results :results file
+    pkg load signal;
+    N = 21;
+    n1=-(N-1)/2; n2=(N-1)/2;
+    n = [n1:n2];
+    n2 = n1:0.01:n2
+    d = 3;
+
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+    x = sinc(n-d);
+    subplot(2,2,1);
+    stem(n,x, "filled", "linewidth", 3);
+    grid;
+    axis([-11, 11, -0.4, 1.1]);
+    title("d=3")
+    set(gca, "fontsize", 24);
+
+    d = 3.5;
+    x = sinc(n-d);
+    x2 = sinc(n2-d);
+    subplot(2,2,2);
+    stem(n,x, "filled", "linewidth", 3);
+    hold on;
+    plot(n2,x2, "r", "linewidth", 0.5);
+    grid;
+    axis([-11, 11, -0.4, 1.1]);
+    title("d=3.5")
+    set(gca, "fontsize", 24);
+
+    d = 3.6;
+    x = sinc(n-d);
+    x2 = sinc(n2-d);
+    subplot(2,2,3);
+    stem(n,x, "filled", "linewidth", 3);
+    hold on;
+    plot(n2,x2, "r", "linewidth", 0.5);
+    grid;
+    axis([-11, 11, -0.4, 1.1]);
+    title("d=3.6")
+    set(gca, "fontsize", 24);
+
+    d = 3.7;
+    x = sinc(n-d);
+    x2 = sinc(n2-d);
+    subplot(2,2,4);
+    stem(n,x, "filled", "linewidth", 3);
+    hold on;
+    plot(n2,x2, "r", "linewidth", 0.5);
+    grid;
+    axis([-11, 11, -0.4, 1.1]);
+    title("d=3.7")
+    set(gca, "fontsize", 24);
+
+    print -dpng "-S800,400" ./image/4_8b_fractional_delay_impulse.png;
+    ans = "./image/4_8b_fractional_delay_impulse.png";
+#+END_SRC
+
+#+results: 4_8b_fractional_delay_impulse
+[[file:./image/4_8b_fractional_delay_impulse.png]]
+
+
+For now suffice it to say that we can actually interpolate in discrete time and
+find intermediate values of a discrete time sequence
+using just discrete times filters like the fractional delay
+
+*** TODO The Hilbert Filter
+- Demodulator
+#+ATTR_LATEX: :width 8cm
+[[./drawing/hilbert-filter.png]]
+
+\centerline{can we build such a thing?}
+
+ 
+
+*** TODO Implementing of Digital Filters
+**** Leaky Integrator in C
+
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+Name: leaky 
+#+BEGIN_SRC C :exports both
+  double leaky(double x) {
+      static const double lambda = 0.9;
+      static double y            = 0;
+
+      y = lambda * y + (1-lambda) *x;
+      return y;
+  }
+
+  int main() {
+      int n;
+      for(n = 0; n <20; n++)
+      {
+          //call with delta signl
+          printf("%.4f ", leaky(n==0 ? 1.0 : 0.0));  
+          if(!((n+1)%10)) printf("\n");
+      }
+  }
+  #+END_SRC
+
+  #+results: leaky
+  |    0.1 |   0.09 |  0.081 | 0.0729 | 0.0656 |  0.059 | 0.0531 | 0.0478 | 0.043 | 0.0387 |
+  | 0.0349 | 0.0314 | 0.0282 | 0.0254 | 0.0229 | 0.0206 | 0.0185 | 0.0167 | 0.015 | 0.0135 |
+
+
+**** Moving Average in C
+
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+Name: moving_average 
+#+BEGIN_SRC C++ :exports both 
+  #include <stdio.h>
+  double ma(double x) {
+      static const int M = 5;
+      static double z[M];
+      static int ix = -1;
+
+      int n;
+      double avg = 0;
+
+      if(ix == -1) {
+          for(n=0; n<M; n++)
+              z[n] = 0;
+          ix = 0;
+      }
+
+      z[ix] = x;
+      ix = (ix + 1) % M; // circular buffer
+
+      for(n=0; n<M; n++)
+          avg += z[n];
+
+      return avg / M;
+  }
+
+  int main() {
+      int n;
+      for (n = 0; n<20; n++)
+      {
+          // call with delta signl
+          printf("%.4f ", ma(n==0 ? 1.0 : 0.0)); 
+          if(!((n+1)%10)) printf("\n");
+      }
+  }
+  #+END_SRC
+
+  #+results: moving_average
+
+
+  
+*** TODO Real-Time Processing
+*** TODO Derevereration and echo canellation

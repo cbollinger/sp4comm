@@ -1,42 +1,53 @@
-#+CATEGORY: SP4COMM
+#+CATEGORY: SP4COMM W5
 
 # #+OPTIONS: H:5
-# #+LaTeX_HEADER: \usepackage[tikz]{bclogo}
-# #+LaTeX_HEADER: \usepackage{tcolorbox}
-# #+LATEX_HEADER: \usepackage{enumitem}
+#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
+#+LaTeX_HEADER: \usepackage{tcolorbox}
+#+LATEX_HEADER: \usepackage{colortbl}
+#+LATEX_HEADER: \usepackage{enumitem}
+#+LaTex_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
 # #+LATEX: \setcounter{secnumdepth}{5}
 
+
+
+
 * Week 5 Module 4: Part 1 Introduction to Filtering
-** Linear  time-invariant filters
+** Linear  Time-Invariant Systems
+#+ATTR_LATEX: :options [couleur=yellow!10, arrondi = 0.1, logo=\bcbook, ombre=true]{LTI System}
+#+BEGIN_bclogo
+Linearity and Time Invariance taken together: A Linear Time Invariant System is completely
+charachterized by its response to the input in particular by its the Impulse Response .
+#+END_bclogo
 *** Linearity
+Linearity is expressed by the equivalence
 #+BEGIN_SRC latex
   \begin{equation}
-  \mathfrak{H}\big\{\alpha\;x_1[n] + \beta\;x_2[n]\big\} = \alpha\;\mathfrak{H}\big\{x_1[n]\big\} + \beta\;\mathfrak{H}\big\{x_2[n]\big\}
+    \mathfrak{H}\big\{\alpha\;x_1[n] + \beta\;x_2[n]\big\} = \alpha\;\mathfrak{H}\big\{x_1[n]\big\} + \beta\;\mathfrak{H}\big\{x_2[n]\big\}
   \end{equation}
-  #+END_SRC
+#+END_SRC
 - Fuzz-Box, example for a none linear device
-**** TODO Add calculation examples 
+**** TODO Add calculation examples
 *** Time invariance
 - The system behaves the same way independently of when a it's switched on
   #+BEGIN_SRC latex
     \begin{equation}
-    y[n] = \mathfrak{H}\big\{x[n]\big\} \Leftrightarrow \mathfrak{H}\big\{x[n-n_o]\big\} = y[n-n_o]
+      y[n] = \mathfrak{H}\big\{x[n]\big\} \Leftrightarrow \mathfrak{H}\big\{x[n-n_o]\big\} = y[n-n_o]
     \end{equation}
   #+END_SRC
 - Wah-Pedal, example of a time variant device
-**** TODO Add calculation examples 
+**** TODO Add calculation examples
 *** Convolution
 The impulse response is the output of a filter when the input is the delta function.
 
-   #+BEGIN_SRC latex
-     \begin{equation}
-       h[n] = \mathfrak{H}\big\{\delta[n]\big\}
-     \end{equation}
-        #+END_SRC
+#+BEGIN_SRC latex
+  \begin{equation}
+    h[n] = \mathfrak{H}\big\{\delta[n]\big\}
+  \end{equation}
+#+END_SRC
 
-#+ATTR_LATEX: :options [couleur = brown!20, arrondi = 0.1, logo=\bcbook, ombre=true]{Impulse Response}
+#+ATTR_LATEX: :options [couleur=yellow!10, arrondi = 0.1, logo=\bcbook, ombre=true]{Impulse Response}
 #+BEGIN_bclogo
- Impulse response fully characterize the LTI system!
+Impulse response fully characterize the LTI system!
 #+END_bclogo
 
 We can always write
@@ -44,32 +55,32 @@ We can always write
   \begin{equation}
     x[n] = \sum_{k=-\infty}^{\infty}\, x[k]\delta[n-k]
   \end{equation}
-   #+END_SRC
+#+END_SRC
 
 by linearity and time invariance
 #+BEGIN_SRC latex
   \begin{tcolorbox}
-  \begin{align}
-    y[n] &= \sum_{k=-\infty}^{\infty}\, x[k]\,h[n-k] \\
-         &= x[n]\, * \,h[n]
-  \end{align}
+    \begin{align}
+      y[n] &= \sum_{k=-\infty}^{\infty}\, x[k]\,h[n-k] \\
+           &= x[n]\, * \,h[n]
+    \end{align}
   \end{tcolorbox}
-   #+END_SRC
+#+END_SRC
 
-Perfoming the convolution algorithmically
+Performing the convolution algorithmically
 #+BEGIN_SRC latex
   \begin{equation*}
-    x[n]\, *\, h[n] = \sum_{k=-\infty}^{\infty}\, x[k]\,*\,h[n-k]
+    x[n]\, *\, h[n] = \sum_{k=-\infty}^{\infty}\, x[k]\,\cdot\,h[n-k]
   \end{equation*}
-   #+END_SRC
+#+END_SRC
 
 #+ATTR_LATEX: :options [leftmargin=2.5cm,labelwidth=2.2cm,itemindent=-2pt]
-- Ingredients :: \\
+- Ingredients ::
   - a sequence x[m]
   - a second sequence h[m]
 
 #+ATTR_LATEX: :options [leftmargin=2.5cm,labelwidth=2.2cm,itemindent=-2pt]
-- The Recipe :: \\
+- The Recipe ::
   - time-reverse h[m]
   - at each step n (from $-\infty \,to\, \infty$):
     - center the time-reversed h[m] in n (i.e. by shift -n)
@@ -84,87 +95,887 @@ sequencies.
   \end{align*}
 #+END_SRC
 
-**** TODO Add calculation examples 
-** TODO Filtering by Example
-#+ATTR_LATEX: :options bgcolor=gray!30
-#+NAME: Signal mit Rauschen
+** Filtering in the Time Domain
+For the convolution of two sequencies to exist, the convolution sum must be finite
+i.e. the both sequencies must be \textcolor{blue}{absolutely summable}
+*** The convolution operator
+#+ATTR_LATEX: :options [leftmargin=5cm,labelwidth=4.7cm,itemindent=-2pt]
+- Linearity ::
+  $x[n] * (\alpha\cdot y[n]+\beta\cdot w[n]) = *\alpha\cdot x[n]*y[n] + \beta\cdot x[n] * w[n])$ \\
+  $w[n] = x[n]* y[n] \iff x[n]*y[n-k] = w[n-k]$
+- Commutative ::
+  $x[n] * y[n] = y[n] * x[n]$
+- Associative ::
+  $(x[n] * y[n]) * w[n] = x[n] * (y[n] * w[n])$
+*** Convolution and inner Product
+#+begin_src latex
+\begin{tcolorbox}
+    \begin{equation*}
+      x[n]*h[n] =  \langle\;h^*[n-k],x[k]\rangle
+    \end{equation*}
+  \end{tcolorbox}
+#+end_src
+Filtering measures the time-localized similarity between the input sequence and a
+prototype sequence - the time reversed impulse response.
+
+In general the convolution operator for a signal is defined with repsect to the inner
+product of its underlaying Hilbert space:
+
+#+ATTR_LATEX: :options [leftmargin=5cm,labelwidth=4.7cm,itemindent=-2pt]
+- Square Summable Sequence $\ell_2(\mathbb{Z})$ :: $x[n]*h[n] =  \langle\;h^*[n-k],x[k]\rangle$
+- N-Periodic Sequence :: $\tilde{x}[n]* \tilde{y}[n] ) \sum\limits_{k=0}^{N-1}\tilde{x}[n-k]\tilde{y}[k]$
+- Square Integrable Function $L_2([-\pi, \pi])$ :: $X(e^{j\omega})*Y(e^{\omega}) = \frac{1}{2\pi}\int_{-\pi}^{\pi} X(e^{j\sigma}) \cdot Y(e^{j(\omega-\sigma)})$
+*** Properties of the Impulse Response
+- Causality :: A system is called causal if its output does not depend on futre values of
+  the input. In practice a causual system is the only type of "real-time" syste we can
+  actually implement.
+- Stability :: A system is called bounded-input bounded-output stabel (BIBO stable) if its
+  output is bounded for all bounded input sequencies.
+  *FIR* Filter are always stable, since only in the convolution sum only a finite number
+  of terms are involved.
+*** Filtering by Example
+**** FIR Filter: Moving Average
+Typicale filtering scenario: denoising
+- idea: replace each sample by the local average. Average are useually good to eliminate
+  random variation from which you don't know mutch about it.
+- for instance: $y[n] = (x[n] + x[n-1]) / 2$
+- more generally:
+  #+begin_src latex
+    \begin{equation*}
+      y[n] =  \frac{1}{M}\sum_{k=0}^{M-1}x[n-k]
+    \end{equation*}
+  #+end_src
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+NAME: MA Signal mit Rauschen
 #+BEGIN_SRC octave :exports results :results file
-   N=500                             # Vector lenght
-   n=0:N-1;        # Discrete Time Vector
-   omega0 = 2*pi/N;
-   phi = pi/5;
+    N=500            # Vector lenght
+    n=0:N-1;         # Discrete Time Vector
+    omega0 = 2*pi/N;
+    phi = pi/5;
 
-   x1 = -sin(omega0*1*n + phi );          # The sinusoid
-   x2 = -sin(omega0*2*n + phi );
-   x3 = -sin(omega0*3*n + phi );
-   x4 = -sin(omega0*4*n + phi );
+    x1 = -sin(n.*1.*omega0 .+ phi );          # The sinusoid
+    x2 = -sin(n.*3.*omega0 .+ phi );
+    x3 = -sin(n.*3.*omega0 .+ phi );
 
-   xn=0.5*rand(1,N);
-   x = (xn+x1+x2+x3)
+    xn=0.5*rand(1,N);
+    x = (xn+x1+x2+x3)
 
-  y2 = zeros(N,1);
-  M = 2
-  for k = M:N
-    y2(k) = sum( x(k-M+1:k)) / M;
-  end
+    y2 = zeros(N,1);
+    M = 2
+    for k = M:N
+      y2(k) = sum( x(k-M+1:k)) / M;       # Moving Average Algorithm
+    end
 
-  y20 = zeros(N,1);
-  K = 20;
-  for k = K:N
-    y20(k) = sum( x(k-K+1:k)) / K;
-  end
+    y50 = zeros(N,1);
+    K = 50;
+    for k = K:N
+      y50(k) = sum( x(k-K+1:k)) / K;     # Moving Average Algorithm
+    end
 
-                                 # Graphik
-   figure( 1, "visible", "off");     # Do not open the graphic window in org
+                                   # Graphik
+    figure( 1, "visible", "off");     # Do not open the graphic window in org
 
-   subplot(2,2,1)
-   plot(n, x1+x2+x3, 'color', 'red', '--', "linewidth", 1);
-   axis([0 (N-1) -3 3])
-   xlabel('Samples')
-   ylabel('Value')
-   title('Original Signal')
-   grid on ;
+    subplot(2,2,1)
+    plot(n, x1+x2+x3, 'color', 'red', '--', "linewidth", 1);
+    axis([0 (N-1) -3 3.5])
+    xlabel('Samples')
+    ylabel('Value')
+    title('Original Signal')
+    set(gca, "fontsize", 24)
+    grid on ;
 
-   subplot(2,2,2)
-   plot(n, x, "linewidth", 1, n, x1+x2+x3, 'color', 'red', '--', "linewidth", 0.5);
-   axis([0 (N-1) -3 3])
-   grid on ;
-   xlabel('Samples')
-   ylabel('Value')
-   title('Signal with noise')
+    subplot(2,2,2)
+    plot(n, x, "linewidth", 1, n, x1+x2+x3, 'color', 'red', '--', "linewidth", 0.5);
+    axis([0 (N-1) -3 3.5])
+    grid on ;
+    xlabel('Samples')
+    ylabel('Value')
+    title('Signal with noise')
+    set(gca, "fontsize", 24)
 
-   subplot(2,2,3)
-   plot(n, y2, "linewidth", 1, n, x1+x2+x3, 'color', 'red', '--', "linewidth", 0.5);
-   axis([0 (N-1) -3 3])
-   grid on ;
-   xlabel('Samples')
-   ylabel('Value')
-   title('Moving Average 2')
+    subplot(2,2,3)
+    plot(n, y2, "linewidth", 1, n, x1+x2+x3, 'color', 'red', '--', "linewidth", 0.5);
+    axis([0 (N-1) -3 3.5])
+    grid on ;
+    xlabel('Samples')
+    ylabel('Value')
+    title('Moving Average 2')
+    set(gca, "fontsize", 24)
 
-   subplot(2,2,4)
-   plot(n, y20, "linewidth", 1, n, x1+x2+x3, 'color', 'red', '--', "linewidth", 0.5);
-   axis([0 (N-1) -3 3])
-   grid on ;
-   xlabel('Samples')
-   ylabel('Value')
-   title('Moving Average 20')
+    subplot(2,2,4)
+    plot(n, y50, "linewidth", 1, n, x1+x2+x3, 'color', 'red', '--', "linewidth", 0.5);
+    axis([0 (N-1) -3 3.5])
+    grid on ;
+    xlabel('Samples')
+    ylabel('Value')
+    title('Moving Average 50')
+    set(gca, "fontsize", 24)
 
-                                       # Org-Mode specific output
-   print -dpng "-S800,400" ./image/signal_mit_rauschen.png;        # Set print device
-   ans = "./image/signal_mit_rauschen.png";            # The mandtory return value
+                                    # Org-Mode specific output
+    print -dpng "-S800,600" ./image/signal_mit_rauschen.png;        # Set print device
+    ans = "./image/signal_mit_rauschen.png";            # The mandtory return value
 #+END_SRC
 
-#+results: Signal mit Rauschen
+#+results: MA Signal mit Rauschen
 [[file:./image/signal_mit_rauschen.png]]
 
-** TODO Filter Stability
-** TODO Frequency Response
-** TODO The convolution theorem
+***** Impulse Response
+  #+begin_src latex
+    \begin{align*}
+      h[n] =  \frac{1}{M}\sum_{k=0}^{M-1}\delta[n-k]
+          \begin{cases}
+            \frac{1}{M}  & \text{for }  0 \leq n < M\\
+             0           & \text{otherwise}
+          \end{cases}
+      \end{align*}
+  #+end_src
+
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+NAME: ma_impresp
+#+BEGIN_SRC octave :exports code :session ma
+  function [x,n] = ma_impresp(M,n1,n2)
+  % Generates x(n) = delta(n); 0 <= M
+  % ----------------------------------------------
+  % [x,n] = stepseq(n0,n1,n2)
+  %
+    n = [n1:n2]; x = [ (n >= 0) & !((n-M) >= 0) ]./M;
+  end
+#+END_SRC
+
+#+NAME: ma impulse response
+#+BEGIN_SRC octave :exports results :results file :session ma
+  N=31;
+  M=7;
+  n1=-(N-1)/2; n2=(N-1)/2;
+  [x,n] = ma_impresp(M,n1,n2);
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  stem(n,x, "filled", "linewidth", 2, "markersize", 6);
+  axis([-(N-1)/2 (N-1)/2 0 0.2]);
+  set(gca,'yticklabel',[])
+  xlabel("Sample [n]");
+  ylabel("x[n]");
+  title("Moving Average Impulse Response");
+  text(-16, 0.15, '\fontsize{16}(1/M)  ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "center");
+  grid on;
+  set(gca, "fontsize", 24);
+  print -dpng "-S800,300" ./image/ma_imprsp.png;
+  ans = "./image/ma_imprsp.png";
+ #+END_SRC
+
+ #+results: ma impulse response
+ [[file:./image/ma_imprsp.png]]
+
+***** MA Analysis
+- soomthin effect is proportional to M
+- number of operations and storage also proportional to M
+
+***** From the MA to first-order recursion
+#+begin_src latex
+  \begin{align*}
+    y_{M[n]} &=  \sum_{k=0}^{M-1}x[n-k] = x[n] X \sum_{k=1}^{M-1}x[n-k] \\
+    M_{y_{M[n]}} &= x[n] + (M-1) y_{M-1}[n-1] \\
+    y_{M}[n] &= \frac{M-1}{M} y_{M-1}[n-1] + \frac{1}{M} x[n] \\
+    y_{M}[n] &= \lambda y_{M-1}[n-1] + (1-\lambda)x[n] \text{, } \lambda = \frac{M-1}{M}
+  \end{align*}
+  #+end_src
+
+**** IIR Filter: The Leaky Integrator
+- when M is large, $y_{M-1}[n] \approx y_{M}[n] \text{and }(\lambda \approx 1)$
+- the filter becomes: $y[n] = \lambda y[n-1] + (1-\lambda)x[n]$
+- the filter is now recursive, since it uses its previous output value
+
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+NAME: Leaky integrator impulse response
+#+BEGIN_SRC octave :exports code :results none
+  function y = lky_impresp(a,b,lambda,x)
+  % Generates x(n) = a^n
+  % ----------------------------------------------
+  % [x,n] = lky_impresp(a,b, lambda, x)
+  % y[n] -lambda y[n-1] = (1-lambda) x[n]
+  % a = [1, -lambda];
+  % b = [(1-lambda)];
+
+    b = [1-lambda];
+    a = [1, -lambda];
+    y = filter(b,a,x);
+  end
+#+END_SRC
+
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+NAME: Leaky Integrator Signal mit Rauschen
+#+BEGIN_SRC octave :exports results :results file
+  N=500            # Vector lenght
+  n=0:N-1;         # Discrete Time Vector
+  omega0 = 2*pi/N;
+  phi = pi/5;
+
+  xn=0.5*rand(1,N);
+  x1 = -sin(n.*1.*omega0 .+ phi );  # The sinusoid imput signal
+  x2 = -sin(n.*3.*omega0 .+ phi );
+  x3 = -sin(n.*3.*omega0 .+ phi );
+  x = (xn+x1+x2+x3);
+
+  l1 = 0.80;                      # lambda#1
+  b = [(1-l1)];
+  a = [1, -l1];
+  y80_2 = filter(b,a,x);
+
+  l2 = 0.98;                      # lambda#2
+  b = [(1-l2)];
+  a = [1, -l2];
+  y98_2 = filter(b,a,x);
+                                  # Graphik
+  figure( 1, "visible", "off");     # Do not open the graphic window in org
+
+  subplot(2,2,1)
+  plot(n, x1+x2+x3, 'color', 'red', '--', "linewidth", 1);
+  axis([0 (N-1) -3 3.5])
+  xlabel('Samples')
+  ylabel('Value')
+  title('Original Signal')
+  set(gca, "fontsize", 24)
+  grid on ;
+
+  subplot(2,2,2)
+  plot(n, x, "linewidth", 1, n, x1+x2+x3, 'color', 'red', '--', "linewidth", 0.5);
+  axis([0 (N-1) -3 3.5])
+  grid on ;
+  xlabel('Samples')
+  ylabel('Value')
+  title('Signal with noise')
+  set(gca, "fontsize", 24)
+
+  subplot(2,2,3)
+  plot(n, y80_2, "linewidth", 1, n, x1+x2+x3, 'color', 'red', '--', "linewidth", 0.5);
+  axis([0 (N-1) -3 3.5])
+  grid on ;
+  xlabel('Samples')
+  ylabel('Value')
+  title('Leaky Integrator lambda=0.8')
+  set(gca, "fontsize", 24)
+
+  subplot(2,2,4)
+  plot(n, y98_2, "linewidth", 1, n, x1+x2+x3, 'color', 'red', '--', "linewidth", 0.5);
+  axis([0 (N-1) -3 3.5])
+  grid on ;
+  xlabel('Samples')
+  ylabel('Value')
+  title('Leaky Integrator lambda=0.98')
+  set(gca, "fontsize", 24)
+
+                                  # Org-Mode specific output
+  print -dpng "-S800,600" ./image/leaky_rauschen.png;        # Set print device
+  ans = "./image/leaky_rauschen.png";            # The mandtory return value
+#+END_SRC
+
+#+results: Leaky Integrator Signal mit Rauschen
+[[file:./image/leaky_rauschen.png]]
+
+***** Impulse Response
+For the impulse we just need to plug the delta function
+#+begin_src latex
+  \begin{align*}
+    h[n] &=  (\lambda y[n-1] + (1-\lambda)) \delta[n] \\
+         &= (1-\lambda) \lambda^n u[n]
+  \end{align*}
+  #+end_src
+
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+NAME: Leaky Integrator Impulse response
+#+BEGIN_SRC octave :exports results :results file
+    N=61;
+    n0=0;                   # Center of Impulse
+    n1=-(N-1)/2;            # +x Max
+    n2=(N-1)/2;             # -x Max
+    n = [n1:n2];            # Samples
+    x = [(n-n0) == 0];      # Impulse Function
+
+    l = 0.8;
+    b = [(1-l)];
+    a = [1, -l];
+    y  = filter(b,a,x);    # Leaky Integrator
+
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+    stem(n,y, "filled", "linewidth", 2, "markersize", 6);
+    axis([-20 30 0 0.25]);
+    set(gca,'yticklabel',[])
+    xlabel("Sample [n]");
+    title("Leaky Integrator Impulse Response");
+    text(-22, 0.2, '\fontsize{16}(1-\lambda)  ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "center");
+    ylabel("h");
+    grid on;
+    set(gca, "fontsize", 24);
+    print -dpng "-S800,250" ./image/leaky_impulse_response.png;
+    ans = "./image/leaky_impulse_response.png";
+#+END_SRC
+
+#+results: Leaky Integrator Impulse response
+[[file:./image/leaky_impulse_response.png]]
+
+
+The peak at n=0 is $1-\lambda$.
+
+***** The leaky integrator why the name
+
+- Discrete Time integrator is a boundless accumulator
+  #+begin_src latex
+    \begin{align*}
+      y[n] &=  \sum_{k=-\infty}^{n} x[k] \\
+          &= y[n-1] + x[n] \Rightarrow \text{ almost leaky integrator}
+    \end{align*}
+  #+end_src
+
+To prevent "explosing" we scale the accumulator with $\lambda$:
+#+ATTR_LATEX: :options [leftmargin=5cm,labelwidth=4.7cm,itemindent=-2pt]
+- $\lambda y[n-1]$ :: keep only a fraction $\lambda$ of the accumulated value so far and
+  forget ("leak") a fraction $\lambda -1$
+- $(1-\lambda)x[n]$ :: add only a fraction $1-\lambda$ of the current value to the
+  accumulator.
+
+  So we get the leaky integrator from the accumulator
+  #+begin_src latex
+    \begin{equation*}
+      y[n]  = \lambda \cdot y[n-1] + (1-\lambda) \cdot x[n] \Rightarrow \text{ almost leaky integrator}
+    \end{equation*}
+  #+end_src
+** Classification of Filters
+#+ATTR_LATEX: :options [leftmargin=5cm,labelwidth=4.7cm,itemindent=-2pt]
+- FIR :: Finite Impulse Response Filter
+  - Impulse response has finite support
+  - only a finite number of samples are involved in the computation of each output
+  - Example: Moving Average Filter
+- IIR :: Infinite Impulse Response Filter
+  - Impulse response has inifinte support
+  - a potentially infinite number of samples are involved in the computation of each
+    output sample
+  - surprisingly, in many cases the computation can still be performed in a finite amount
+    of steps
+  - Example: The Leaky Integrator
+- Casual ::
+  - impulse response is zero for n < 0
+  - only past samples are involved in the computation of each output sample
+  - causul filters can work "on line" since they only need the past
+- Noncasual ::
+  - impulse response in nonzero for some (or all) n < 0
+  - can still be implemented in a offline fashing (e.g. image processing)
+** Filter Stability
+
+#+ATTR_LATEX: :options [couleur=yellow!10, arrondi = 0.1, logo=\bcbook, ombre=true]{FIR Filter}
+#+BEGIN_bclogo
+FIR filters are always stable
+#+END_bclogo
+
+because their impuls response only contains a finite number of non-zero values, and
+therefore the sum of their absolute values will always be finite.
+** Frequency Response
+*** References
+- [[http://ece.uccs.edu/~mwickert/ece2610/lecture_notes/ece2610_chap6.pdf][Signal and System for Dummies: Frequency Response]]
+  
+*** Eigensequence
+If a complex exponential is applied to a LTI filter its response is the DTFT of the
+impulse response of the LTI filter times the complex exponential.
+
+#+BEGIN_SRC latex
+  \begin{align*}
+    x[n] &=e^{j\omega_0n}  \\
+    y[n] &= \mathfrak{H}\big\{x[n]\big\} \\
+    y[n] &= x[n] * h[n]  \\
+    y[n] &= e^{j\omega_0n} * h[n]  \\
+    y[n] &= H(e^{j\omega_0})e^{j\omega_0n}  \\     
+  \end{align*}
+#+END_SRC
+- DTFT of impulse response determinse the frequency characteristic of a filter
+- Complex exponential are \textcolor{blue}{eignesequences} of LTI systems, i.e. linear
+  filters cannot change the frequency of a sinusoid.
+*** Magnitude and phase
+#+BEGIN_SRC latex
+  \begin{align*}
+    \text{if } H(j^{j\omega_0}) = Ae^{j\theta} \text{, then}  \\
+     \mathfrak{H}\big\{e^{j\omega_0n}\big\} = Ae^{j(\omega_0n+\theta)}\\
+  \end{align*}
+#+END_SRC
+
+#+ATTR_LATEX: :caption \def\arraystretch{1.5} :align p{5cm}c|p{5cm}c
+| *amplitude*  \rowcolor{gray!10} | *A*            | *phase shift* | $\theta$       |
+| amplification                   | >1             | delay         | $< 0$          |
+| attenuation                     | $0\leq A < 1$  | advancment    | $> 0$          |
+
+*** The convolution theorem
+The convolution theorem summerizes this result in
+#+BEGIN_SRC latex
+  \begin{tcolorbox}
+      \begin{equation*}
+        DTFT \big\{x[n] * h[n]\big\} = X(e^{j\omega})H(e^{j\omega})
+      \end{equation*}
+    \end{tcolorbox}
+#+END_SRC
+
+*** Frequency response
+The DTFT of the impulse response is called the frequency response
+#+BEGIN_SRC latex
+  \begin{tcolorbox}
+      \begin{equation*}
+        H(e^{j\omega}) = DTFT \big\{h[n]\big\}
+      \end{equation*}
+    \end{tcolorbox}
+#+END_SRC
+
+#+ATTR_LATEX: :caption \def\arraystretch{1.5} :align p{5cm}c|p{5cm}
+| *magnitude*  \rowcolor{gray!10} | \vert $H(e^{j\omega}$ \vert | *phase*           |
+| amplification                   | > 1                         | overall shape and |
+| attenuation                     | < 1                         | phase changes     |
+
+*** Example of Frequency Response: Moving Average Filter
+The difference equation from M-point averager is
+#+BEGIN_SRC latex
+  \begin{equation*}
+    y[n] = \frac{1}{M} \sum_{k=0}^{M-1} x[n-k]
+  \end{equation*}
+#+END_SRC
+
+The Frequency response of the moving average filter
+#+BEGIN_SRC latex
+  \begin{align*}
+    H(e^{j\omega})
+    = \frac{1}{M} \sum_{k=0}^{M-1} e^{-j\omega k}
+    &= \frac{1}{M} \sum_{k=0}^{M-1} \big(e^{-j\omega}\big)^k \\
+    &= \frac{1}{M} \frac{(1-e^{-j\omega M})}{(1-e^{j\omega})}
+  \end{align*}
+
+#+END_SRC
+- The frequency response is composed of a linear term $e^{-j\omega\frac{M-1}{2}}$ and
+  $\pm\pi$ due to the sign changes of $\frac{sin(\frac{\omega}{2}M)}{sin(\frac{\omega}{2}M)}$
+  
+The Magnetute response of the moving average filter
+#+BEGIN_SRC latex
+  \begin{equation*}
+    H(e^{j\omega})
+    = \frac{1}{M}
+    \left\lvert
+      \frac{sin(\frac{\omega}{2}M)}{sin(\frac{\omega}{2})}
+    \right\rvert
+  \end{equation*}
+
+#+END_SRC
+
+#+NAME: ma frequency response
+#+BEGIN_SRC octave :exports results :results file
+   w = -pi:pi/500:pi;
+   M = 10;
+   H = (1/M) .* ((1-exp(-j*w*M))./(1-exp(j*w)))
+   figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+   subplot(2, 1, 1)
+   plot(w,abs(H),"linewidth", 2)
+   grid; axis([-pi pi 0 1])
+   ylabel('Magnitude Response')
+   set(gca, "fontsize", 24);
+   set(gca,'XTick',-pi:pi/2:pi)
+   set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+   text(1.2, 0.8, '\fontsize{24}\it M=10  ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "left");
+
+
+   subplot(2, 1, 2)
+   plot(w,angle(H),"linewidth", 2)
+   grid; axis([-pi pi -pi pi])
+   ylabel('Phase Response')
+   set(gca, "fontsize", 24);
+   set(gca,'XTick',-pi:pi/2:pi)
+   set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+
+  print -dpng "-S800,400" ./image/ma_freqrsp.png;
+  ans = "./image/ma_freqrsp.png";
+    #+END_SRC
+*** Phase and signal shape
+To understand the effects of the phase on a signal is to distinguihs three different cases
+- zero phase: the spectrum is real: $\angle{H(e^{jw})} = 0$ 
+  #+BEGIN_SRC octave :exports results :results file
+    N= 160;
+    fs = 100;             # sample frequency
+    omega_0=2*pi/40;      # frequency 
+    n=-10:1/fs:N-10;      # samples
+    x=(1/2)*sin(omega_0*n) + cos(2*omega_0*n);
+
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+    plot(n, x, "linewidth", 2 ); axis([-10 N-10 -2 2]);
+    xlabel("time t")
+    ylabel("x(t)");
+    title('Zero Phase');
+    set(gca, "fontsize", 24)
+    
+    text(1.2, 1.6, '\fontsize{24}\itx[n]=1/2 sin(2\omega_0n) + cos(\omega_0n)   ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "left");
+    text(120, 1.6, '\fontsize{24}\it\omega_0 = 2\pi/40   ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "left");
+    grid on;
+                                        # Org-Mode specific setting
+    print -dpng "-S800,200" ./image/zero_phase.png;
+    ans = "./image/zero_phase.png";
+#+END_SRC
+
+- linear phase: the phase is proportional to the frequency via a real factor, d:
+  $\angle{H(e^{jw})} = d\omega$
+  the phase is proportional to the frequency of the sinusoid. The net effect is a shift of
+  the signal if the phase component is porportional to the frequency.
+  #+BEGIN_SRC octave :exports results :results file
+    N= 160;
+    fs = 100;             # sample frequency
+    omega_0=2*pi/40;      # frequency
+    theta_0=8*pi/5;
+    n=-10:1/fs:N-10;      # samples
+    x=(1/2)*sin(omega_0*n + theta_0) + cos(2*omega_0*n + 2*theta_0);
+
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+    plot(n, x, "linewidth", 2 ); axis([-10 N-10 -2 2]);
+    xlabel("time t")
+    ylabel("x(t)");
+    title('Linear Phase');
+    text(1.2, 1.6, '\fontsize{24}\itx[n]=1/2 sin(2\omega_0n +\theta_0) + cos(\omega_0n + 2*\theta_0)   ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "left");
+    text(120, 1.6, '\fontsize{24}\it\theta_0 = 8\pi/5   ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "left");
+
+    set(gca, "fontsize", 24)
+    grid on;
+                                        # Org-Mode specific setting
+    print -dpng "-S800,200" ./image/linear_phase.png;
+    ans = "./image/linear_phase.png";
+#+END_SRC
+
+- non linear phase: which covers all the other properties
+  now the shape of the signal in the time domain changes.
+    #+BEGIN_SRC octave :exports results :results file
+      N= 160;
+      fs = 100;             # sample frequency
+      omega_0=2*pi/40;      # frequency
+      theta_0=8*pi/5;
+      n=-10:1/fs:N-10;      # samples
+      x=(1/2)*sin(omega_0*n) + cos(2*omega_0*n + 2*theta_0);
+
+      figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+      plot(n, x, "linewidth", 2 ); axis([-10 N-10 -2 2]);
+      xlabel("time t")
+      ylabel("x(t)");
+      title('Nonlinear Phase');
+      text(1.2, 1.6, '\fontsize{24}\itx[n]=1/2 sin(2\omega_0n) + cos(\omega_0n + 2*\theta_0)   ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "left");
+
+      set(gca, "fontsize", 24)
+      grid on;
+                                          # Org-Mode specific setting
+      print -dpng "-S800,200" ./image/nonlinear_phase.png;
+      ans = "./image/nonlinear_phase.png";
+#+END_SRC
+
+#+ATTR_LATEX: :options [couleur=yellow!10, arrondi = 0.1, logo=\bcbook, ombre=true]{Spectrum}
+#+BEGIN_bclogo
+The spectrum of all three signals x[n] remains exactely the same in magnitude.
+#+END_bclogo
+
+*** Linear Phase
+#+BEGIN_SRC latex
+  \begin{align*}
+    y[n] &= x[n-\textcolor{blue}{d}]  \\
+    Y(e^{j\omega}) &= e^{-j\omega\textcolor{blue}{d}}\;X(e^{j\omega})\\
+    H(e^{j\omega}) &= e^{-j\omega\textcolor{blue}{d}} \Rightarrow \textcolor{blue}{linear phase term}
+  \end{align*}
+#+END_SRC
+*** Moving Average is linear Phase
+#+BEGIN_SRC latex
+  \begin{align*}
+    H(e^{j\omega})
+    &= \textcolor{red}{A(e^{j\omega})} \textcolor{blue}{e^{-j\omega d}}\\
+    &\Rightarrow \textcolor{red}{A(e^{j\omega}) \text{: pure real term}} \\
+    &\Rightarrow \textcolor{blue}{e^{-j\omega d} \text{: pure phase term}} \\
+    &=
+      \textcolor{red}{\frac{1}{M}}
+      \textcolor{red}{\frac{sin(\frac{\omega}{2}M)}{sin(\frac{\omega}{2}M)}}
+      \textcolor{blue}{e^{-j\omega\frac{M-1}{2}}} \Rightarrow \frac{M-1}{2} = d
+  \end{align*}
+
+#+END_SRC
+*** Example of Frequency Response: Leaky Integrator
+The Frequency response of the leaky integrator
+#+BEGIN_SRC latex
+  \begin{equation*}
+    H(e^{j\omega})
+    = \frac{1-\lambda}{1-\lambda e^{j\omega}}
+  \end{equation*}
+#+END_SRC
+Finding the magnitude and phaser requires a little algebra
+
+From Complex Algebra
+#+BEGIN_SRC latex
+  \begin{equation*}
+   \frac{1}{a+jb} = \frac{1-jb}{a^2+b^2}
+  \end{equation*}
+#+END_SRC
+So that if $x=\frac{1}{a+jb}$
+#+BEGIN_SRC latex
+  \begin{align*}
+   |x|^2 &= \frac{1}{a^2+b^2} \\
+   \angle{x} &= tan^{-1} \left[- \frac{a}{b}\right]     
+  \end{align*}
+#+END_SRC
+
+#+BEGIN_SRC latex
+  \begin{equation*}
+    H(e^{j\omega})
+    = \frac{1-\lambda}{(1-\lambda cos\omega) - j sin \omega}
+  \end{equation*}
+#+END_SRC
+
+so that:
+#+BEGIN_SRC latex
+  \begin{equation*}
+    |H(e^{j\omega})|^2
+    = \frac{(1-\lambda)^2}{1- 2\lambda cos\omega + \lambda^2}
+  \end{equation*}
+#+END_SRC
+
+#+BEGIN_SRC latex
+  \begin{equation*}
+    \angle{H(e^{j\omega})}
+    = tan^{-1} \left[\frac{\lambda sin \omega}{1 - \lambda cos \omega}\right]     
+  \end{equation*}
+#+END_SRC
+The phase is nonlinear in this case
+
+
+#+NAME: leaky integrator magnitude response
+#+BEGIN_SRC octave :exports results :results file
+     w = -pi:pi/500:pi;
+     lambda = 0.9;
+     figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+     subplot(2, 2, 1)
+     H = (1-lambda) ./ (1 - lambda*exp(j*w));
+     plot(w,abs(H),"linewidth", 2)
+     grid; axis([-pi pi 0 1])
+     ylabel('Magnitude Response')
+     set(gca, "fontsize", 24);
+     set(gca,'XTick',-pi:pi/2:pi)
+     set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+     text(1.2, 0.8, '\fontsize{24}\it\lambda=0.9  ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "left");
+
+    subplot(2, 2, 2)
+    lambda = 0.93;
+    H = (1-lambda) ./ (1 - lambda*exp(j*w));
+    plot(w,abs(H), "linewidth", 2)
+    grid; axis([-pi pi 0 1])
+    ylabel('Magnitude Response')
+    xlabel('hat(\omega)')
+    set(gca, "fontsize", 24);
+    set(gca,'XTick',-pi:pi/2:pi)
+    set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+    text(1.2, 0.8, '\fontsize{24}\it\lambda=0.93  ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "left");
+
+    subplot(2, 2, 3)
+    lambda = 0.96;
+    H = (1-lambda) ./ (1 - lambda*exp(j*w));
+    plot(w,abs(H), "linewidth", 2)
+      grid; axis([-pi pi 0 1])
+      ylabel('Magnitude Response')
+      xlabel('hat(\omega)')
+      set(gca, "fontsize", 24);
+      set(gca,'XTick',-pi:pi/2:pi)
+      set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+      text(1.2, 0.8, '\fontsize{24}\it\lambda=0.96  ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "left");
+
+    subplot(2, 2, 4)
+    lambda = 0.99;
+    H = (1-lambda) ./ (1 - lambda*exp(j*w));
+      plot(w,abs(H), "linewidth", 2)
+      grid; axis([-pi pi 0 1])
+      ylabel('Magnitude Response')
+      xlabel('hat(\omega)')
+      set(gca, "fontsize", 24);
+      set(gca,'XTick',-pi:pi/2:pi)
+      set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+      text(1.2, 0.8, '\fontsize{24}\it\lambda=0.99  ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "left");
+
+
+     print -dpng "-S800,600" ./image/li_mag_freqrsp.png;
+     ans = "./image/li_mag_freqrsp.png";
+ #+END_SRC
+
+ 
+#+NAME: leaky integrator phase response
+#+BEGIN_SRC octave :exports results :results file
+     w = -pi:pi/500:pi;
+     lambda = 0.9;
+     figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+     subplot(2, 2, 1)
+     H = (1-lambda) ./ (1 - lambda*exp(j*w));
+     plot(w,angle(H),"linewidth", 2)
+     grid; axis([-pi pi -pi pi])
+     ylabel('Phase Response')
+     set(gca, "fontsize", 24);
+     set(gca,'XTick',-pi:pi/2:pi)
+     set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+     text(1.2, 0.8, '\fontsize{24}\it\lambda=0.9  ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "left");
+
+    subplot(2, 2, 2)
+    lambda = 0.93;
+    H = (1-lambda) ./ (1 - lambda*exp(j*w));
+    plot(w,angle(H), "linewidth", 2)
+    grid; axis([-pi pi -pi pi])
+    ylabel('Phase Response')
+    xlabel('hat(\omega)')
+    set(gca, "fontsize", 24);
+    set(gca,'XTick',-pi:pi/2:pi)
+    set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+    text(1.2, 0.8, '\fontsize{24}\it\lambda=0.93  ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "left");
+
+    subplot(2, 2, 3)
+    lambda = 0.96;
+    H = (1-lambda) ./ (1 - lambda*exp(j*w));
+    plot(w,angle(H), "linewidth", 2)
+      grid; axis([-pi pi -pi pi])
+      ylabel('Phase Response')
+      xlabel('hat(\omega)')
+      set(gca, "fontsize", 24);
+      set(gca,'XTick',-pi:pi/2:pi)
+      set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+      text(1.2, 0.8, '\fontsize{24}\it\lambda=0.96  ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "left");
+
+    subplot(2, 2, 4)
+    lambda = 0.99;
+    H = (1-lambda) ./ (1 - lambda*exp(j*w));
+      plot(w,angle(H), "linewidth", 2)
+      grid; axis([-pi pi -pi pi])
+      ylabel('Phase Response')
+      xlabel('hat(\omega)')
+      set(gca, "fontsize", 24);
+      set(gca,'XTick',-pi:pi/2:pi)
+      set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+      text(1.2, 0.8, '\fontsize{24}\it\lambda=0.99  ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "left");
+
+
+     print -dpng "-S800,600" ./image/li_phase_freqrsp.png;
+     ans = "./image/li_phase_freqrsp.png";
+ #+END_SRC
+
+ #+results: leaky integrator magnitude response
+ [[file:./image/li_phase_freqrsp.png]]
+
+*** TODO Example of Frequency Response: Karplus Strong Algorithm
+#+BEGIN_SRC latex
+  \begin{equation*}
+    y[n]
+    = \alpha y[n-M] + x[n]
+  \end{equation*}
+#+END_SRC
+
+The Karplus-Strong algorithm is initialized with a finite support signal x of support
+M. And then we use a feedback loop with a delay of M taps. To qproduce multiple copies of
+the original finite support signal, scaled by an exponentially decaying factor alpha.
+
+\vspace{1em}
+#+BEGIN_SRC latex
+    \begin{dspBlocks}{2}{1}
+  % first row:
+  %        2         3              4           5         6              7         
+  %--------------------------------------------------------------------------
+  $x[n]$   & \BDadd  &              & \BDsplit & $y[n]$   & \vspace{3em} & \\
+  %
+  % second row:
+           &         & \BDdelayN{M} &          &          & \vspace{3em} &         
+  %
+  % connections:
+    \ncline{1,1}{1,2}
+    \ncline{1,2}{1,4}
+    \ncline{2,2}{2,3} \tlput{$a$}
+    \ncline{1,4}{2,4}
+
+    \BDConnH{1}{1}{2}{$$}
+    \BDConnH{1}{4}{5}{}
+    \BDConnV{2}{2}{1}{}
+    \BDConnH{2}{4}{3}{}
+  \end{dspBlocks}
+#+END_SRC
+\vspace{2em}
+
+in the time domain we have
+#+BEGIN_SRC latex
+  \begin{equation*}
+    y[n]
+    =
+    \underbrace{\tilde{x}[0], \tilde{x}[1]\text{, ..., }\tilde{x}[M-1]}_{1^{st} Period},
+    \underbrace{\alpha\tilde{x}[x0],\alpha\tilde{x}[1]\text{, ..., }\alpha\tilde{x}[M-1]}_{2^{nd} Period}, 
+    \underbrace{\alpha^2\tilde{x}[0], \alpha^2\tilde{x}[1]\text{, ..., }\alpha^2\tilde{x}[M-1]}_{3^{rd} Period}\text{, ..., } 
+  \end{equation*}
+#+END_SRC
+
+#+BEGIN_SRC latex
+  \begin{equation*}
+    y[n] = \tilde{x}[n]*w[n],
+    \begin{cases}
+      \alpha^k  & \text{for }  n = kM \\
+      0           & \text{otherwise}
+    \end{cases}
+  \end{equation*}
+#+END_SRC
+
+#+BEGIN_SRC latex
+  \begin{equation*}
+    Y(j\omega) = \tilde{X}(j\omega)W(j\omega)
+  \end{equation*}
+#+END_SRC
+
+**** With Sawtooth Wave
+#+BEGIN_SRC latex
+  \begin{equation*}
+    \tilde{X}(j\omega)W(j\omega)
+    = e^{-j\omega} \big(\frac{M+1}{M-1}\big)
+    \frac{1-e^{-j(M-1)\omega}}{\big(1-e^{j\omega}\big)^2}
+    - \frac{1-e^{-j(M+1)\omega}}{\big(1-e^{j\omega}\big)^2}
+  \end{equation*}
+#+END_SRC
+
+#+BEGIN_SRC latex
+  \begin{equation*}
+    {X}(j\omega)W(j\omega)
+    = \frac{1}{1-\alpha e^{-j\omega M}}
+  \end{equation*}
+#+END_SRC
+
 ** Ideal Filters
-*** Frequencey Response Ideal Lowpass Filter
+*** The ideal lowpass filter frequency response
+
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal
+  fs = 100;             # sample frequency
+  omega_c=pi/3;         # cutoff frequency
+  omega_b=2*omega_c;    # passpand
+  f=-pi:1/fs:pi;        # frequency vector
+  x=rectpuls(f,omega_b)     #generating square wave
+
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  plot(f, x, "linewidth", 3 ); axis([-pi pi -0.5 1.5]);
+  title('Frequency Respones Ideal Lowpass Filter');
+  xlabel('omega');
+  ylabel('H(e^{jw})');
+  set(gca,'XTick',-pi:pi/2:pi)
+                  #set(gca,'XTickLabel',{'-pi','-pi/2','0','pi/2','pi'})
+  set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+  set(gca, "fontsize", 24)
+  grid on;
+  text(1.2      ,  -0.1, '\fontsize{24}\it\omega_c   ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "center");
+  text(-1     ,  -0.1, '\fontsize{24}-\it\omega_c  ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "center");
+  text(0      ,  1.1 , '\fontsize{24}\it{Passband} ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "center");
+  text(-pi/1.5,  0.1 , '\fontsize{24}\it{Stopband} ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "center");
+  text(pi/1.5 ,  0.1 , '\fontsize{24}\it{Stopband} ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "center");
+
+                                  # Org-Mode specific setting
+  print -dpng "-S600,300" ./image/lp.png;
+  ans = "./image/lp.png";
+#+END_SRC
+
+*** Ideal lowpass filter impulse response
 - Lets low frequencies go through
 - Attenuates i.e. kills high frequencies
-  
+
 #+ATTR_LATEX: :options [leftmargin=5cm,labelwidth=4.7cm,itemindent=-2pt]
 - Cut off Frequency :: $\omega_c$ - the frequency response transitions from 1 to zero
 - Passband :: $\omega_b = 2\omega_c$
@@ -172,145 +983,165 @@ sequencies.
 #+BEGIN_SRC latex
   \begin{align*}
     H(e^{j\omega})  &=
-       \begin{cases}
-          1  & \text{for } |\omega| \leq \omega_c\\
-          0                  & \text{otherwise}
-        \end{cases}  
+                      \begin{cases}
+                        1  & \text{for } |\omega| \leq \omega_c\\
+                        0                  & \text{otherwise}
+                      \end{cases}
   \end{align*}
 #+END_SRC
+
 - perfectly flat passband
 - infinite attenuation in stopband
 - zero-phase (no delay)
- 
-*** Impulse response Ideal Lowpass Filter
+
 Calculation of the impulse response from the frequency response of an ideal low pass filter.
-  #+BEGIN_SRC latex
-    \text{Impulse Respones}
-    \begin{align*}
-      h[n]  &= IDFT\{H(e^{j\omega})\} \\
-            &= \frac{1}{2\pi}\int_{-\pi}^{\pi}H(e^{j\omega}) e^{j\omega\;n} d\omega \\
-            &= \frac{1}{2\pi}\int_{-\omega_c}^{\omega_c}e^{j\omega\;n} d\omega \\
-            &= \frac{1}{\pi\;n}\frac{e^{j\omega_c\;n}-e^{-j\omega_c\;n}}{2j} \\
-            &= \frac{sin(\omega_c\;n)}{\pi\;n}
-     \end{align*}
+#+BEGIN_SRC latex
+  \text{Impulse Respones}
+  \begin{align*}
+    h[n]  &= IDFT\{H(e^{j\omega})\} \\
+          &= \frac{1}{2\pi}\int_{-\pi}^{\pi}H(e^{j\omega}) e^{j\omega\;n} d\omega \\
+          &= \frac{1}{2\pi}\int_{-\omega_c}^{\omega_c}e^{j\omega\;n} d\omega \\
+          &= \frac{1}{\pi\;n}\frac{e^{j\omega_c\;n}-e^{-j\omega_c\;n}}{2j} \\
+          &= \frac{sin(\omega_c\;n)}{\pi\;n}
+  \end{align*}
 #+END_SRC
 
 #+NAME: Impulse Response ideal low pass filter
 #+BEGIN_SRC octave :exports results :results file
-  N=64                           # Vector lenght
-  n=-N:pi/4:N;        # Discrete Time Vector
-  omegaC = pi/4;
-
-  h = sin(omegaC*n)./(pi*n);          # The sinusoid
-
-                                 # Graphik
+  N=64                             # Vector lenght
+  n=-N:pi/4:N;                     # Discrete Time Vector
+  omegaC = pi/4                    #omegaC = pi/4;
+                                   # The sinusoid
+  h = sin(omegaC*n)./(pi*n);
+                                 # Graphik Output Configuraton
   figure(1, "visible", "off");     # Do not open the graphic window in org
   clf
   stem(n,h, "filled", "linewidth", 2, "markersize", 6)
+  set(gca, "fontsize", 24)
+                                  # set(gca,'YTick',-pi/8:pi/32:pi/4)
+  # set(gca,'YTickLabel',{'\pi/32', '0','\pi/32','\pi/16','\pi/8','\pi/4'})
   axis([-30 30 -0.1 0.3])
-  xlabel('Samples')
-  ylabel('Value')
+  xlabel('samples')
+  ylabel('h[n]')
   title('Impulse Response Ideal Low Pass Filter')
   grid on ;
-
-                                      # Org-Mode specific output
-  print -dpng "-S800,200" ./image/impulse_response_lp.png;        # Set print device
-  # print -dpng ./image/impulse_response_lp.png;        # Set print device
-  ans = "./image/impulse_response_lp.png";            # The mandtory return value
+                                  # Org-Mode specific output
+  print -dpng "-S800,300" ./image/impulse_response_lp.png;  # Set print device
+  ans = "./image/impulse_response_lp.png";                  # The mandtory return value
 #+END_SRC
 
 #+results: Impulse Response ideal low pass filter
 [[file:./image/impulse_response_lp.png]]
 
+- from [[https://www.mathworks.com/matlabcentral/fileexchange/13586-ideal-low-pass-filter][Mathworks]]
 
 - The impulse response has infinite support to the right and to the left
 - Independant of how the convolution is computed, it will always take an inifintie number
   of operations.
 - The impulse response decays slowly in time $\displaystyle \Big(\frac{1}{n}\Big)$, we need a lot
   of samples for a good approximation.
+
+**** Impulse Response: From normlized Algorithm to Octave Implementation
+
+#+BEGIN_SRC latex
+  \begin{align*}
+      \frac{sin(\omega_c\;n)}{\pi\;n}
+      &=  \frac{\omega_c}{\pi}.\cdot sinc(n\frac{\omega_c}{\pi}); \\
+      &=  \frac{\frac{\pi}{c}}{\pi}.\cdot sinc(n\frac{\frac{\pi}{c}}{\pi}); \\
+      &=  \frac{1}{c}.\cdot sinc(n\frac{1}{c}); \\
+      &=  \frac{1}{c}.\cdot sinc(\frac{n}{c}); \\
+  \end{align*}
+  #+END_SRC
+
+
 **** The sinc-rect pair:
 #+BEGIN_SRC latex
-    \begin{align*}
-         rect(x)  &=
-           \begin{cases}
-              1  & |x| \leq \frac{1}{2}\\
-              0  & |x|  > \frac{1}{2}
-            \end{cases}  
-      \end{align*}
+  \begin{align*}
+    rect(x)  &=
+               \begin{cases}
+                 1  & |x| \leq \frac{1}{2}\\
+                 0  & |x|  > \frac{1}{2}
+               \end{cases}
+  \end{align*}
 #+END_SRC
 
 #+BEGIN_SRC latex
-    \begin{align*}
-        sinc(x)  &=
-                   \begin{cases}
-              \frac{ sin(\pi\;x) }{\pi\;x}  & x \neq 0 \\
-              1                            & x = 0
-            \end{cases}  
-      \end{align*}
+  \begin{align*}
+    sinc(x)  &=
+               \begin{cases}
+                 \frac{ sin(\pi\;x) }{\pi\;x}  & x \neq 0 \\
+                 1                            & x = 0
+               \end{cases}
+  \end{align*}
 #+END_SRC
 
 - rect is the indicator function from $\displaystyle -\frac{1}{2}$ to $\displaystyle \frac{1}{2}$
 **** Canonical form of the ideal low pass filter
-The sinct-rect pair can be written in canonical form as follow:\\
+The sinct-rect pair can be written in canonical form as follow:
+$~$\\
 #+attr_latex: :options {0.4\textwidth} :center
-#+begin_minipage latex 
+#+begin_minipage latex
 \begin{tcolorbox}[colback=blue!20]
     \begin{equation*}
       H(e^{j\;\omega}) = rect\Bigg(\frac{\omega}{2\;\omega_c}\Bigg)
     \end{equation*}
   \end{tcolorbox}
-#+end_minipage                                          
+#+end_minipage
 #+attr_latex: :options {0.1\textwidth} :center
-#+begin_minipage latex 
-    \begin{equation*}
-     \underleftrightarrow{DTFT}
-    \end{equation*}
-  #+end_minipage                                          
+#+begin_minipage latex
+\begin{equation*}
+ \underleftrightarrow{DTFT}
+\end{equation*}
+#+end_minipage
 #+attr_latex: :options {0.4\textwidth} :center
-#+begin_minipage latex 
+#+begin_minipage latex
 \begin{tcolorbox}[colback=red!20]
     \begin{equation*}
       \frac{\omega_c}{\pi}\;sinc\Bigg(\frac{\omega_c}{\pi}\;n\Bigg) = h[n]
     \end{equation*}
   \end{tcolorbox}
-#+end_minipage                                          
+#+end_minipage
 
 - The Impulse response is normalized by $\frac{\omega_c}{\pi}$
 *** Example
-- Calculation of the impulse- and frequency response for a ideal low pass filter with $\omega_c$ :: $\frac{\pi}{3}$
+- Calculation of the impulse- and frequency response for an ideal low pass filter with $\omega_c$ :: $\frac{\pi}{3}$
 
 #+NAME: Ideal Filter
 #+BEGIN_SRC octave :exports results :results file
   pkg load signal
-  N = 64                                        # Vector lenght
-  omegaC = pi/3;                                # cut off frequency
-  n = -N:omegaC:N;                              # Discrete Time Vector
-  f = n/64*pi;                                  # Discrete Frequency Vector
-
-  H = rectpuls(f,2*omegaC); 
-  h = sin(omegaC*n)./(pi*n);                    # The sinusoid
-
-                                                # Graphik
-  figure(1, "visible", "off");                  # Do not open the graphic window in org
-  
+  N=33                      # Discret-Time Vector lenght
+  n=-(N-1)/2:pi/10:(N-1)/2; # Discrete Time Vector
+  fs = 100;                 # Sampling rate
+  w = -pi:1/fs:pi;          # Frequency Vector
+  omegaC = pi/3;            # cut off frequency
+  # Algorithm --------------------------------------------------------------
+  h = 1/3.*sinc(n/3);               # The sinusoid
+  H = rectpuls(w,2*omegaC);         # Rectpuls
+      # Graphik ----------------------------------------------------------------
+  figure(1, "visible", "off");      # Do not open the graphic window in org
+  # Plot 1 -----------------------------------------------------------------
   subplot(2,1,1),
-  plot(f,H, "linewidth", 2, "color", "r")
-  axis([-pi pi 0 1])
+  plot(w,H, "linewidth", 2, "color", "r");
+  axis([-pi pi -0.1 1.1]);
+  set(gca,'XTick',-pi:pi/2:pi);
+  set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
   xlabel('Samples')
+  set(gca,'YTick',0:0.5:1);
   ylabel('Magnitude')
-  title('Frequency Response Ideal Low Pass Filter')
+  title('Frequency Response Ideal Low Pass Filter');
+  set(gca, "fontsize", 24);
   grid on ;
-
-
-  subplot(2,1,2),
+  % Plot 2 -----------------------------------------------------------------
+  subplot(2,1,2);
   stem(n,h, "filled", "linewidth", 2, "markersize", 6)
-  axis([-30 30 -0.1 0.4])
-  xlabel('Samples')
-  ylabel('Amplitude')
+  axis([-(N-1)/2 (N-1)/2 -0.1 0.4])
+  xlabel('Samples');
+  ylabel('Amplitude');
+  set(gca,'YTick',0:0.2:0.4);
   title('Impulse Response Ideal Low Pass Filter')
+  set(gca, "fontsize", 24);
   grid on ;
-
-                                                # Org-Mode specific output
+  # Org-Mode specific output -----------------------------------------------
   print -dpng "-S800,400" ./image/ideal_lp.png; # Set print device
   ans = "./image/ideal_lp.png";                 # The mandtory return value
 #+END_SRC
@@ -318,12 +1149,81 @@ The sinct-rect pair can be written in canonical form as follow:\\
 #+results: Ideal Filter
 [[file:./image/ideal_lp.png]]
 
-  
+
 
 *** TODO Ideal filters derived from the ideal low pass filter
 *** TODO Demodulation revisted
-** Programing Assignment 1
+** MP3 Encoder
+- *Goal:* Reduce number of bits to represent original signal x[n]
 
+- MP3: Motion Picture Expert G3roup
+
+  #+BEGIN_SRC ditaa  :file lossy_compression_scheme.png 
+           +--------------+               +--------------+
+           |              |               |              |
+    x[n]-->+  Encoder     +----0100111--->+  Decoder     +---> y[n]
+           |        cGRE  |               |        cBLU  |
+           +--------------+               +--------------+
+#+END_SRC
+- *Lossy Compression:* $x[n] \neq y[n]$
+- Put noise where not perceptible by human ear
+- *Example:*Raw Storage Consumption DVD
+  - Sample Rate: 48kHz
+  - Bits per Sample: 16
+  - Bit Rate: $\frac{48000\text{samples}}{second} \frac{16bits}{samples} = 768 kbits/s$
+  - Duration: 60s
+  - Mono Raw Data Storage Usage: $60s*76.8 kbits/s = 46 Mbit = 5.8 MByte$
+  - Stereo Raw Data Storage Usage: $2*5.8MBytes = 12MBytes$
+  - MP3 Compressed Storage Usage: $1.5MBytes$
+
+ 
+
+  #+BEGIN_SRC ditaa  :file mp3_encoding.png
+           +--------------+    +--------------+    +---------------+
+           | 32-Subbands  |    | Subband      |    | Bitstream     |
+ x[n]---+->+ Filtering[32]+--->| Samples cRED +--->| Formatting    +----> y[n]
+        |  |        cGRE  |    | Quantization |    |        cBLU   |
+        |  +--------------+    +--------------+    +---------------+
+        |                             ^
+        |                             |
+        |  +--------------+           |
+        |  | Psycho       |           |
+        +->| Acustic      +-----------+
+           | Model  cRED  |
+           +--------------+
+#+END_SRC
+
+#+results:
+[[file:mp3_encoding.png]]
+
+- Clever Quantiziation Scheme: Number of bits allocated to each subband is dependent on
+  the perceptual importance of each sub-band with respect to overall quality of the audio
+  wave-form
+- Masking Effect of the human auditory system.
+
+*** Psycho Acoustic Model, How it Works
+- The psycho acoustic model is not part of the mp3 standard
+- calculate the minimum number of bits that we need to quantize each of the 32 subband
+  filter outputs, so that the perceptual distortion is as little as possible
+- step 1 :: Use FFT to estimate the energy of the signal in each subband
+- step 2 :: Distinguish beween tonal (sinusoid like) and non-tonal (nois-like) compnent
+- step 3 :: Determine indicidual masking effect of tonal and non-tonal component in each
+  critical band
+- step 4 :: Determine the total masking effect by summing the individual contirbution
+- step 5 :: Map this total effect to the 32 subbands
+- step 6 :: Determine bit alloction by allocating priority bits to subbands with lowest
+  singal-to-mask ratio
+*** Subband Filter
+
+#+BEGIN_SRC latex
+  \begin{equation*}
+    h_i[n]= h[n]cos(\frac{pi}{64}(2i+1)(n-16))
+  \end{equation*}
+#+END_SRC
+
+
+** Programing Assignment 1
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+begin_src python :results file 
   import matplotlib
   import numpy as np
@@ -384,4 +1284,5 @@ The sinct-rect pair can be written in canonical form as follow:\\
 
 #+results:
 [[file:image/python-matplot-fig-04.png]]
+
 

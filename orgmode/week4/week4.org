@@ -1,7 +1,7 @@
 #+CATEGORY: SP4COMM w4
 * Week 4 Module 3: Part 2 - Advanced Fourier Analysise
 ** Discrete Fourier Series DFS
-#+ATTR_LATEX: :options [logo=\bcbook, couleur=green!10, barre=snake, arrondi=0.1]{Discrete Fourier Series}
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Discrete Fourier Series}
  #+BEGIN_bclogo
 DFS = DFT with periodicity explicit
 $\tilde{X}[k] = DFS\{x[n]\}$
@@ -35,7 +35,7 @@ test
   \end{align*}
   #+END_SRC
 
-#+ATTR_LATEX: :options [logo=\bcinfo,barre=none,noborder=true]{Time Shifts}
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Discrete Fourier Series}}
 #+BEGIN_bclogo
 \begin{gbar}{yellow}{blue!10}
 Shifts for finite-length signals are "naturally" circular
@@ -80,7 +80,7 @@ Shifts for finite-length signals are "naturally" circular
 - $x[n] \in \ell_2(\mathbb{Z})$, the space of square summable infinity sequneces
 - define the function of $\omega \in \mathbb{R}$ \\
   #+BEGIN_SRC latex
-    \begin{tcolorbox}[colback=red!20]
+    \begin{tcolorbox}
       \begin{equation*}
           F(e^{j\omega}) = \sum_{n=-\infty}^{\infty} x[n]e^{-j \omega n}  \text{, with } \omega = \frac{2\pi}{N} \text{ and } N \rightarrow \infty
       \end{equation*}
@@ -90,7 +90,7 @@ Shifts for finite-length signals are "naturally" circular
 
 - inversion (when $F(\omega)$ exists):
   #+BEGIN_SRC latex
-    \begin{tcolorbox}[colback=red!20]
+    \begin{tcolorbox}
       \begin{equation*}
        x[n] = \frac{1}{2\;\pi}\int_{-\pi}^{\pi}F(e^{j\omega});e^{j\;\omega\;n}\mathrm{d}\omega \text{, with } n \in \mathbb{Z}   
       \end{equation*}

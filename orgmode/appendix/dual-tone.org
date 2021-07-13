@@ -29,12 +29,12 @@ instance, if the digit '1' is pressed, the generated signal will be:
 \end{equation*}
  #+END_SRC
 
-#+ATTR_LATEX: :options [logo=\bcbook, couleur=green!10, barre=snake, arrondi=0.1]{FFT Module}
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{FFT Module}
  #+BEGIN_bclogo
 In Python, we will use the fft module in Numpy to compute the DFT
  #+END_bclogo
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: Initialisation
 #+BEGIN_SRC ipython :session DFT-Plot :exports code :results: raw drawer
 # First the usual bookkeeping
@@ -46,7 +46,7 @@ import IPython
 from scipy.io.wavfile import write
 #+end_src
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: Figure_Size
 #+BEGIN_SRC ipython :session DFT-Plot :exports code :results raw drawer
 # Sets the size of the output plots
@@ -55,7 +55,7 @@ plt.rcParams["figure.figsize"] = (14,4)
 
 Typically, we will take a vector of data points, compute the DFT and plot the magnitude of
 the result. For instance, consider the DFT of a linear ramp:
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: discrete ramp
 #+BEGIN_SRC ipython :session DFT-Plot :exports both :results raw drawer
 x = np.arange(0, 10.2, 0.2) - 5
@@ -63,9 +63,21 @@ x = np.arange(0, 10.2, 0.2) - 5
 plt.stem(x);
 #+END_SRC
 
-#+ATTR_LATEX: :options bgcolor=gray!30
+#+results: discrete ramp
+:results:
+# Out[62]:
+[[file:./obipy-resources/nUWC2G.png]]
+:end:
+
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: dft ramp
 #+BEGIN_SRC ipython :session DFT-Plot :exports both :results raw drawer
 X = np.fft.fft(x);
 plt.stem(abs(X));
 #+END_SRC
+
+#+results: dft ramp
+:results:
+# Out[61]:
+[[file:./obipy-resources/ixng9O.png]]
+:end:
