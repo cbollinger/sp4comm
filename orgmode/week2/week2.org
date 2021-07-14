@@ -1,12 +1,12 @@
 #+CATEGORY: SP4COMM W2:
 
-# #+OPTIONS: H:5
-# #+LATEX_HEADER: \usepackage[table]{xcolor}
-# #+LATEX_HEADER: \definecolor{contiYellow}{RGB}{255,165,0}
-# #+LaTeX_HEADER: \usepackage[tikz]{bclogo}
-# #+LaTeX_HEADER: \usepackage{tcolorbox}
-# #+LATEX_HEADER: \usepackage{enumitem}
-# #+LATEX: \setcounter{secnumdepth}{5}
+#+OPTIONS: H:5
+#+LATEX_HEADER: \usepackage[table]{xcolor}
+#+LATEX_HEADER: \definecolor{contiYellow}{RGB}{255,165,0}
+#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
+#+LaTeX_HEADER: \usepackage{tcolorbox}
+#+LATEX_HEADER: \usepackage{enumitem}
+#+LATEX: \setcounter{secnumdepth}{5}
 
 * Week 2 Module 2: Vector Spaces
 #+ATTR_LATEX: :options [logo=\bcbook,couleur=yellow!10, barre=snake, arrondi=0.1]{Vector Space}

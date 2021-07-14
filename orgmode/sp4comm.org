@@ -2,9 +2,9 @@
 #+DATE: <2020-07-20 Mo>
 #+AUTHOR: Ch. Bollinger
 #+EMAIL: christian.bollinger@hispeed.ch
-#+OPTIONS: ':nil *:t -:t ::t <:t H:5 \n:nil ^:t arch:headline
+#+OPTIONS: ':nil *:t -:t ::t <:t H:6 \n:nil ^:t arch:headline
 #+OPTIONS: author:t c:nil creator:comment d:(not "LOGBOOK") date:t
-#+OPTIONS: e:t email:nil f:t inline:t num:t p:nil pri:nil stat:t
+#+OPTIONS: e:t email:nil f:t inline:t num:4 p:nil pri:nil stat:t
 #+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:t title:t todo:t |:t
 #+CREATOR: Emacs 24.3.1 (Org mode 8.2.5h)
 #+DESCRIPTION:
@@ -90,12 +90,12 @@
 #+INCLUDE: "./week5/week5.org"
 \newpage
 #+INCLUDE: "./week6/week6.org"
-
-# #+INCLUDE: "./week7/week7.org"yy
+\newpage
+#+INCLUDE: "./week7/week7.org"
 # #+INCLUDE: "./week8/week8.org"
 
 \newpage
-* Appendix
+* COMMENT Appendix
 #+INCLUDE: "./appendix/plots.org"
 \newpage
 #+INCLUDE: "./appendix/dft-plot.org"

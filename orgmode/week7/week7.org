@@ -1,2 +1,84 @@
 #+CATEGORY: SP4COMM
+
+#+LATEX_HEADER: \usepackage[table]{xcolor}
+#+LaTeX_HEADER: \usepackage{tcolorbox}
+
+#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
+#+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}
+
+#+LaTeX_HEADER: \usepackage{amsmath}
+#+LaTeX_HEADER: \usepackage{amsxtra}
+#+LATEX_HEADER: \usepackage{mathtools} 
+#+Latex: \everymath{\displaystyle}
+#+Latex: \renewcommand{\arraystretch}{1.2}
+
 * Week 7 Module 5: Sampling and Quantization
+Interpolation describes the process of building a continuous-time signal *x(t)* from
+a sequence of samples *x[n]*. In other words, interpolation allows moving from the
+discrete-time world to the continuous-time world. Interpolation raises two interesting
+questions:
+
+The first one is how to interpolate between samples?
+- In the case, of two samples, this is simple enough and there is there is a straight line
+  that goes between these two samples.
+- In the case of three samples, similarly, you have a parabola that goes through these 3
+  samples.
+- If you have many samples, you can try to do the same and go through all samples but you
+  see this is a trickier issue compared to what we have done with two or three
+  samples.
+The second question is:
+- is there a minimum set of values you need to measure the function at so that you can
+  perfectly reconstruct it.
+
+Later on in the module, we are going to study sampling, i.e. the process of moving from a
+continuous-time signal to a sequence of samples. In other words, sampling allows moving
+from the continuous-time world to the discrete-time world. Suppose we take equally-spaced
+samples of a function *x(t)*. The question is when is there a one-to-one
+relationship between the continuous-time function and its samples, i.e. when do the
+samples form a unique representation of the continuous-time function? To answer this
+question, we are going to use all the tools in the toolbox that we have looked at so far:
+- Hilbert spaces
+- projections
+- filtering
+- sinc functions
+- and so on.
+Everything comes together in this module to develop a profound and very useful result, the
+*sampling theorem*.
+
+Before moving to the heart of the topic, let us briefly review its history. The Shannon
+sampling theorem has a very interesting history which goes back well before
+Shannon. Numerical analysts were concerned about interpolating tables of functions and the
+first one to proove a version of the sampling theorem was Whittaker in England
+in 1915. Harry Nyquist at Bell Labs came up with the Nyqvist criterion, namely that a
+function that has a maximum frequency F0F_0F0​ could be sampled at 2F02F_02F0​. In the
+Soviet Union, Kotelnikov proved a sampling theorem. The son of the first Whittaker further
+proved results on the sampling theorem. Then Herbert Raabe in Berlin wrote his PhD thesis
+about a sampling theorem that, wrong time wrong city, he got zero credit for. Denis Gabor
+worked on a version of the sampling theorem in the mid 1940s. Then Claude Shannon, the
+inventor of information theory, wrote a beautiful paper that is in the further reading for
+this class where the Shannon sampling theorem appears in the form that we use today. Last
+but not least, in 1949 Someya in Japan also proved the sampling theorem. You can see that
+it’s a very varied history, it’s a fundamental result where many people independently came
+up with this result.
+** The Continous-Time World
+*** Introduction
+The continuous-time world is the world we live in, the physical reality of the world, in
+contrast with the discrete-time world, the world inside a computer. We are first going to
+look at models of the world and compare digital with analog views of the world. Then we
+are going to study continuous-time signal processing in greater details. Furthermore, we
+will introduce the last form of Fourier transform we have not yet encountered in this
+class, the continuous-time Fourier transform.
+*** The continous-time paradigm
+
+#+LATEX: \rowcolors[]{1}{yellow!5}{}
+#+ATTR_LATEX: :center :align  p{6cm}  p{6cm} 
+#+CAPTION: Two views of the world
+| \rowcolor{yellow!30} \bfseries\textcolor{red}{Digital World} | \bfseries\textcolor{red}{Analog World}         |
+|--------------------------------------------------------------+------------------------------------------------|
+| countable integer index n                                    | real-valued time t [sec]                       |
+| sequences $x[n] \in \ell_2(\mathbb{Z})$                      | function $x(t) \in L_2(\mathbb{R})$            |
+| frequency $\omega \in [-\pi, \pi]$                           | frequency $\Omega \in \mathbb{R} (rad/sec)$    |
+| DTFT: $\ell_2(\mathbb{Z}) \rightarrow L_2[-\pi, \pi]$        | FT: $L_2(\mathbb{R}) \rightarrow L_2(\mathbb{R})$ |
+|--------------------------------------------------------------+------------------------------------------------|
+

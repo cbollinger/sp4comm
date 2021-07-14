@@ -444,7 +444,7 @@
   \textcolor{blue}{differentation} operator to the \textcolor{blue}{unit step}.
  #+END_bclogo
 
-*** Shift of finite-length: finite-support
+*** COMMENT Shift of finite-length: finite-support
 #+attr_latex: :options {0.4\textwidth} :float 
  #+begin_minipage latex
 \begin{equation*} 
@@ -470,7 +470,7 @@
  
 - As we shift, we pull in 0s and we lose data.
 
-*** Shift of finite-length: periodization
+*** COMMENT Shift of finite-length: periodization
 #+attr_latex: :options {0.4\textwidth} :float 
  #+begin_minipage latex
 \begin{equation*}

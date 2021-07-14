@@ -1,6 +1,6 @@
 #+CATEGORY: SP4COMM W5
 
-# #+OPTIONS: H:5
+#+OPTIONS: H:5
 #+LaTeX_HEADER: \usepackage[tikz]{bclogo}
 #+LaTeX_HEADER: \usepackage{tcolorbox}
 #+LATEX_HEADER: \usepackage{colortbl}
@@ -145,6 +145,7 @@ Typicale filtering scenario: denoising
       y[n] =  \frac{1}{M}\sum_{k=0}^{M-1}x[n-k]
     \end{equation*}
   #+end_src
+
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: MA Signal mit Rauschen
 #+BEGIN_SRC octave :exports results :results file
@@ -496,9 +497,9 @@ impulse response of the LTI filter times the complex exponential.
 #+END_SRC
 
 #+ATTR_LATEX: :caption \def\arraystretch{1.5} :align p{5cm}c|p{5cm}c
-| *amplitude*  \rowcolor{gray!10} | *A*            | *phase shift* | $\theta$       |
-| amplification                   | >1             | delay         | $< 0$          |
-| attenuation                     | $0\leq A < 1$  | advancment    | $> 0$          |
+| \rowcolor{gray!10} *amplitude* | *A*           | *phase shift* | $\theta$ |
+| amplification                  | >1            | delay         | $< 0$    |
+| attenuation                    | $0\leq A < 1$ | advancment    | $> 0$    |
 
 *** The convolution theorem
 The convolution theorem summerizes this result in
@@ -521,9 +522,10 @@ The DTFT of the impulse response is called the frequency response
 #+END_SRC
 
 #+ATTR_LATEX: :caption \def\arraystretch{1.5} :align p{5cm}c|p{5cm}
-| *magnitude*  \rowcolor{gray!10} | \vert $H(e^{j\omega}$ \vert | *phase*           |
-| amplification                   | > 1                         | overall shape and |
-| attenuation                     | < 1                         | phase changes     |
+| \rowcolor{gray!10} *magnitude* | \vert $H(e^{j\omega}$ \vert | *phase*           |
+| amplification                  | > 1                         | overall shape and |
+| attenuation                    | < 1                         | phase changes     |
+
 
 *** Example of Frequency Response: Moving Average Filter
 The difference equation from M-point averager is
@@ -870,6 +872,7 @@ The Karplus-Strong algorithm is initialized with a finite support signal x of su
 M. And then we use a feedback loop with a delay of M taps. To qproduce multiple copies of
 the original finite support signal, scaled by an exponentially decaying factor alpha.
 
+**** COMMENT KS Diagram
 \vspace{1em}
 #+BEGIN_SRC latex
     \begin{dspBlocks}{2}{1}

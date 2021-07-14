@@ -12,7 +12,7 @@
 #+Latex: \everymath{\displaystyle}
 #+Latex: \renewcommand{\arraystretch}{1.2}
 
-* Week 6 Module 4 Part 2: Filter Design Part 1
+* Week 6 Module 4 Part 2: Introduction to Filtering
 
 - First strategy of filter design: Imitation
   - uuImpulse truncation
@@ -1263,7 +1263,8 @@ Filterdesign was established art long before digital processing appeared
 **** Butterworth lowpass
 
 #+LATEX: \rowcolors[]{1}{yellow!5}{}
-#+ATTR_LATEX: :center :align  p{4cm}  p{4cm} p{4cm} 
+#+ATTR_LATEX: :center :align  p{4cm}  p{4cm} p{4cm}
+#+CAPTION: Butterworth lowpass
 | \rowcolor{yellow!30} \bfseries\textcolor{red}{Magnitude response} | \bfseries\textcolor{red}{Design Parameters} | \bfseries\textcolor{red}{Test values} |
 |-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
 | maximally flat                                                    | order N                                     | width of transition band              |
@@ -1353,7 +1354,8 @@ Filterdesign was established art long before digital processing appeared
 **** Chebyshev lowpass
 
 #+LATEX: \rowcolors[]{1}{yellow!5}{}
-#+ATTR_LATEX: :center :align  p{4cm}  p{4cm} p{4cm} 
+#+ATTR_LATEX: :center :align  p{4cm}  p{4cm} p{4cm}
+#+CAPTION: Chebyshev lowpass
 | \rowcolor{yellow!30} \bfseries\textcolor{red}{Magnitude response} | \bfseries\textcolor{red}{Design Parameters} | \bfseries\textcolor{red}{Test values} |
 |-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
 | equiripple in passband                                            | order N                                     | width of transition band              |
@@ -1447,7 +1449,8 @@ Filterdesign was established art long before digital processing appeared
 **** Elliptic lowpass
 
 #+LATEX: \rowcolors[]{1}{yellow!5}{}
-#+ATTR_LATEX: :center :align  p{4cm}  p{4cm} p{4cm} 
+#+ATTR_LATEX: :center :align  p{4cm}  p{4cm} p{4cm}
+#+CAPTION: Elliptic lowpass
 | \rowcolor{yellow!30} \bfseries\textcolor{red}{Magnitude response} | \bfseries\textcolor{red}{Design Parameters} | \bfseries\textcolor{red}{Test values} |
 |-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
 | equiripple in passband                                            | order N                                     | width of transition band              |
@@ -1641,7 +1644,7 @@ one half sample.
 [[file:./image/4_9_fir_park_mcmellon.png]]
 
 
-** TODO Notes and Supplementary Materials
+** ONGOING Notes and Supplementary Materials
 *** The Fractional Delay Filter (FDF)
 #+ATTR_LATEX: :width 8cm
 [[./drawing/fractional_delay.png]]
@@ -1736,7 +1739,7 @@ For now suffice it to say that we can actually interpolate in discrete time and
 find intermediate values of a discrete time sequence
 using just discrete times filters like the fractional delay
 
-*** TODO The Hilbert Filter
+*** ONGOING The Hilbert Filter
 - Demodulator
 #+ATTR_LATEX: :width 8cm
 [[./drawing/hilbert-filter.png]]
@@ -1745,16 +1748,19 @@ using just discrete times filters like the fractional delay
 
  
 
-*** TODO Implementing of Digital Filters
+*** Implementing of Digital Filters
 **** Leaky Integrator in C
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+Name: leaky 
-#+BEGIN_SRC C :exports both
+#+BEGIN_SRC C++ :exports both :flags -std=c++11
+  #include <stdio.h>
   double leaky(double x) {
       static const double lambda = 0.9;
-      static double y            = 0;
+      static double y = 0;   // 1x memory cell
+      // plus initialization
 
+      // algorithm: 2x multiplication, 1x addition 
       y = lambda * y + (1-lambda) *x;
       return y;
   }
@@ -1775,40 +1781,44 @@ using just discrete times filters like the fractional delay
   | 0.0349 | 0.0314 | 0.0282 | 0.0254 | 0.0229 | 0.0206 | 0.0185 | 0.0167 | 0.015 | 0.0135 |
 
 
+- we need a "memory cell" to store previous state
+- we need to initialize the storage before first use
+- we need 2 multiplications and one addition per output sampel
+  
 **** Moving Average in C
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+Name: moving_average 
-#+BEGIN_SRC C++ :exports both 
+#+BEGIN_SRC C++ :exports both :flags -std=c++11
   #include <stdio.h>
   double ma(double x) {
       static const int M = 5;
-      static double z[M];
+      static double z[M]; // Mx memory cells
       static int ix = -1;
 
       int n;
       double avg = 0;
 
-      if(ix == -1) {
+      if(ix == -1) {      // initalize storage
           for(n=0; n<M; n++)
               z[n] = 0;
           ix = 0;
       }
 
       z[ix] = x;
-      ix = (ix + 1) % M; // circular buffer
+      ix = (ix + 1) % M;  // circular buffer
 
-      for(n=0; n<M; n++)
+      for(n=0; n<M; n++)  // Mx additions
           avg += z[n];
 
-      return avg / M;
+      return avg / M;     // 1x division
   }
 
   int main() {
       int n;
       for (n = 0; n<20; n++)
       {
-          // call with delta signl
+         // call with delta signl
           printf("%.4f ", ma(n==0 ? 1.0 : 0.0)); 
           if(!((n+1)%10)) printf("\n");
       }
@@ -1816,8 +1826,204 @@ using just discrete times filters like the fractional delay
   #+END_SRC
 
   #+results: moving_average
+  | 0.2 | 0.2 | 0.2 | 0.2 | 0.2 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |
+  | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |
+
+- we need M memory cells to store previous input values
+- we need to initialize the storage before first use
+- we need 1 division and M additions per output sample
+
+**** Programming Abstraction
+
+With this three building blocks we can describe and Constant Coefficient Equation. 
+***** Building Blocks
+#+ATTR_LATEX: :width 8cm
+[[./drawing/building_blocks.png]]
+
+***** Leaky Integrator
+#+BEGIN_SRC latex
+  \begin{equation*}
+    y[n] = \lambda y[n-1] + (1-\lambda)x[n] \\
+  \end{equation*}
+#+END_SRC
+
+#+ATTR_LATEX: :width 8cm
+[[./drawing/leaky-integrator.png]]
+
+***** Moving Average
+#+BEGIN_SRC latex
+  \begin{equation*}
+    y[n] = \frac{1}{M} \sum_{k=0}^{M-1} x[n-k] \\
+  \end{equation*}
+#+END_SRC
+
+#+ATTR_LATEX: :width 12cm
+[[./drawing/moving_average.png]]
+
+***** The second-order section
+
+#+BEGIN_SRC latex
+  \begin{equation*}
+    H(z) = \frac{b_0+b_1 z^{-1} + b_2 z^{-2}} {1 - a_1 z^{-1} - a_2 z^{-2}} = \frac{B(z)}{A(z)} \\
+  \end{equation*}
+#+END_SRC
+
+***** Second-order section, direct form I
+#+ATTR_LATEX: :width 8cm
+[[./drawing/sos_direct_form_I.png]]
+
+***** Second-order section, inverted direct form I
+Because the convolution is commutative, numerator and denominator may be swapped.
+#+ATTR_LATEX: :width 8cm
+[[./drawing/sos_inv_direct_form_I.png]]
+
+***** Second-order section, direct form II
+Since the content of the delay cells are exactly the same for all time, so we can lumb the
+delay cells together.
+#+ATTR_LATEX: :width 8cm
+[[./drawing/sos_direct_form_II.png]]
 
 
-  
+
 *** TODO Real-Time Processing
-*** TODO Derevereration and echo canellation
+**** I/O and DMA Everything works in synch with a system clock of period $T_s$
+  - record a value $x_i[n]$
+  - process the value in a casual filter
+  - play the output $x_o[n]$
+
+#+ATTR_LATEX: :options [couleur = brown!20, arrondi = 0.1, logo=\bcbook, ombre=true]{}
+#+BEGIN_bclogo
+Everything needs to happen in at most $T_s$ seconds!
+#+END_bclogo
+
+Buffering:
+
+- interrupt for each sample would be too much overhead
+- soundcard consumes samples in buffers
+- soundcard notifies when buffer used up
+- CPU can fill a buffer in less time than soundcard can empty it
+
+Double Buffering
+
+- Delay $d = T_s \times \frac{L}{2}$  L: Lenght of the Buffer
+- If CPU doesn’t fill the buffer fast enough: *underflow*
+Multiple I/O Processing
+ - Delay: $d = T_s \times L$
+ - usually start out process first
+**** Implementation Framework
+Low Level
+- study soundcard data sheet
+- write code to program soundcard via writes to IO Ports
+- write an interrupt handler
+- write the code to handle the data
+High Level
+- choose a good API
+- write a callback function to handle the data
+
+**** Callback Prototype
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+Name: callback
+#+BEGIN_SRC C++ :exports none:flags -std=c++11
+  int Callback( const void *input,     // pointer to the input buffer
+                void *output,          // pointer to the output buffer
+                unsigned long samples, // length of samples
+      );
+  {
+      float* pIn = (float*)input;      // Convert the generic buffers
+      float* pOut = (float*)output;    // to the right data type
+      for (int n=0; n < samples; n++)  // Calls process for each sample in input the buffer
+          ,*pOut++ = Process(*pIn++);   // and store the result into the output buffer.
+  }
+#+END_SRC
+
+**** Processing Gateway
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+Name: gateway
+#+BEGIN_SRC C++ :exports none:flags -std=c++11
+                                   // 10 sec @ 24kHz
+  enum {BUF_LEN = 0x10000};        // Buffer length, power of 2
+  enum {BUF_MASK = BUF_LEN -1};    // Circular buffer mask
+  float m_pY[BUF_LEN];             // 2 Buffers
+  float m_pX[BUF_LEN];
+  int m_Ix;                        // 2 indixes into the buffers
+  int m_Iy;
+  float Process(float Sample)
+  {
+      m_PX[m_Ix] = Sample;         // store the sample into input buffer
+      float y = Effect();          // call Effect()
+      m_pY[m_Iy] = y;              // store the output into output buffer
+      m_Ix = (m_Ix + 1) & BUF_MAS; // Update indices with the ciruclar strategy
+      m_IY = (m_Iy + 1) & BUF_MAS;
+      return y;                    // return current output sample
+  }
+#+END_SRC
+
+**** Effect
+Implementing the echo effect as a reflection of the original signal, scaled with a factor at subsequent points in
+time:
+#+BEGIN_SRC latex
+  \begin{equation*}
+    y[n] = \frac{ax[n] + bx
+      [n-N] + cx[n-2N]}{a + b + c}
+  \end{equation*}
+#+END_SRC
+
+#+NAME: 4_10_simple_echo
+#+BEGIN_SRC octave :exports results :results file
+  L = 50;
+  n = [0:L-1];
+  N =10
+  a = 0.85;
+  b = 0.7;
+  c = 0.55;
+
+  for (i = 1 : length(n))
+    if (n(i)-N == 0)
+        x(i) = a*1;
+    elseif (n(i)-(2*N) == 0)
+      x(i) = b*1;
+    elseif (n(i)-(3*N) == 0)
+      x(i) = c*1;
+    else
+      x(i) = 0;
+    endif
+  end
+  # x = a*([(n-N) == 0]) || b*([(n-2*N) == 0]);
+
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+
+  stem(n,x, "r", "filled", "linewidth", 2);
+  grid off;
+
+  set(gca, "fontsize", 24);
+  set(gca,'XTick',0:N:L-1)
+  set(gca,'XTickLabel',{'','N','2N','3N',''})
+
+  set(gca,'YTick',c:0.15:a)
+  set(gca,'YTickLabel',{'c','b','a'})
+  title("Simple Echo")
+
+  print -dpng "-S800,400" ./image/4_10_simple_echo.png;
+  ans = "./image/4_10_simple_echo.png";
+#+END_SRC
+
+#+results: 4_10_simple_echo
+[[file:./image/4_10_simple_echo.png]]
+
+
+#+ATTR_LATEX: :options bgcolor=gray!10
+#+Name: gateway
+#+BEGIN_SRC C++ :exports none:flags -std=c++11
+
+  float Echo() {
+      static float a = 0.85;             // the three scaling factors
+      static float b = 0.6f;
+      static float c = 0.45f;
+      static float norm = 1.0f/(a+b+c);  // the normalisation factor
+      static int N = (int)(0.3 * m_SR);  // delay between reflextion
+
+      return norm * ( a * m_pX[m_Ix]
+                      + b * m_pX[(m_Ix + BUF_LEN -N)   & BUF_MASK]
+                      + c * m_pX[(m_Ix + BUF_LEN -2*N) & BUF_MASK]); }
+#+END_SRC
+*** TODO Derevereration and echo cancellation
