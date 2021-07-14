@@ -12,7 +12,7 @@
 #+Latex: \everymath{\displaystyle}
 #+Latex: \renewcommand{\arraystretch}{1.2}
 
-* Week 6 Module 4 Part 2: Filter Design Part 1
+* Week 6 Module 4 Part 2: Introduction to Filtering
 
 - First strategy of filter design: Imitation
   - uuImpulse truncation
@@ -1641,7 +1641,7 @@ one half sample.
 [[file:./image/4_9_fir_park_mcmellon.png]]
 
 
-** TODO Notes and Supplementary Materials
+** ONGOING Notes and Supplementary Materials
 *** The Fractional Delay Filter (FDF)
 #+ATTR_LATEX: :width 8cm
 [[./drawing/fractional_delay.png]]
@@ -1736,7 +1736,7 @@ For now suffice it to say that we can actually interpolate in discrete time and
 find intermediate values of a discrete time sequence
 using just discrete times filters like the fractional delay
 
-*** TODO The Hilbert Filter
+*** ONGOING The Hilbert Filter
 - Demodulator
 #+ATTR_LATEX: :width 8cm
 [[./drawing/hilbert-filter.png]]
@@ -1745,16 +1745,19 @@ using just discrete times filters like the fractional delay
 
  
 
-*** TODO Implementing of Digital Filters
+*** Implementing of Digital Filters
 **** Leaky Integrator in C
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+Name: leaky 
-#+BEGIN_SRC C :exports both
+#+BEGIN_SRC C++ :exports both :flags -std=c++11
+  #include <stdio.h>
   double leaky(double x) {
       static const double lambda = 0.9;
-      static double y            = 0;
+      static double y = 0;   // 1x memory cell
+      // plus initialization
 
+      // algorithm: 2x multiplication, 1x addition 
       y = lambda * y + (1-lambda) *x;
       return y;
   }
@@ -1775,40 +1778,44 @@ using just discrete times filters like the fractional delay
   | 0.0349 | 0.0314 | 0.0282 | 0.0254 | 0.0229 | 0.0206 | 0.0185 | 0.0167 | 0.015 | 0.0135 |
 
 
+- we need a "memory cell" to store previous state
+- we need to initialize the storage before first use
+- we need 2 multiplications and one addition per output sampel
+  
 **** Moving Average in C
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+Name: moving_average 
-#+BEGIN_SRC C++ :exports both 
+#+BEGIN_SRC C++ :exports both :flags -std=c++11
   #include <stdio.h>
   double ma(double x) {
       static const int M = 5;
-      static double z[M];
+      static double z[M]; // Mx memory cells
       static int ix = -1;
 
       int n;
       double avg = 0;
 
-      if(ix == -1) {
+      if(ix == -1) {      // initalize storage
           for(n=0; n<M; n++)
               z[n] = 0;
           ix = 0;
       }
 
       z[ix] = x;
-      ix = (ix + 1) % M; // circular buffer
+      ix = (ix + 1) % M;  // circular buffer
 
-      for(n=0; n<M; n++)
+      for(n=0; n<M; n++)  // Mx additions
           avg += z[n];
 
-      return avg / M;
+      return avg / M;     // 1x division
   }
 
   int main() {
       int n;
       for (n = 0; n<20; n++)
       {
-          // call with delta signl
+         // call with delta signl
           printf("%.4f ", ma(n==0 ? 1.0 : 0.0)); 
           if(!((n+1)%10)) printf("\n");
       }
@@ -1816,8 +1823,66 @@ using just discrete times filters like the fractional delay
   #+END_SRC
 
   #+results: moving_average
+  | 0.2 | 0.2 | 0.2 | 0.2 | 0.2 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |
+  | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |
+
+- we need M memory cells to store previous input values
+- we need to initialize the storage before first use
+- we need 1 division and M additions per output sample
+
+**** Programming Abstraction
+
+With this three building blocks we can describe and Constant Coefficient Equation. 
+***** Building Blocks
+#+ATTR_LATEX: :width 8cm
+[[./drawing/building_blocks.png]]
+
+***** Leaky Integrator
+#+BEGIN_SRC latex
+  \begin{equation*}
+    y[n] &= \lambda y[n-1] + (1-\lambda)x[n] \\
+  \end{equation*}
+#+END_SRC
+
+#+ATTR_LATEX: :width 8cm
+[[./drawing/leaky-integrator.png]]
 
 
-  
+***** Moving Average
+#+BEGIN_SRC latex
+  \begin{equation*}
+    y[n] &= \frac{1}{M} \sum_{k=0}^{M-1} x[n-k] \\
+  \end{equation*}
+#+END_SRC
+
+#+ATTR_LATEX: :width 12cm
+[[./drawing/moving_average.png]]
+
+***** The second-order section
+
+#+BEGIN_SRC latex
+  \begin{equation*}
+    H(z) = \frac{b_0+b_1 z^{-1} + b_2 z^{-2}} {1 - a_1 z^{-1} - a_2 z^{-2}} = \frac{B(z)}{A(z)} \\
+  \end{equation*}
+#+END_SRC
+
+***** Second-order section, direct form I
+#+ATTR_LATEX: :width 8cm
+[[./drawing/sos_direct_form_I.png]]
+
+***** Second-order section, inverted direct form I
+Because the convolution is commutative, numerator and denominator may be swapped.
+#+ATTR_LATEX: :width 8cm
+[[./drawing/sos_inv_direct_form_I.png]]
+
+
+***** Second-order section, direct form II
+Since the content of the delay cells are exactly the same for all time, so we can lumb the
+delay cells together.
+#+ATTR_LATEX: :width 8cm
+[[./drawing/sos_direct_form_II.png]]
+
+
+
 *** TODO Real-Time Processing
 *** TODO Derevereration and echo canellation
