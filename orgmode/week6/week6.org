@@ -1758,7 +1758,11 @@ using just discrete times filters like the fractional delay
   double leaky(double x) {
       static const double lambda = 0.9;
       static double y = 0;   // 1x memory cell
+<<<<<<< HEAD
       // plus initialization
+=======
+      // plus initialization
+>>>>>>> 33f0b145cfe7a710c74d021981ee66f45b33a1b0
 
       // algorithm: 2x multiplication, 1x addition 
       y = lambda * y + (1-lambda) *x;
@@ -1843,17 +1847,29 @@ With this three building blocks we can describe and Constant Coefficient Equatio
 ***** Leaky Integrator
 #+BEGIN_SRC latex
   \begin{equation*}
+<<<<<<< HEAD
     y[n] = \lambda y[n-1] + (1-\lambda)x[n] \\
+=======
+    y[n] &= \lambda y[n-1] + (1-\lambda)x[n] \\
+>>>>>>> 33f0b145cfe7a710c74d021981ee66f45b33a1b0
   \end{equation*}
 #+END_SRC
 
 #+ATTR_LATEX: :width 8cm
 [[./drawing/leaky-integrator.png]]
 
+<<<<<<< HEAD
 ***** Moving Average
 #+BEGIN_SRC latex
   \begin{equation*}
     y[n] = \frac{1}{M} \sum_{k=0}^{M-1} x[n-k] \\
+=======
+
+***** Moving Average
+#+BEGIN_SRC latex
+  \begin{equation*}
+    y[n] &= \frac{1}{M} \sum_{k=0}^{M-1} x[n-k] \\
+>>>>>>> 33f0b145cfe7a710c74d021981ee66f45b33a1b0
   \end{equation*}
 #+END_SRC
 
@@ -1877,6 +1893,10 @@ Because the convolution is commutative, numerator and denominator may be swapped
 #+ATTR_LATEX: :width 8cm
 [[./drawing/sos_inv_direct_form_I.png]]
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 33f0b145cfe7a710c74d021981ee66f45b33a1b0
 ***** Second-order section, direct form II
 Since the content of the delay cells are exactly the same for all time, so we can lumb the
 delay cells together.
