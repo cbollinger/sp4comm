@@ -90,14 +90,12 @@
 #+INCLUDE: "./week5/week5.org"
 \newpage
 #+INCLUDE: "./week6/week6.org"
-<<<<<<< HEAD
 \newpage
 #+INCLUDE: "./week7/week7.org"
-=======
-
-# #+INCLUDE: "./week7/week7.org"
->>>>>>> 33f0b145cfe7a710c74d021981ee66f45b33a1b0
-# #+INCLUDE: "./week8/week8.org"
+\newpage
+#+INCLUDE: "./week7/week7.org"
+\newpage
+#+INCLUDE: "./week8/week8.org"
 
 \newpage
 * COMMENT Appendix

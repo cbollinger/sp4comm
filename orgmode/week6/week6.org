@@ -1758,12 +1758,7 @@ using just discrete times filters like the fractional delay
   double leaky(double x) {
       static const double lambda = 0.9;
       static double y = 0;   // 1x memory cell
-<<<<<<< HEAD
       // plus initialization
-=======
-      // plus initialization
->>>>>>> 33f0b145cfe7a710c74d021981ee66f45b33a1b0
-
       // algorithm: 2x multiplication, 1x addition 
       y = lambda * y + (1-lambda) *x;
       return y;
