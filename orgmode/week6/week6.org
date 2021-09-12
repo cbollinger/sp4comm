@@ -12,8 +12,9 @@
 #+Latex: \everymath{\displaystyle}
 #+Latex: \renewcommand{\arraystretch}{1.2}
 
-* Week 6 Module 4 Part 2: Introduction to Filtering
+#+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
 
+* Week 6 Module 4 Part 2: Introduction to Filtering
 - First strategy of filter design: Imitation
   - uuImpulse truncation
   - Window Method
@@ -385,7 +386,6 @@ Dependencies Octave Symbolic Package:
 4. use result as M-tap impulse response $\hat{h}[n]$
 #+END_bclogo
 
-
 #+BEGIN_SRC octave :exports results :results file
   pkg load signal
   N=64;                # Vector lenght
@@ -443,8 +443,9 @@ Dependencies Octave Symbolic Package:
   ans = "./image/freq_sampling.png";
       #+END_SRC
 
-  #+results:
-  [[file:./image/freq_sampling.png]]
+      #+results:
+      [[file:./image/freq_sampling.png]]
+
 
 - *Why Frequency Sampling is not such a good idea:*
   - frequency response is DTFT of finite-support, whose DFT we know
@@ -464,7 +465,7 @@ design methods
 *** Rosettta Mission: Spacecraft
 - Reaching Comet 67P. 10 years to get momentum to get its orbit.
 - Resolution of taken pictures:
-  | Resolution  | at Distance | Year              |                                    |
+  | Resolution | at Distance | Year              |                                    |
   | 1km/pixel  | 86'000km    | 28. June 2014     |                                    |
   |            | 12'000km    | 14. July 2014     |                                    |
   | 100m/pixel | 5'500km     | 20. July 2014     |                                    |
@@ -505,7 +506,7 @@ The major enemy to image quality of telescope on earth are the atmospheric distu
     \end{equation*} 
   #+END_SRC
 
-  - $\lambda$ : wave length of the light that hits the camera
+    - $\lambda$ : wave length of the light that hits the camera
   - D : Diameter of the aperture
 
 *** Seeing the Lunar Excursion Module (LEM)
@@ -675,7 +676,8 @@ Conditions for convergences
 An LTI system is stable if its region of convergence includes the unit circle
 #+END_bclogo
 
-** Filter Design Part 2 
+** Filter Design Part 2
+
 - many signal processing problems can be solved using simple filters
 - we have seen simple lowpass filters already (Moving Average, Leaky Integrator)
 - simplel (low order) transfer functions allow for intuitive design and tuning
@@ -1265,12 +1267,14 @@ Filterdesign was established art long before digital processing appeared
 #+LATEX: \rowcolors[]{1}{yellow!5}{}
 #+ATTR_LATEX: :center :align  p{4cm}  p{4cm} p{4cm}
 #+CAPTION: Butterworth lowpass
+| <20>                                                              | <20>                                        | <20>                                  |
 | \rowcolor{yellow!30} \bfseries\textcolor{red}{Magnitude response} | \bfseries\textcolor{red}{Design Parameters} | \bfseries\textcolor{red}{Test values} |
 |-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
 | maximally flat                                                    | order N                                     | width of transition band              |
 | monotonic over [0, $\pi$ ]                                        | cutoff frequency                            | passband error                        |
 |-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
-  
+#+TBLFM: 
+
 ***** Pole-Zero Plot
 #+NAME: 4_9_butterworth_pole-zero-plot
  #+BEGIN_SRC octave :exports results :results file
@@ -1643,7 +1647,6 @@ one half sample.
 #+results: 4_9_fir_park_mcmellon
 [[file:./image/4_9_fir_park_mcmellon.png]]
 
-
 ** ONGOING Notes and Supplementary Materials
 *** The Fractional Delay Filter (FDF)
 #+ATTR_LATEX: :width 8cm
@@ -1751,10 +1754,12 @@ using just discrete times filters like the fractional delay
 *** Implementing of Digital Filters
 **** Leaky Integrator in C
 
+
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+Name: leaky 
-#+BEGIN_SRC C++ :exports both :flags -std=c++11
-  #include <stdio.h>
+#+BEGIN_SRC C++ :exports source :flags -std=c++11 :includes '(<stdio.h> <algorithm> <functional> <iostream>)
+  using namespace std;
+  
   double leaky(double x) {
       static const double lambda = 0.9;
       static double y = 0;   // 1x memory cell
@@ -1763,61 +1768,62 @@ using just discrete times filters like the fractional delay
       y = lambda * y + (1-lambda) *x;
       return y;
   }
-
+  
   int main() {
       int n;
       for(n = 0; n <20; n++)
       {
           //call with delta signl
           printf("%.4f ", leaky(n==0 ? 1.0 : 0.0));  
-          if(!((n+1)%10)) printf("\n");
+          //if(!((n+1)%10)) printf("\n");
       }
   }
   #+END_SRC
 
   #+results: leaky
-  |    0.1 |   0.09 |  0.081 | 0.0729 | 0.0656 |  0.059 | 0.0531 | 0.0478 | 0.043 | 0.0387 |
-  | 0.0349 | 0.0314 | 0.0282 | 0.0254 | 0.0229 | 0.0206 | 0.0185 | 0.0167 | 0.015 | 0.0135 |
+  : 0.1000 0.0900 0.0810 0.0729 0.0656 0.0590 0.0531 0.0478 0.0430 0.0387 0.0349 0.0314 0.0282 0.0254 0.0229 0.0206 0.0185 0.0167 0.0150 0.0135
 
-
-- we need a "memory cell" to store previous state
+  - we need a "memory cell" to store previous state
 - we need to initialize the storage before first use
 - we need 2 multiplications and one addition per output sampel
   
 **** Moving Average in C
 
+  BEGIN_SRC C++ :exports both :flags -std=c++11
+
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+Name: moving_average 
-#+BEGIN_SRC C++ :exports both :flags -std=c++11
-  #include <stdio.h>
+#+Name: leaky 
+#+BEGIN_SRC C++ :exports source :flags -std=c++11 :includes '(<stdio.h> <algorithm> <functional> <iostream>)
+  using namespace std;
   double ma(double x) {
       static const int M = 5;
       static double z[M]; // Mx memory cells
       static int ix = -1;
-
+  
       int n;
       double avg = 0;
-
+  
       if(ix == -1) {      // initalize storage
           for(n=0; n<M; n++)
               z[n] = 0;
           ix = 0;
       }
-
+  
       z[ix] = x;
       ix = (ix + 1) % M;  // circular buffer
-
+  
       for(n=0; n<M; n++)  // Mx additions
           avg += z[n];
-
+  
       return avg / M;     // 1x division
   }
-
+  
   int main() {
       int n;
       for (n = 0; n<20; n++)
       {
-         // call with delta signl
+          // call with delta signl
           printf("%.4f ", ma(n==0 ? 1.0 : 0.0)); 
           if(!((n+1)%10)) printf("\n");
       }
@@ -1825,8 +1831,6 @@ using just discrete times filters like the fractional delay
   #+END_SRC
 
   #+results: moving_average
-  | 0.2 | 0.2 | 0.2 | 0.2 | 0.2 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |
-  | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |
 
 - we need M memory cells to store previous input values
 - we need to initialize the storage before first use
@@ -1842,30 +1846,18 @@ With this three building blocks we can describe and Constant Coefficient Equatio
 ***** Leaky Integrator
 #+BEGIN_SRC latex
   \begin{equation*}
-<<<<<<< HEAD
     y[n] = \lambda y[n-1] + (1-\lambda)x[n] \\
-=======
-    y[n] &= \lambda y[n-1] + (1-\lambda)x[n] \\
->>>>>>> 33f0b145cfe7a710c74d021981ee66f45b33a1b0
   \end{equation*}
 #+END_SRC
 
 #+ATTR_LATEX: :width 8cm
 [[./drawing/leaky-integrator.png]]
 
-<<<<<<< HEAD
 ***** Moving Average
 #+BEGIN_SRC latex
   \begin{equation*}
     y[n] = \frac{1}{M} \sum_{k=0}^{M-1} x[n-k] \\
-=======
-
-***** Moving Average
-#+BEGIN_SRC latex
-  \begin{equation*}
-    y[n] &= \frac{1}{M} \sum_{k=0}^{M-1} x[n-k] \\
->>>>>>> 33f0b145cfe7a710c74d021981ee66f45b33a1b0
-  \end{equation*}
+\end{equation*}
 #+END_SRC
 
 #+ATTR_LATEX: :width 12cm
@@ -1888,10 +1880,6 @@ Because the convolution is commutative, numerator and denominator may be swapped
 #+ATTR_LATEX: :width 8cm
 [[./drawing/sos_inv_direct_form_I.png]]
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 33f0b145cfe7a710c74d021981ee66f45b33a1b0
 ***** Second-order section, direct form II
 Since the content of the delay cells are exactly the same for all time, so we can lumb the
 delay cells together.

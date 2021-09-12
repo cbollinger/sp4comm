@@ -13,6 +13,10 @@
 #+Latex: \everymath{\displaystyle}
 #+Latex: \renewcommand{\arraystretch}{1.2}
 
+
+#+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
+
+
 * Week 7 Module 5: Sampling and Quantization
 Interpolation describes the process of building a continuous-time signal *x(t)* from
 a sequence of samples *x[n]*. In other words, interpolation allows moving from the
@@ -71,14 +75,749 @@ will introduce the last form of Fourier transform we have not yet encountered in
 class, the continuous-time Fourier transform.
 *** The continous-time paradigm
 
+Two views of the world
+
 #+LATEX: \rowcolors[]{1}{yellow!5}{}
 #+ATTR_LATEX: :center :align  p{6cm}  p{6cm} 
-#+CAPTION: Two views of the world
-| \rowcolor{yellow!30} \bfseries\textcolor{red}{Digital World} | \bfseries\textcolor{red}{Analog World}         |
-|--------------------------------------------------------------+------------------------------------------------|
-| countable integer index n                                    | real-valued time t [sec]                       |
-| sequences $x[n] \in \ell_2(\mathbb{Z})$                      | function $x(t) \in L_2(\mathbb{R})$            |
-| frequency $\omega \in [-\pi, \pi]$                           | frequency $\Omega \in \mathbb{R} (rad/sec)$    |
-| DTFT: $\ell_2(\mathbb{Z}) \rightarrow L_2[-\pi, \pi]$        | FT: $L_2(\mathbb{R}) \rightarrow L_2(\mathbb{R})$ |
-|--------------------------------------------------------------+------------------------------------------------|
+#+CAPTION: Two views of the world 1
+| <40>                                                         | <40>                                   |
+| \rowcolor{yellow!30} \bfseries\textcolor{red}{Digital World} | \bfseries\textcolor{red}{Analog World} |
+|--------------------------------------------------------------+----------------------------------------|
+| arithmetic                                                   | calculus                               |
+| combinatorics                                                | distributions                          |
+| computer sience                                              | system theory                          |
+| DSP                                                          | electronics                            |
+|--------------------------------------------------------------+----------------------------------------|
 
+
+#+LATEX: \rowcolors[]{1}{yellow!5}{}
+#+ATTR_LATEX: :center :align  p{6cm}  p{6cm} 
+#+CAPTION: Two views of the world 2
+| \rowcolor{yellow!30} \bfseries\textcolor{red}{Digital World} | \bfseries\textcolor{red}{Analog World}            |
+| <40>                                                         | <40>                                              |
+|--------------------------------------------------------------+---------------------------------------------------|
+| countable integer index n                                    | real-valued time t [sec]                          |
+| sequences $x[n] \in \ell_2(\mathbb{Z})$                      | function $x(t) \in L_2(\mathbb{R})$               |
+| frequency $\omega \in [-\pi, \pi]$                           | frequency $\Omega \in \mathbb{R} (rad/sec)$       |
+| DTFT: $\ell_2(\mathbb{Z}) \rightarrow L_2[-\pi, \pi]$        | FT: $L_2(\mathbb{R}) \rightarrow L_2(\mathbb{R})$ |
+|--------------------------------------------------------------+---------------------------------------------------|
+
+Sampling: $x(t) \rightarrow x[n]$
+Interpolation: $x[n] \rightarrow x(t)$
+
+** Continuous-time signal processing
+
+- time ::
+  real variable t
+- signal x(t) ::
+  complex function of areal variable
+- finite energy ::
+  $x(t) \in L_2(\mathbb{R})$
+- inner product in  $L_2(\mathbb{R})$ ::
+  $\langle x(t), y(t) \rangle = \int_{-\infty}^{\infty} x^*(t)\;y(t)\;\dt$
+- energy ::
+  $||x(t)||^2 = \langle{x(t),x(t)}\rangle$
+
+*** Analog LTI filters
+
+#+begin_src latex
+  \begin{align*}
+    y(t) &= (x*h)t \\
+         &= \langle{h^*(t-\tau),x(\tau)}\rangle \\
+         &= \int_{-\infty}^{\infty}x(\tau)\;h(t-\tau)\;d\tau
+  \end{align*}
+#+end_src
+
+*** Fourier analysis
+- in discrete time max angular frequency is $\pm \pi$
+- in continous time no max frequency: $\Omega \in \mathbb{R}$
+- concept is the same:
+
+#+CAPTION: Real-time Fourier Transform
+#+begin_src latex
+  \begin{equation*}
+    X(j\Omega) = \int_{-\infty}^{\infty}e^{-j\Omega\;t}\;dt
+  \end{equation*}
+#+end_src
+
+#+CAPTION: Real-time inverse Fourier Transform
+#+begin_src latex
+  \begin{equation*}
+    x(t) = \frac{1}{2\;\pi}\int_{-\infty}^{\infty} X(j\Omega)\;e^{j\Omega\;t} dt
+  \end{equation*}
+#+end_src
+
+*** Real-world frequency
+- \Omega expresse in rad/s
+- $F=\frac{\Omega}{2\;\pi}$, expressed in Hertz (1/s)
+- period $T = \frac{1}{F} = \frac{2\;\pi}{\Omega}$
+
+*** Example
+
+
+
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal
+  clc; clear all; close all;
+  
+  s = 5; #sigma
+  t = -60:0.1:60;
+  x = exp((-t.^2)./(2*s^2));
+  # y= x;
+  
+  O = -2:0.01:2;
+  X = s*sqrt(2*pi).*exp((-s^2)/(2)*O.^2)
+  
+  figure( 1, "visible", "off" )           # Do not open the graphic window in org
+  subplot(2,1,1)
+  plot(t,x, "linewidth", 3)
+  set(gca, "fontsize", 24)
+  grid on
+  title('Bell Curve')
+  xlabel('time s')
+  ylabel('x(t)') 
+  
+  subplot(2,1,2)
+  plot(O,X, "linewidth", 3)
+  set(gca, "fontsize", 24)
+  grid on
+  title('Fourier Transform')
+  xlabel('Frequency [rad/s]')
+  ylabel('X(j\Omega)') 
+  
+  print -dpng "-S800,400" ./image/w7_gauss-01.png;
+  ans = "./image/w7_gauss-01.png";
+#+END_SRC
+
+#+results:
+[[file:./image/w7_gauss-01.png]]
+*** Convolution theorem
+#+begin_src latex
+  \begin{equation*}
+    Y(j\;\Omega) = X(j\Omega)\;H(j\Omega) 
+  \end{equation*}
+#+end_src
+
+*** Bandlimited Functions
+#+begin_src latex
+  \begin{equation*}
+    X(j\;\Omega) = 0 \text{ for } |\Omega| > \Omega_N 
+  \end{equation*}
+#+end_src
+
+**** The Fourier Transform of a bandlimited function
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal
+  fs = 100;             # sample frequency
+  Omega_N=40;         # cutoff frequency
+  Omega_B=2*Omega_N;    # passpand
+  O=-80:1/fs:80;        # frequency vector
+  x=rectpuls(O,Omega_B)     #generating square wave
+  
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  
+  plot(O, x, "linewidth", 3 );
+  set(gca, "fontsize", 24)
+  title('Prototypical bandlimited function');
+  
+  axis("nolabel");
+  axis([-80 80 -0.4 1.4])
+  grid on;
+  text(44      ,  -0.2, '\fontsize{24}\it\Omega_N   ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "center");
+  text(-40     ,  -0.2, '\fontsize{24}-\it\Omega_N  ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "center");
+  text(-85      ,  1 , '\fontsize{24}\it{G} ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "center");
+  
+                                  # Org-Mode specific setting
+  print -dpng "-S800,200" ./image/w7_bandlimited.png;
+  ans = "./image/w7_bandlimited.png";
+#+END_SRC
+
+#+results:
+[[file:./image/w7_bandlimited.png]]
+
+#+begin_src latex
+  \begin{equation*}
+    \Phi(j\;\Omega) = G \; rect(\frac{\Omega}{2\;\Omega_N})
+  \end{equation*}
+#+end_src
+
+**** The Inverse Fourier Transform of a bandlimited function
+
+#+begin_src latex
+  \begin{align*}
+    \phi(t) &= \frac{1}{2\;\pi} \int_{-\infty}^{\infty} \Phi(j\Omega) e^{j\Omega\;t}d\Omega \\
+              &= G \frac{\Omega_N}{\pi} sinc(\frac{\Omega_N}{\pi}\;t)
+  \end{align*}
+#+end_src
+
+- normalization :: $G = \frac{\pi}{\Omega_n}$
+- totoal bandwith :: $\Omega_B = 2\;\Omeag_N$
+- define  :: $T_s = \frac{2\;\pi}{\Omega_B} = \frac{\pi}{\Omega_N}$
+
+**** The prototypical bandlimited function
+
+#+begin_src latex
+  \begin{align*}
+    \Phi(j\;\Omega) &= \frac{\pi}{\Omega_N} \; rect(\frac{\Omega}{2\;\Omega_N}) \\
+    \phi(t) &= sinc(\frac{t}{T_s})
+  \end{align*}
+#+end_src
+*** TODO Plot Normalized prototypicale bandlimited function
+
+** Interpolation
+
+- Main Task :: $x[n] \Rightarrow x(t)$
+- Gaps :: fill the gaps between samples 
+*** Interpolation requirements
+- decide on $T_s$
+- make sure $x(nT_s) = x[n]$
+- make sure x(t) is smooth
+*** Why smoothness
+- jumps (1st order discontinuities) wourl require the signal to move "faster than light"
+- 2nd order discontinuities would require infinite acceleration
+- the interpolation should be infinitely differentialbe
+- "natural" solution: polynominal interpolation
+*** Polynomial interpolation
++ N points $\Rightarrow$ polynomial of degree (N-1)
++ $p(t) = a_0 + a_1t +a_2t^2 a ... + a_{N-1} t^{(N-1)}$
++ "naive" approach
+
+  #+begin_src latex
+    \begin{equation*}
+      \left\{
+        \begin{array}{ll}
+          p(0)        &= x[0]  \\
+          p(T_s)      &= x[1]  \\
+          p(2T_s)     &= x[2]  \\
+          ......               \\
+          p((N-1)T_s) &= x[N-1]
+        \end{array}
+      \right.
+    \end{equation*}
+  #+end_src
+
+Without loss of gnerality:
+- consider a symmetric interval $I_N = [-N...N]$
+- set $T_s = 1$
+
+  #+begin_src latex
+    \begin{equation*}
+      \left\{
+        \begin{array}{ll}
+          p(-N)   &= x[-N]   \\
+          p(-N+1) &= x[-N+1] \\
+          ......             \\
+          p(0)    &= x[0]    \\
+          p(N)    &= x[N]
+        \end{array}
+      \right.
+    \end{equation*}
+  #+end_src
+
+*** Lagrange interpolation
+The natural solution to this interpolation problem is given by Lagrange interpolation
+- $P_N:$ space of degree-2N polynominals over I_N
+- a basis for P_N is the family of 2N + 1 Lagrange polynominals
+
+  #+begin_src latex
+    \begin{equation*}
+      L_n^{(N)}(t) = \prod_{k=-N}^{N} \frac{t-k}{n-k} \text{ for   } n = -N \text{,...,}N
+    \end{equation*}
+  #+end_src
+
+  The formula:
+  #+begin_src latex
+    \begin{equation*}
+      p(t) = \sum_{n=-N}^N x[n]L_n^{(N)}(t)
+    \end{equation*}
+  #+end_src
+  
+
+The Lagrange interpolation is the sought-after polynominal interpolation:
+- polynominal of degree 2N through 2N+1 points is unique
+- the Lagrangian interpolator satisfies
+  #+begin_src latex
+    \begin{equation*}
+      p(N)   = x[N] \text{ for } -N \le n \le N
+    \end{equation*}
+  #+end_src
+
+  since
+  #+begin_src latex
+    \begin{equation*}
+    L_n^{(N)}(m) = \left\{
+        \begin{array}{ll}
+          1   \text{ if } n = m   \\
+          0   \text{ if } n \neq m \\
+        \end{array}
+      \right
+      -N \leq n, m \leq N \\
+    \end{equation*}
+  #+end_src
+
+- key property ::
+  maximmally smooth (infinitely many continuous derivatives)
+
+- drawback ::
+  interpolation "bricks" depend on N
+  
+*** Local interpolation schemes
+
+#+begin_src latex
+  \begin{equation*}
+    x(t) \sum_{n=-N}^N x[n]i_c(t-n)
+    \end{equation*}
+#+end_src
+
+Interpolator's requirements:
+- i_c: interpolation kernel
+- i_c(0) = 1
+- i_c(t) = 0
+
+- Key property :: same interpolating function independently of N.
+- drawback :: lack of smoothness
+  
+*** Sinc interpolation formula
+
+#+begin_src latex
+  \begin{equation*}
+   x(t) \sum_{n=-N}^N x[n]sinc(\frac{t-nT_s}{T_s})
+  \end{equation*}
+#+end_src
+
+** Sampling of bandlimited functions
+
+*** The spectrum of interpolated signals
+
+#+begin_src latex
+  \begin{equation*}
+    X(j\Omeag) = \left\{
+          \begin{array}{ll}
+            (\pi/\Omega_N)X(e^{j\pi(\Omega/\Omega_N)})   \text{ for } |\Omega| \leq \Omega_N   \\
+            0   \text{ otherwise }\\
+          \end{array}
+        \right
+  \end{equation*}
+#+end_src
+
+Pich interpolation period T_s:
+- $X(j\Omega)$ is $\Omeag_N$-bandlimited, with $\Omega_N = \pi/T_s$
+- fast interpolation ($\T_s$ small) $\Rightarrow$ wider spectrum
+- slow interpolation ($\T_s$ large) $\Rightarrow$ narrower spectrum
+*** The space of bandlimited functions
+The space $\pi-BL$
+- is a a vector space because $\pi-BL \subset L_2(\mathbb{R})$
+- inner product is standard inner product in $L_2(\mathbb{R})$
+- completeness... that's more delicate
+
+Inner product:
+#+begin_src latex
+  \begin{equation*}
+    \langle x(t),y(t)\rangle = \int_{-\infty}^{\infty} x^*(t)y(t)dt
+  \end{equation*}
+#+end_src
+
+Convolution:
+#+begin_src latex
+\begin{equation*}
+  (x * y)(t) = \langle x^*(\tau),y(t-\tau)\rangle
+\end{equation*}
+#+end_src
+
+A basis for the $\pi-BL$ space
+#+begin_src latex
+\begin{equation*}
+  \phi^{(n)}(t) = sinc(t-n) \text{, for} n \in \mathbb{Z}
+\end{equation*}
+#+end_src
+
+#+begin_src latex
+\begin{equation*}
+  FT{sinc(t)} = rect(\frac{\Omega}{2\pi})
+\end{equation*}
+#+end_src
+
+#+begin_src latex
+  \begin{equation*}
+    (sinc * sinc)(m-n) = \left\{
+            \begin{array}{ll}
+              1   \text{ for } m=n   \\
+              0   \text{ otherwise }\\
+            \end{array}
+          \right
+  \end{equation*}
+#+end_src
+
+*** The sampling Theorem
+
+Analysis formula:
+#+begin_src latex
+  \begin{equation*}
+    x[n] = \langle sinc(\frac{t-nT_s}{T_s}),x(t) \rangle = T_s x(nT_s)
+  \end{equation*}
+ #+end_src
+
+Synthesis formula:
+ #+begin_src latex
+   \begin{equation*}
+      x(t) =  \frac{1}{T_s} \sum_{n=-\infty}^{\infty} x[n] sinc(\frac{t-nT_s}{T_s})
+   \end{equation*}
+ #+end_src
+
+ - the space of $\Omega_n-bandlimited$ functions is a Hilbert space
+ - set $T_s = \pi/\Omega_N$
+ - the functions $\phi^{(n)}(t) = sinc((t-nT_s)/T_s)$ form a bais for the space
+ - for any $x(t) \in \Omega_N-BL$ the coefficients in the sinc basis are the (scaled) samples $T_s x(nT_s)$
+
+ \begin{tcolorbox}
+    for any $x(t) \in \Omega_N-BL$, a sufficient representation is the sequence $x[n] = x(nT_s)$
+ \end{tcolorbox}
+
+  The sampling theorem in Hertz
+
+  ans signal x(t) bandlimited to $F_N$ Hz can be sampled with no loss of
+   information using a sampling frequency $F_s \geq 2F_N$ (i.e. sampling period
+   $T_s \leq 1/2\;F_N$
+
+** Sampling of nonbandlimited functions
+
+*** Raw Sampling
+Raw sampling is when we don't care about first taking the inner product with the
+sinc function. So we just take x(t) and every T_s seconds, we take a sample.\\
+
+x(n): The continous-time complex exponential
+#+begin_export latex
+\begin{equation*)
+x(t) = e^{j\Omega_ot}
+ \end{equation*}
+#+end_export
+- always periodic, period $T = \frac{2\pi}{\Omega_0}$
+- all angualr speed are allowed
+- $FT{e^{j\Omeag_0t}} = 2\pi\delat(\Omega - Omega_0)$
+- bandlimited to $\Omega_0$
+
+*** Aliasing
+
+#+begin_export latex
+\begin{align*}
+  x(t) &= cos(2\piF_ot) \\
+  x[n] &= x(nT_s) = cos(\omeag_0n) \\
+\end{align*}
+#+end_export
+with
+#+begin_export latex
+\begin{align*}
+  F_s      &= \frac{1}{T_s} \\
+  \omega_o &=  2\pi(\frac{F_0}{F_s})\\
+\end{align*}
+#+end_export
+
+#+LATEX: \rowcolors[]{1}{yellow!5}{}
+#+ATTR_LATEX: :center :align  p{4cm}  p{4cm} p{4cm}
+#+CAPTION: Aliasing
+| <20>                                                           | <20>                                        | <20>                                                       |
+| \rowcolor{yellow!30} \bfseries\textcolor{red}{sampling period} | \bfseries\textcolor{red}{digital frequency} | \bfseries\textcolor{red}{$\hat{x}$}                        |
+|----------------------------------------------------------------+---------------------------------------------+------------------------------------------------------------|
+| $T_s < \pi/\Omega_0$                                           | 0 < \omega_o < \pi                          | e^{j\Omeag_0}                                              |
+| $\pi/\Omega_0 < T_s < 2\pi/Omega_0$                            | \pi < \omeag_0 < 2\pi                       | $e^{j\Omeag_1}\text{: } \Omega_1 = \Omega_0 -2\pi/T_s$     |
+| T_s > 2\pi/\Omega_0                                            | \omeag_0 > 2\pi                             | $e^{j\Omeag_2}\text{: } \Omega_2 = \Omega_0 mod(2\pi/T_s)$ |
+|----------------------------------------------------------------+---------------------------------------------+------------------------------------------------------------|
+
+*** Sinusoidal 
+#+begin_src octave :exports results :results file
+  w=1
+  T = [0:1/1000:w];     %1000Hz sampling frequency
+  A = cos(2*pi*3*T);
+  
+  t100 = [0:1/100:w];      %20Hz sampling
+  a100 = cos(2*pi*3*t100);  %3Hz sine wave
+  
+  t10 = [0:1/10:w];      %20Hz sampling
+  a10 = cos(2*pi*3*t10);  %3Hz sine wave
+  
+  t6 = [0:1/6:w];      %20Hz sampling
+  a6 = cos(2*pi*3*t6);  %3Hz sine wave
+  
+  t3 = [0:1/3:w];      %20Hz sampling
+  a3 = cos(2*pi*3*t3);  %3Hz sine wave
+  
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  subplot(2,2,1);
+  plot(T, A, 'b', "linewidth", 1);
+  set(gca, "fontsize", 24, 'XTick', 0:0.25:1, 'YTick', -2:1:2);
+  title("F = 3Hz / Fs = 100Hz");
+  xlabel('time [s]');
+  axis([0 w -1.2 1.2]);
+  grid 'on';
+  hold on;
+  plot(t100, a100, "color","r", 'o', "markersize", 5, "linewidth", 3 );
+  
+  subplot(2,2,2);
+  plot(T, A, 'b', "linewidth", 1);
+  set(gca, "fontsize", 24, 'XTick', 0:0.25:1, 'YTick', -2:1:2)
+  title("F = 3Hz / Fs = 10Hz");
+  xlabel('time [s]');
+  axis([0 w -1.2 1.2]);
+  grid on;
+  hold on;
+  plot(t10, a10, "color","r", 'o', "markersize", 5, "linewidth", 3 );
+  
+  subplot(2,2,3);
+  plot(T, A, 'b', "linewidth", 1);
+  set(gca, "fontsize", 24, 'XTick', 0:0.25:1, 'YTick', -2:1:2)
+  title("F = 3Hz / Fs = 6Hz");
+  xlabel('time [s]');
+  axis([0 w -1.2 1.2]);
+  grid on;
+  hold on;
+  plot(t6, a6, "color","r", 'o', "markersize", 5, "linewidth", 3 );
+  
+  subplot(2,2,4);
+  plot(T, A, 'b', "linewidth", 1);
+  set(gca, "fontsize", 24, 'XTick', 0:0.25:1, 'YTick', -2:1:2)
+  title("F = 3Hz / Fs = 3Hz");
+  xlabel('time [s]');
+  axis([0 w -1.2 1.2]);
+  grid on;
+  hold on;
+  plot(t3, a3, "color","r", 'o', "markersize", 5, "linewidth", 3 );
+  
+  print -dpng "-S800,600" ./image/w7_sampling_01.png;
+  ans = "./image/w7_sampling_01.png";
+#+end_src
+
+#+results:
+[[file:./image/w7_sampling_01.png]]
+
+#+begin_src octave :exports results :results file
+  w=20
+  t = [0:1/2.9:w];      %2.9Hz sampling
+  a = cos(2*pi*3*t);  %3Hz sine wave
+  
+  T = [0:0.001:w];     %1000Hz sampling frequency
+  A = cos(2*pi*3*T);
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  
+  
+  plot(t, a, "color","r", 'o', "markersize", 5, "linewidth", 3 );
+  set(gca, "fontsize", 24, 'YTick', -2:1:2)
+  title('F = 2.9Hz / Fs = 3Hz')
+  xlabel('time [s]');
+  axis([0 w -1.2 1.2]);
+  grid on
+  hold on;
+  plot(T, A, 'b', "linewidth", 0.5);
+  
+  print -dpng "-S800,300" ./image/w7_sampling.png;
+  ans = "./image/w7_sampling.png";
+#+end_src
+
+#+results:
+[[file:./image/w7_sampling.png]]
+
+*** Aliasing for arbitrary spectra
+A contiuous time signal $x_c$ sampled every $T_s$ seconds gives a sequence
+x[n]. Which is equal to the contious time signals at multiples of the sampling
+intervals $T_s$.
+- $x_c(t) \Rightarrow x[n] =x_c(nT_s)$
+In Fourier Transform domain we have a spectra of the continuous time signal
+$X_c(j\Omega)$. And at the output we have a discrete time Fourier Transform of
+the sequence $X(j\omega)$. What is that going to be in genaral? And how is it
+going to be related to the input spectrum?
+- $X(j\Omega) \Rightarrow X(j\omega) = ?$
+
+The key idea:
+- pick $T_s$ and set $\Omega_N = \pi/T_s$
+- pick $\Omega_= < \Omega_N$
+  
+#+begin_export latex
+\begin{align*}
+  e^{j\Omega_0t} &\rightarrow e^{j\Omega_0T_sn} \\
+  e^{j(\Omega_0 + 2\Omega_N)t} &\rightarrow e^{j(\Omega_0 + 2\Omega_N)T_sn} \text{, add } 2\Omega_N \\
+  e^{j(\Omega_0 + 2\Omega_N)t} &\rightarrow e^{j(\Omega_0T_sn + 2\Omega_NT_sn)} \text{, expand this product } \\ 
+  e^{j(\Omega_0 + 2\Omega_N)t} &\rightarrow e^{j(\Omega_0T_sn + \frac{2\pi}{T_s}T_sn)}  \\
+  e^{j(\Omega_0 + 2\Omega_N)t} &\rightarrow e^{j(\Omega_0T_sn + 2\pin)}  \text{,  } e^{j2\pin} \text{ is equal to one}\\
+  e^{j(\Omega_0 + 2\Omega_N)t} &\rightarrow e^{j\Omega_0T_sn }  \text{,  the same discrete time sequence as before}\\
+\end{align*}
+#+end_export
+
+So we do not see the higher frequency complex exponential, it simply looks like the lower frequency exponential $\Omega_0$.
+
+#+begin_export latex
+\begin{tcolorbox}
+So in general, if we have two frequencies sampled, the higher frequency is
+aliased back onto the lower frequency and we simply see the sum of these two.
+\end{tcolorbox}
+
+#+end_export
+
+**** Spectrum of raw-sampled signals
+
+- start with the inverse Fourier Transform
+  #+begin_export latex
+  \begin{equation*}
+    x[n] = x_c(nT_s) = \frac{1}{2\pi}\int_{-\infty}^{\infty} X_c(j\Omega)e^{j\Omega n T_s}d\Omega
+  \end{equation*}
+  #+end_export
+- frequencies $2\Omega_N$ apart will be aliased, so split the integration interval
+  #+begin_export latex
+  \begin{equation*}
+    x[n] = \frac{1}{2\pi} \sum_{k=-\infty}^{\infty} \int_{(2k-1)\Omega_N}^{(2k+1)\Omega_N} X_c(j\Omega)e^{j\Omega n T_s}d\Omega
+  \end{equation*}
+  #+end_export
+
+- with a change of variable and using $e^{j(\Omega+2k\Omega_N)T_s n} = e^{j\Omega T_s n}$  
+#+begin_export latex
+\begin{equation*}
+  x[n] = \frac{1}{2\pi} \sum_{k=-\infty}^{\infty} \int_{-\Omega T_s n}^{\Omega T_s n} X_c(j(\Omega - 2k\Omega_N)e^{j\Omega n T_s}d\Omega 
+\end{equation*}
+  #+end_export
+
+- interchange summation and integral
+#+begin_export latex
+\begin{equation*}
+  x[n]  = \frac{1}{2\pi} \int_{-\Omega T_s n}^{\Omega T_s n} \left[ \sum_{k=-\infty}^{\infty} X_c(j(\Omega - 2k\Omega_N) \right] e^{j\Omega n T_s}d\Omega
+\end{equation*}
+  #+end_export
+  
+- periodization of the spectrum; define
+#+begin_export latex
+\begin{equation*}
+   \~{X}_c(j\Omega) &= \sum_{k=-\infty}^{\infty} X_c(j(\Omega - 2k\Omega_N)\\ 
+\end{equation*}
+  #+end_export
+
+- so that
+#+begin_export latex
+\begin{equation*}
+ x[n] = \frac{1}{2\pi} \int_{-\Omega T_s n}^{\Omega T_s n} \~{X}_x(j\Omega) e^{j\Omega n T_s}d\Omega
+\end{equation*}
+  #+end_export
+
+- set $\omega = \Omega T_s$
+#+begin_export latex
+\begin{align*}
+  x[n] &= \frac{1}{2\pi} \int_{-\pi}^{\pi} \frac{1}{T_s} \~{X}_c(j\frac{\omega}{T_s}) e^{j\omega n}d\omega \\
+       &= IDTFT \left{ \frac{1}{T_s} \~{X}_c(j\frac{\omega}{T_s}) \right} \\
+  X(e^{j\omega})  &= \frac{1}{T_s} \sum_{k=-\infty}^{\infty} \~{X}_c \left(j\frac{\omega}{T_s} - j\frac{2\pi k}{T_s}\right) \\
+\end{align*}
+#+end_export
+
+#+begin_export latex
+\begin{equation*}
+    X(e^{j\omega})  = \frac{1}{T_s} \sum_{k=-\infty}^{\infty} \~{X}_c \left( j\frac{\omega}{T_s} - j\frac{2\pi k}{T_s} \right) \\
+\end{equation*}
+#+end_export
+**** Sampling strategies
+
+given a sampling period $T_s$
+- if the signal is bandlimited to $\pi/T_s$ or less, raw sampling is fine
+  i.e. equivalent to sinc sampling up to scaling factor $T_s$.
+- if the signal is not bandlimited, two choices:
+  - bandlimit via lowpass filter in the /continuous-time domain/ before sampling i.e. sinc sampling
+  - or raw sample the signal an incur aliasing
+- aliasing sounds horrible, so usualle we choose to bandlimit in continuous time
+
+***** Sinc Sampling and Interpolation
+
+#+begin_export latex
+\begin{align*}
+  \hat{X}[n] &= \langle sinc\left(\frac{t-nT_s}{T_s}\right),x(t)\rangle = (sinc_T_s * x)(nT_s) \\
+  \hat{X}[n] &= \sum_n x[n] \;sinc\left(\frac{t-nT_s}{T_s}\right)
+ \end{align*}
+#+end_export
+
+[[file:./drawing/sinc_sampling.png]]
+
+** Stochastic signal processing
+
+#+begin_src octave :exports results :results file
+  m = 16;  # rows
+  n = 15;   # columns
+  x = rand(m,n);
+  y = zeros(m,n);
+  for i=1:m
+    for j=1:n
+      if (10*x(i,j) > 5)
+        y(i,j) = 1
+      else
+        y(i,j) = -1
+      end
+    end
+  end
+  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+  row = 4;
+  column = 3;
+  for p=1:(row*column)
+    subplot(row, column, p)
+    stem(1:m,y(:,p), "linewidth", 2, "filled")
+    axis([0 m+1 -1.2 1.2]);
+    set(gca,'XTick',0:16:32,'YTick',-2:1:2,'fontangle','italic','fontsize', 24)
+  
+  end
+  print -dpng "-S800,900" ./image/w7_stoch-01.png;
+  ans = "./image/w7_stoch-01.png";
+#+end_src
+
+#+results:
+[[file:./image/w7_stoch-01.png]]
+
+*** Averaging
+- when faced with random data an intuitive response is to take "averages"
+- in probability theory the average is across realizations and it's called \textcolor{expectation}
+- for the coin-toss signal
+  $E[x[n]] = -1 \times P[n-th toss is tail] + 1 \times P[n-th toss is head] = 0$
+- so the average value for each sample is zero....
+*** Energy and power
+- the coin-toss signal has infinite energy
+#+begin_export latex
+\begin{equation*}
+  E_x = \sum\limits_{k=-\infty}^{\infty} \vert x[n] \vert^2 = \lim_{N \rightarrow \infty} = \infty
+\end{equation*}
+#+end_export
+
+- however it has finite power over any interval:
+#+begin_export latex
+\begin{equation*}
+  P_x = \lim_{N \rightarrow \infty} \frac{1}{2N+1} \sum_{n=-N}^{N} \vert x[n] \vert^2 = 1
+\end{equation*}
+#+end_export
+  
+*** Power spectral density
+#+begin_export latex
+\begin{equation*}
+  P[k] = E \left[ \left| X_N[k] \right|^2 / N\right]
+\end{equation*}
+#+end_export
+
+- it looks very much as if è[k] = 1
+- if $\left| X_N[k] \right|^2$ tends to the /energy/ distribution in frequnec....
+- ... $\left| X_N[k] \right|^2/N$ tends to the /power/ distributi8on (aka density) in frequency
+- the frequency-domain representation for stochastic processes is the power spectral density
+*** Summary
+- a stochastic process is characterized by its power spectral density (PSD)
+- it can be shown (see text book) that the PSD is
+  #+begin_export latex
+  \begin{equation*}
+    P_x(e^{j\omega}) = DTFT {r_x[n]}
+  \end{equation*}
+  #+end_export
+  where $r_x[n] = E\left[x[k]x[n+k] \right]$ is the autocorrelation of the process
+- for a filtered stochastic process $y[n] = \mathfrak{H}{x[n]}$, it is:
+  #+begin_export latex
+  \begin{equation*}
+    P_y(e^{j\omega}) = |H(e^{j\omega}|^2 P_x(e^{j\omega})
+  \end{equation*}
+  #+end_export
+
+*** White noise
+- "white" indicates uncorrelated samples
+- $r_w[n] = \sigma^2\delta[n]$
+- P_w(e^{j\omega}) = \sigma^2
+
+- the PSD is independent of the probability distribution of the signal samples
+  (depnds only on the variance)
+- distribution is important to estimate bounds for the signal
+- very often a Gaussian distribution models the expermiental data the best
+- AWGN: additive white Gaussion noise
+*** Quantization

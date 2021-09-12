@@ -1,10 +1,11 @@
 #+CATEGORY: SP4COMM
+#+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
 * Week 1 Module 1: Basics of Digital Signal Processing
 ** Introduction to digital signal processing
 *** Signal
 - Description of the evoultion of a physical phenomenon
   | phenomenon      | signal              |
-  | weather        | temperature         |
+  | weather         | temperature         |
   | sound           | pressure            |
   | sound           | magnetic deviation  |
   | light intensity | gray level on paper |
@@ -60,6 +61,7 @@
   - analysis: periodic measurement
   - synthesis: stream of generated samples, reproduce a physical phenomenon
 
+    
 *** COMMENT Basic Signals
 #+attr_latex: :options {0.4\textwidth} :float 
 #+begin_minipage latex 
@@ -494,7 +496,6 @@
 *** Energy and Power
 - Energy ::
   Many sequencies have an infinity amount of energy e.g. the unit step u[n],
-#+results:
 #+begin_export latex
 \begin{equation}
   E_x = \vert\vert x \vert\vert_2^2 = \sum\limits_{k=-\infty}^{\infty} \vert x[n] \vert^2
@@ -503,7 +504,6 @@
 
 - Power ::
   To describe the energetic properties of the sequencies we use the concept of power
-  #+results:
   #+begin_export latex
   \begin{equation}
      P_x = \vert\vert x \vert\vert_2^2 = \frac{1}{N}\sum\limits_{n=0}^{N-1} \vert x[n] \vert^2
@@ -648,4 +648,5 @@ x[n] = \sum\limits_{k=-\infty}^{\infty} x[k]\delta[n-k]
 \end{equation}
 Any \textcolor{blue}{signal} can be expressed as a linear combination of wighted and shifted pulses.
  #+END_bclogo
+
 

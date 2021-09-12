@@ -1,3 +1,6 @@
 #+CATEGORY: SP4COMM
+
+#+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
+
 * Week 8 Module 6: Digital Communication Systems
 * Week 8 Module 7: Image Processing

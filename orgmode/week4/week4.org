@@ -5,8 +5,9 @@
 #+LATEX_HEADER: \usepackage{colortbl}
 #+LATEX_HEADER: \usepackage{enumitem}
 #+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}
-#+OPTIONS: tex:imagemagick
+# #+OPTIONS: tex:imagemagick
 #+LaTex_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
+#+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
 * Week 4 Module 3: Part 2 - Advanced Fourier Analysise
 ** Discrete Fourier Series DFS
 #+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Discrete Fourier Series}

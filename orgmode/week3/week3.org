@@ -4,7 +4,7 @@
 #+LaTeX_HEADER: \usepackage[tikz]{bclogo}
 #+LaTeX_HEADER: \usepackage{tcolorbox}
 # #+LATEX: \setcounter{secnumdepth}{4}
-
+#+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
 
 * Week 3 Module 3: Part 1 - Basics of Fourier Analysis
 ** Introduction to Fourier Analysis

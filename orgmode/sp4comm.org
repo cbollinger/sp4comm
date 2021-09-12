@@ -32,13 +32,13 @@
 
 # Colored Tables
 #+LATEX_HEADER: \usepackage[table]{xcolor}
-# Colored text box and frames
+# # Colored text box and frames
 #+LATEX_HEADER: \usepackage{tcolorbox}
-# bclogo
+# # bclogo
 #+LaTeX_HEADER: \usepackage[tikz]{bclogo}
-# Highlight Formulas
+# # Highlight Formulas
 #+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}
-#+OPTIONS: tex:imagemagick
+# #+OPTIONS: tex:imagemagick                            # HTML EXPORT Comment this option!!!!!
 
 # Math Packages
 #+LaTeX_HEADER: \usepackage{amsmath}
@@ -74,6 +74,7 @@
 #+LATEX_HEADER: \cfoot*{page \thepage}
 #+LATEX_HEADER: \ofoot*{\today}
 
+#+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
 
 \renewcommand{\arraystretch}{2.0}
 
@@ -92,9 +93,7 @@
 #+INCLUDE: "./week6/week6.org"
 \newpage
 #+INCLUDE: "./week7/week7.org"
-\newpage
-#+INCLUDE: "./week7/week7.org"
-\newpage
+\newpagey
 #+INCLUDE: "./week8/week8.org"
 
 \newpage

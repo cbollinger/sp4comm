@@ -8,7 +8,7 @@
 #+LaTex_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
 # #+LATEX: \setcounter{secnumdepth}{5}
 
-
+#+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
 
 
 * Week 5 Module 4: Part 1 Introduction to Filtering
@@ -497,9 +497,9 @@ impulse response of the LTI filter times the complex exponential.
 #+END_SRC
 
 #+ATTR_LATEX: :caption \def\arraystretch{1.5} :align p{5cm}c|p{5cm}c
-| \rowcolor{gray!10} *amplitude* | *A*           | *phase shift* | $\theta$ |
-| amplification                  | >1            | delay         | $< 0$    |
-| attenuation                    | $0\leq A < 1$ | advancment    | $> 0$    |
+| \rowcolor{gray!10} *amplitude* | *A*             | *phase shift* | $\theta$ |
+| amplification                | >1            | delay       | $< 0$    |
+| attenuation                  | $0\leq A < 1$ | advancment  | $> 0$    |
 
 *** The convolution theorem
 The convolution theorem summerizes this result in
@@ -1161,13 +1161,14 @@ $~$\\
 
 - MP3: Motion Picture Expert G3roup
 
-  #+BEGIN_SRC ditaa  :file lossy_compression_scheme.png 
+  #+BEGIN_SRC ditaa  :file ./image/lossy_compression_scheme.png 
            +--------------+               +--------------+
            |              |               |              |
     x[n]-->+  Encoder     +----0100111--->+  Decoder     +---> y[n]
            |        cGRE  |               |        cBLU  |
            +--------------+               +--------------+
 #+END_SRC
+
 - *Lossy Compression:* $x[n] \neq y[n]$
 - Put noise where not perceptible by human ear
 - *Example:*Raw Storage Consumption DVD
@@ -1177,11 +1178,9 @@ $~$\\
   - Duration: 60s
   - Mono Raw Data Storage Usage: $60s*76.8 kbits/s = 46 Mbit = 5.8 MByte$
   - Stereo Raw Data Storage Usage: $2*5.8MBytes = 12MBytes$
-  - MP3 Compressed Storage Usage: $1.5MBytes$
+  - MP3 Compressed Storage Usage: $1.5MBytes$ 
 
- 
-
-  #+BEGIN_SRC ditaa  :file mp3_encoding.png
+  #+BEGIN_SRC ditaa  :file ./image/mp3_encoding.png
            +--------------+    +--------------+    +---------------+
            | 32-Subbands  |    | Subband      |    | Bitstream     |
  x[n]---+->+ Filtering[32]+--->| Samples cRED +--->| Formatting    +----> y[n]
@@ -1195,9 +1194,6 @@ $~$\\
            | Model  cRED  |
            +--------------+
 #+END_SRC
-
-#+results:
-[[file:mp3_encoding.png]]
 
 - Clever Quantiziation Scheme: Number of bits allocated to each subband is dependent on
   the perceptual importance of each sub-band with respect to overall quality of the audio
@@ -1223,7 +1219,6 @@ $~$\\
     h_i[n]= h[n]cos(\frac{pi}{64}(2i+1)(n-16))
   \end{equation*}
 #+END_SRC
-
 
 ** Programing Assignment 1
 #+ATTR_LATEX: :options bgcolor=gray!10
