@@ -1,6 +1,24 @@
-* Links
+* Links 
+- [[https://www.drmprsk.com/digitalsignalprocessing/][DSP Professor Murugan Pallikonda Rajasekaran]]
 - [[https://greatscottgadgets.com/sdr/][Software Defined Radio with HackRF]]
 - [[https://de.wikipedia.org/wiki/VSB-Modulation][VSB - Modulation (MVB)]]
 - [[https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7553559][Phase-Shift Method-Based Optical VSB]]
 - [[https://www.dsprelated.com/showarticle/176.php][Understanding the "Phasing Method" of Single Sideband Demodulation]]
 - [[https://de.wikipedia.org/wiki/Einseitenbandmodulation][Einseitenbandmodulation]]
+** All About Circuits
+*** Filter Design
+- [[https://www.allaboutcircuits.com/technical-articles/design-of-fir-filters-design-octave-matlab/][Practical FIR Filter Design: Part1 - Design with Octave]] - see also m-files/fir-filter.m
+- [[https://www.allaboutcircuits.com/technical-articles/practical-fir-filter-design-part-2-implement-filter/][Practical FIR Filter Design: Part2 Implementing Your Filter]]
+- [[https://www.allaboutcircuits.com/technical-articles/design-of-fir-filters-using-frequency-sampling-method/][Design of FIR Filters Using the Frequency Sampling Method]]
+- [[https://www.allaboutcircuits.com/technical-articles/finite-impulse-response-filter-design-by-windowing-part-i-concepts-and-rect/][FIR Filter Design by Windowing: Concepts and the Rectangular Window]]
+- [[https://www.allaboutcircuits.com/technical-articles/filter-specs-window-parameters-in-finite-impulse-response-filter-design/][From Filter Specs to Window Parameters in FIR Filter Design]]
+- [[https://www.allaboutcircuits.com/technical-articles/design-examples-of-fir-filters-using-window-method][Design Examples of FIR Filters Using the Window Method]]
+*** Software Defined Radio
+- [[https://www.allaboutcircuits.com/textbook/radio-frequency-analysis-design/][Practical Guide to Radio-Frequency Analysis and Design]]
+- [[https://www.allaboutcircuits.com/technical-articles/introduction-to-software-defined-radio/][Introduction to Software-Defined Radio]]
+*** Digital Modulation
+- [[https://www.allaboutcircuits.com/textbook/radio-frequency-analysis-design/radio-frequency-modulation/digital-modulation-amplitude-and-frequency/][Digital Modulation: Amplitude and Frequency]]
+- [[https://www.allaboutcircuits.com/technical-articles/digital-signal-processing-in-scilab-how-to-decode-an-fsk-signal/][Digital Signal Processing in Scilab: How to Decode an FSK Signal]]
+- [[https://www.allaboutcircuits.com/technical-articles/how-to-use-i-q-signals-to-design-a-robust-fsk-decoder/][How to Use I/Q Signals to Design a Robust FSK Decoder]]
+* Books
+- Flatland: A Romance of Many Dimensions

@@ -1,18 +1,19 @@
 #+CATEGORY: SP4COMM
 #+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
-* Week 1 Module 1: Basics of Digital Signal Processing
-** Introduction to digital signal processing
-*** Signal
+* Week 1 Module 1: 
+** Basics of Digital Signal Processing
+*** Introduction to digital signal processing
+**** Signal
 - Description of the evoultion of a physical phenomenon
   | phenomenon      | signal              |
   | weather         | temperature         |
   | sound           | pressure            |
   | sound           | magnetic deviation  |
   | light intensity | gray level on paper |
-*** Processing 
+**** Processing 
   - *Analysis:* Understanding the information carried by the signal
   - *Synthesis:* Creating a signal to contain the given information
-*** Digital
+**** Digital
   - Discrete Time
     - Splice up time into a series of descrete instance without loosing information
     - Harry Nyquist and Claude Shannon state with the \textcolor{blue}{Sampling Theorem} that
@@ -37,7 +38,7 @@
       - *Processing* General purpose microprocessor is sufficient 
       - *Transmission* Reproduction of the original signal and therefore eliminating nois
         is easy
-*** From Analog to Digital Signal Processing
+**** From Analog to Digital Signal Processing
  - Analog asks for $\displaystyle f_{(t)} = ?$
 
  - Digital represents data as a sequence of numbers (scaled with a factor of 1000)
@@ -50,8 +51,8 @@
  #+results: Represent speach 3
  | -8 | -8 | -7 | -7 | -8 | -8 | -8 | -7 | -7 | -7 |
 
-** Discrete-Time Signals
-*** Basic Definitions
+*** Discrete-Time Signals
+**** Basic Definitions
 - Sequence: defined as \textcolor{blue}{complex-valued function}
 - Discrete-Time Signal: a sequnece of complex numbers
   - one dimension (for now)
@@ -62,7 +63,7 @@
   - synthesis: stream of generated samples, reproduce a physical phenomenon
 
     
-*** COMMENT Basic Signals
+**** COMMENT Basic Signals
 #+attr_latex: :options {0.4\textwidth} :float 
 #+begin_minipage latex 
 \begin{dspPlot}[width=5cm, xticks=5]{-5, 5}{-1.2, 1.2}
@@ -131,7 +132,7 @@
 \end{equation}
  #+end_minipage
 
-*** Octave Algorithm for some basic Signals
+**** Octave Algorithm for some basic Signals
 - Unit Impulse ::
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: impseq
@@ -319,7 +320,7 @@
   [[file:./image/cosseq_test.png]]
 #+end_minipage
 
-*** COMMENT Some Wave form examples
+**** COMMENT Some Wave form examples
 
 - [[https://www.youtube.com/watch?v=SMkkBfSdm1E&t=955s][Youtube Introduction to GNU Octave]]
 #+ATTR_LATEX: :options bgcolor=gray!10
@@ -360,19 +361,19 @@
 #+results:
 [[file:./image/signals.png]]
 
-*** Classes of Discrete-Time signals
-**** Finite-Length
+**** Classes of Discrete-Time signals
+***** Finite-Length
 - indicate notation: $\displaystyle x[n] \text{, }n=0.1.2.....N-1$
 - vector notation: $\displaystyle x = [x_0, x_1, ... x_{N-1}]^T$
 - practical entities, good for numerical packages (e.g. numpy)
-**** Infinte-Length
+***** Infinte-Length
 - sequence notation: $\displaystyle x[n] \text{, n } \in \mathbb{Z}$
 - abstraction, good for theorems
-**** Periodic
+***** Periodic
 - N-periodic sequence: $\displaystyle \tilde{x}[n] = \tilde{x}[n+kN] \text{, n,k,N } \in \mathbb{Z}$
 - same information as in finite-length of length N
 - \textcolor{blue}{natural bridge} between finite and infinite length
-**** Finite-Support
+***** Finite-Support
 #+results:
 #+begin_export latex
 \color{blue}Finite-support sequence \color{black}
@@ -388,7 +389,7 @@
 - same information as in finite-length of length N
 - another bridge between finite and infinite lengths
 
-**** Elementary Operations
+***** Elementary Operations
  - Scaling ::
    #+results:
    #+begin_export latex
@@ -437,7 +438,7 @@
   \begin{equation} y[n] = x[n] - x[n-1] \end{equation}
   #+end_export
 
-#+ATTR_LATEX: :options [logo=\bcbook,couleur=yellow!10,barre=snake,arrondi=0.1]{Relation Operator and Signals}
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Relation Operator and Signals}
  #+BEGIN_bclogo
 - The \textcolor{blue}{unit step} can be optained by applying the
   \textcolor{blue}{integration} operator to the
@@ -446,7 +447,7 @@
   \textcolor{blue}{differentation} operator to the \textcolor{blue}{unit step}.
  #+END_bclogo
 
-*** COMMENT Shift of finite-length: finite-support
+**** COMMENT Shift of finite-length: finite-support
 #+attr_latex: :options {0.4\textwidth} :float 
  #+begin_minipage latex
 \begin{equation*} 
@@ -472,7 +473,7 @@
  
 - As we shift, we pull in 0s and we lose data.
 
-*** COMMENT Shift of finite-length: periodization
+**** COMMENT Shift of finite-length: periodization
 #+attr_latex: :options {0.4\textwidth} :float 
  #+begin_minipage latex
 \begin{equation*}
@@ -493,7 +494,7 @@
 \end{dspPlot}
  #+end_minipage
 
-*** Energy and Power
+**** Energy and Power
 - Energy ::
   Many sequencies have an infinity amount of energy e.g. the unit step u[n],
 #+begin_export latex
@@ -511,9 +512,9 @@
   #+end_export
 
 - Many signals have infi 
-** Basic signal processing
-*** How a PC plays discrete-time sounds
-**** The discrete-time sinusoid
+*** Basic signal processing
+**** How a PC plays discrete-time sounds
+***** The discrete-time sinusoid
 #+results:
 #+begin_export latex
 \begin{equation*}
@@ -547,7 +548,7 @@
 #+results: sinusoid
 [[file:./image/sin.png]]
 
-**** Digital vs physical frequency
+***** Digital vs physical frequency
 - Discrete Time:
   - Periodicity: how many samples before the pattern repeats (M)
   - n: no physical dimension
@@ -577,8 +578,8 @@
     \end{align*}
     #+end_export
 
-*** The Karplus Strong Algorithm
-**** The Moving Average
+**** The Karplus Strong Algorithm
+***** The Moving Average
   - simple average (2 point average)
     #+results:
     #+begin_export latex
@@ -605,13 +606,13 @@
     \end{align*}
     #+end_export
 
-#+ATTR_LATEX: :options [couleur=yellow!10, arrondi = 0.1, logo=\bcbook, ombre=true]{Linear Transformation}
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Linear Transformation}
 #+BEGIN_bclogo
 Applying a linear transformation to a sinusoidal input results in a sinusoidal output of
 the same frequency with a phase shift.
 #+END_bclogo
 
-**** Reversing the loop
+***** Reversing the loop
     #+results:
     #+begin_export latex
     \begin{equation}
@@ -623,8 +624,8 @@ the same frequency with a phase shift.
   - set a start time (usually n_0 = 0)
   - assume input and output are zero for all time before N_0
     
-** Digital Frequency
-#+ATTR_LATEX: :options [logo=\bcbook,couleur=yellow!10,barre=snake]{Digital Frequency}
+*** Digital Frequency
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Digital Frequency}
 #+BEGIN_bclogo
 \begin{equation}
   \begin{split}
@@ -634,13 +635,13 @@ the same frequency with a phase shift.
 \end{equation} 
 #+END_bclogo
 
-#+ATTR_LATEX: :options [logo=\bcdz,couleur=yellow!10, barre=snake]{Complex Exponential}
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Complex Exponential}
 #+BEGIN_bclogo 
 \begin{equation}
   \omega = \frac{M}{N} \times 2 \times \pi
 \end{equation}
 #+END_bclogo
-** The Reproduction Formula
+*** The Reproduction Formula
 #+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Reproduction Formula}
  #+BEGIN_bclogo
 \begin{equation}

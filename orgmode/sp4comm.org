@@ -16,7 +16,7 @@
 #+SELECT_TAGS: export
 
 #+LATEX_COMPILER: xelatex                                    
-#+LATEX_CLASS: koma-article                                   
+#+LATEX_CLASS: koma-report                                   
 #+LATEX_CLASS_OPTIONS: [a4paper,10pt,DIV=15,draft=false]      
 
 #+LATEX_HEADER_EXTRA: \usepackage{fontspec}                     
@@ -79,7 +79,6 @@
 \renewcommand{\arraystretch}{2.0}
 
 \newpage
-
 #+INCLUDE: "./week1/week1.org"
 \newpage
 #+INCLUDE: "./week2/week2.org"
@@ -97,7 +96,7 @@
 #+INCLUDE: "./week8/week8.org"
 
 \newpage
-* COMMENT Appendix
+* Appendix
 #+INCLUDE: "./appendix/plots.org"
 \newpage
 #+INCLUDE: "./appendix/dft-plot.org"

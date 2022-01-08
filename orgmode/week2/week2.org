@@ -8,8 +8,9 @@
 #+LATEX_HEADER: \usepackage{enumitem}
 #+LATEX: \setcounter{secnumdepth}{5}
 #+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
-* Week 2 Module 2: Vector Spaces
-#+ATTR_LATEX: :options [logo=\bcbook,couleur=yellow!10, barre=snake, arrondi=0.1]{Vector Space}
+* Week 2 Module 2:
+** Vector Spaces
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Vector Space}
 #+BEGIN_bclogo
 Vector spaces build among others a common framework to work with the four classes of signals:
 - Finite Length Signal
@@ -24,14 +25,14 @@ square-summabe $\sum_{n=-\infty}^{\infty} |x[n]|^2$
 #+END_bclogo
 
 #+ATTR_LATEX: :options [leftmargin=5cm, labelwidth=4.7cm, itemindent=-2pt]
-- $\displaystyle \mathbb{R}^2$, $\mathbb{R}^3$ :: Euclidean space, geomtery
-- $\displaystyle \mathbb{R}^n$, $\mathbb{C}^n$  :: Linear algebra
-- $\displaystyle \ell_2(\mathbb{Z})$ :: Square-Summable infinite sequences
-- $\displaystyle L_2([a,b])$ :: Square-integrable functions over an interval
+- $\mathbb{R}^2$, $\mathbb{R}^3$ :: Euclidean space, geomtery
+- $\mathbb{R}^n$, $\mathbb{C}^n$  :: Linear algebra
+- $\ell_2(\mathbb{Z})$ :: Square-Summable infinite sequences
+- $L_2([a,b])$ :: Square-integrable functions over an interval
 
-** Operationl Definitions
+*** Operationl Definitions
 
-#+ATTR_LATEX: :options [logo=\bcbook,couleur=yellow!10, barre=snake, arrondi=0.1]{Inner Product}
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Inner Product}
  #+BEGIN_bclogo
 Measure of similarity between vectors
  #+END_bclogo
@@ -51,8 +52,8 @@ Measure of similarity between vectors
   maximal different vectors\\
   inner product = 0
 - Distance :: $d(x,y) = \mathbf{x} -\mathbf{y}_2$
-
-** Some Examples
+  
+*** Some Examples
 
 Not all vector spaces have got a graphical representation. The following table shows the
 graphical representation of vector spaces
@@ -172,13 +173,42 @@ Inner Product in $\mathbb{L}_2[-1,1]$ - The Norm: \\
 [[file:image/iproduct_sin.png]]
 #+end_minipage
 
-** Hilbert Space
+*** Hilbert Space
 A hilbert space is  an *inner product space* which fulfills completeness. 
 
-** Signal Spaces
+*** Signal Spaces
 Finite length signal live in $\mathbb{C}^{N}$
 - all operations well defined and intuitive
 - space of N-periodic signals sometimes indicated by $\tilde{\mathbb{C}}^{ N}$  
-** TODO Vecotor Bases
-** TODO Subspace Approximations
+*** TODO Vecotor Bases
+*** TODO Subspace Approximations
+**** Least-Square Approximation
+Consider a orthonormal basis for subspace S, called S of K
+#+begin_src latex
+  \begin{equation*}
+    {s-{(k)}}_{k=0,1..,k-1} \text{ orthonormal basis for S }
+  \end{equation*}
+#+end_src
+
+orthonormal projection is defined as follows:
+
+#+begin_src latex
+  \begin{equation*}
+    \hat{x} = \sum_{k=0}^{k-1}\langle{s^{(k)},x\rangle}s^{(k)}
+  \end{equation*}
+#+end_src
+
+- orthogonal projection has minimum-norm error:
+  #+begin_src latex 
+    \begin{equation*}
+        arg \; min ||x-y|| = \hat{x}
+    \end{equation*}
+  #+end_src
+
+- :
+#+begin_src latex 
+  \begin{equation*}
+       \langle{x-\hat{x},\hat{x}\rangle}= 0
+  \end{equation*}
+ #+end_src
 \newpage

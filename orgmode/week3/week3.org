@@ -6,9 +6,11 @@
 # #+LATEX: \setcounter{secnumdepth}{4}
 #+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
 
-* Week 3 Module 3: Part 1 - Basics of Fourier Analysis
-** Introduction to Fourier Analysis
-*** Sustainable dynamic systems exhibit oscillatory behavior
+* Week 3 Module 3: 
+** Part 1 - Basics of Fourier Analysis
+*** Introduction to Fourier Analysis
+**** The Frequency Domain
+***** Sustainable dynamic systems exhibit oscillatory behavior
 - A train has got an engine which makes the wheels turn in circular motion
 - Waves, ebb and flow can be modeled as sinusoidal fashion
 - Musical instruments generates sound by vibrating at a certain fundamental frequency
@@ -16,19 +18,19 @@
   - bombs
   - rockets
   - human beeings
-*** Descriptin of the oscillations in the plane
+***** Descriptin of the oscillations in the plane
 - Period :: $P$
 - Frequency :: $f = \frac{1}{P}$
 - Ordinate :: $\sin(ft)$
 - Abscissa :: $\cos(ft)$
-*** Example Sinusoidal Detectors in our Body:
+***** Example Sinusoidal Detectors in our Body:
 - cochlea :: In the inner ear that detects air pressure sinusoids at frequenies from 20
   to 20kHz
 - retina :: In the eye to detect electromagnetic sinusoids with frequency 430THz to
   790THz. This is the frequency of lights in the visible spectrum
 - Humans anlayze complex signals (audio, images) in terms of their sinusoidal components
 - Frequency Domain semms to be as good a the time domain
-*** Fundamental Questions: Can we decompse any signal into sinusoidal elements?
+***** Fundamental Questions: Can we decompse any signal into sinusoidal elements?
 - Yes, Fourier showed us how to do it exactely
 - Analysis
   - From time domain to frequency domain
@@ -38,9 +40,10 @@
   - From frequency domain to time domain
   - Create signals with known frequency content
   - Fit signals to specific frequency regions
-** The Discrete Fourier Transform (DFT)
-*** The DFT as a change of basis
-*** The Fourier Basis for $\displaystyle\mathbb{C}^N$ in "Signal" Notation
+**** TODO The DFT as a change of basis
+*** The Discrete Fourier Transform (DFT)
+**** DFT definition
+***** The Fourier Basis for $\mathbb{C}^N$ in "Signal" Notation
 
 #+BEGIN_SRC latex
   \begin{tcolorbox}
@@ -49,7 +52,7 @@
     \end{equation}
   \end{tcolorbox}
 #+END_SRC
-*** The Fourier Basis in Vector Notation
+***** The Fourier Basis in Vector Notation
 #+BEGIN_SRC latex
   \begin{tcolorbox}
     \begin{equation}
@@ -60,9 +63,8 @@
 - N ::  N Dimension of vector space
 - k :: Index for different vectors and goes from 0..N-1
 - n :: Index of element in each vector goes from 0...N-1
-*** Definition of the DFT
-**** Basis Expansion Vector Notation
-***** Analysis Formula
+***** Basis Expansion Vector Notation
+****** Analysis Formula
 $~$ \\
 #+BEGIN_SRC latex
   \begin{tcolorbox}
@@ -75,7 +77,7 @@ $~$ \\
 - $X_k$ :: Coefficent for the new basis. Inner Product of $\mathbf{x}$ with each vector $\mathbf{w}^{(k)}$
 - $\mathbf{x}$ :: An arbitrary vector of $\mathbb{C}^N$
 - $\mathbf{w}^{(k)}$ :: New basis
-***** Synthesis Formula
+****** Synthesis Formula
 $~$ \\
 #+BEGIN_SRC latex
   \begin{tcolorbox}
@@ -85,13 +87,13 @@ $~$ \\
   \end{tcolorbox}
 #+END_SRC
 
-**** TODO Basis Expansion Matrix Form
-**** Basis Expansion Signal Notation
+***** TODO Change of basis in matrix form
+***** Basis Expansion Signal Notation
 - Consider explicitely the operations involved in the transformation
 - This notion is particulary useful if you want to consider the algorithmic nature of the
   transform
 \par
-***** Analysis Formula N-point signal in the frequency domain
+****** Analysis Formula N-point signal in the frequency domain
 $~$ \\
 #+BEGIN_SRC latex
   \begin{tcolorbox}
@@ -104,7 +106,7 @@ $~$ \\
 - $x[n]$ :: Signal vector in the (discrete) time domain
 - Reminder :: This is the inner Product in explicite form
 
-***** Synthesis Formula N-point signal in the time domain
+****** Synthesis Formula N-point signal in the time domain
 $~$ \\
 #+BEGIN_SRC latex
   \begin{tcolorbox}
@@ -118,8 +120,8 @@ $~$ \\
 - $\frac{1}{N}$ :: Normalisation coeficent
 - Reminder :: This is the inner Product in explicite fashion
 
-*** Examples
-**** DFT of the impulse function
+**** Examples
+***** DFT of the impulse function
 \begin{equation*}
 x[n] = \delta[n]
 \end{equation*}
@@ -168,7 +170,7 @@ x[n] = \delta[n]
 
 
 - The delata contains all frequencies over the range of all possible frequencies
-**** DFT of the unit step
+***** DFT of the unit step
 \begin{equation*}
 x[n] = 1
 \end{equation*}
@@ -215,7 +217,7 @@ x[n] = 1
 #+results: DFT Step
 [[file:./image/dft_step.png]]
 
-**** DFT Cosine Calculation Problem 1
+***** DFT Cosine Calculation Problem 1
 #+BEGIN_SRC latex
   \begin{equation*}
     x[n] = 3\cos(2\pi/16\times{n}) \text{, } x[n] = \mathbb{C}^{64}
@@ -304,7 +306,7 @@ x[n] = 1
 #+results: DFT Cosine
 [[file:./image/dft_cosine.png]]
 
-**** DFT Cosine Calculation Problem 2
+***** DFT Cosine Calculation Problem 2
 #+BEGIN_SRC latex
   \begin{align*}
     x[n]  &= 3\;cos(2\;pi/16\;n + pi/3) \text{, } x[n] \in \mathbb{C}^{64} \\
@@ -387,7 +389,7 @@ x[n] = 1
 
 The calcution of the phase just does not work out of the box with octave.
 
-**** DFT Cosine Calculation Problem 3
+***** DFT Cosine Calculation Problem 3
 #+BEGIN_SRC latex
   \begin{align*}
     x[n]  &= 3\;cos(2\;pi/10\;n) \text{, } x[n] \in \mathbb{C}^{64} \\
@@ -437,16 +439,16 @@ The calcution of the phase just does not work out of the box with octave.
 #+results: DFT Cosine not periodic
 [[file:./image/dft_cosine_not_periodic.png]]
 
-*** Properties of the DFT
+**** Properties of the DFT
 - Linearity :: $DFT {\alpha x[n] + \beta y[n]} = DFT {\alpha x[n]} + DFT {\beta y[n]}$
-*** Interpreting a DFT Plot
+**** Interpreting a DFT Plot
 - Frequency coefficence $\displaystyle < \pi[ 0... N/2]$ are interpreted as counter clock wise rotation in
   the plane
 - Frequency coefficence $\displaystyle > \pi[ N/2...N-1]$ are interpreted as clock wise rotation in the
   plane
 - The fastest frequency of the signal in the vector space is at N/2
 
-#+ATTR_LATEX: :options [logo=\bcbook, couleur=green!10, barre=snake, arrondi=0.1]{Energy of a Signal}
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Energy of a Signal}
 #+BEGIN_bclogo
 The square magnitude of the k-th DFT coefficent is proportional to the signal's energy at
 frequency $\omega = (\frac{2\pi}{N})k$
@@ -503,10 +505,12 @@ frequency $\omega = (\frac{2\pi}{N})k$
   - $|X[k]| = |X[N-k]| \text{, for } k = 1, 2,...[N/2]$
   - For real signals, magnitude plots need only $[N/2] + 1$ points
 
-*** DFT Analysis
-**** Daily Temeperature (2920 days)
+*** The DFT in Practice
+**** TODO DFT Analysis
+***** TODO Mystery Signal revisted
+***** TODO Solar Spots
+***** TODO Daily Temeperature (2920 days)
 - The recorded signal
-**** TODO Add dayly temp image
 
 - average value (0-th DFT coefficient: 12.3°
 - DFT main peak for $k = 8$, value 6.4°C
@@ -518,7 +522,7 @@ The fastest positive frequency of a singnal is at $frac{N}{2}$ samples.
 Since a full revolution of $2\;\pi$ requires N samples,
 the discrete frequency corresponding with $\frac{N}{2}) \text{ is } \pi$.
 
-**** Labeling Frequency Band Axis
+***** Labeling Frequency Band Axis
 - If "clock" of a System is $T_s$
   - fastest (positive) frequency is $\omega = \pi$
   - sinosoid at $\omega = \pi$ needs two samples to do a full revolution
@@ -526,16 +530,22 @@ the discrete frequency corresponding with $\frac{N}{2}) \text{ is } \pi$.
   - real world period for fastest sinosoid: $2T_s$ seconds
   - reald world frequency for fastest sinosoid: $F_s/2$ Hz
 - The discrete frequency x of a sinusoid compenent at peak k can be determined as follows:
-  \begin{equation}
-   \frac{x}{k} = \frac{N}{2 \pi} \text{, with k=0...N-1}
-  \end{equation}
+  #+begin_src latex
+    \begin{equation}
+      \frac{x}{k} = \frac{N}{2 \pi} \text{, with k=0...N-1}
+    \end{equation}
+  #+end_src
 - The real world frequency of a siusoid compenent at peak k can be determined as follows:
-  \begin{align*}
-   \frac{x}{k}      &= \frac{2 \pi}{N} \text{, with k=0...N-1}                \\
-   \frac{f_s}{2}    &= \rightarrow \pi  \text{, } f_s \text{ sampling frequency} \\
-   \frac{x}{k}      &= \frac{f_s}{N}          \\
-   x                &= \frac{k f_s}{N}        \\
-  \end{align*}
+  #+begin_src latex
+    \begin{align*}
+      \frac{x}{k}      &= \frac{2 \pi}{N} \text{, with k=0...N-1}                \\
+      \frac{f_s}{2}    &= \rightarrow \pi  \text{, } f_s \text{ sampling frequency} \\
+      \frac{x}{k}      &= \frac{f_s}{N}          \\
+      x                &= \frac{k f_s}{N}        \\
+    \end{align*}
+  #+end_src
+
+***** TODO Example: train whistle
 
 ***** Example 1
 A DFT analysis of a signal with length $N = 4000$ samples at a frequency $fs = 44.1kHz$
@@ -619,19 +629,18 @@ analysed with the fourier transform
 #+results:
 [[file:./image/eth-example.png]]
 
-**** DFT Example - Analysis of Musical Instruments
+**** TODO DFT Example Analysis of Musical Instruments
 - The fundamental note is the \textcolor{blue}{first peak} in the spectrum
 - The relative size of the harmonics gives the timber or the charachter of an instrument
-*** TODO DFT Synthesis
-*** DFT Examples
-**** Tide Prediction in Venice
-**** MP3 Compression
+**** TODO DFT Synthesis
+**** TODO DFT Example - Tide Prediction in Venice
+**** TODO DFT Example - MP3 Compression
 - MP3 compression approx. factor 20 or more
 - Compression introduces nois from approximation error
 - \textcolor{blue}{Noise Shaping} : Error shaped as the song in the Fourier domain.
 - \textcolor{blue}{Perceptual Compression} inclueds the human hearing system properties
   intto compression algorithm
-**** Video Signal of the Day: The first man-made signal from outer space
+**** TODO Signal of the Day: The first man-made signal from outer space
 #+BEGIN_SRC latex
   \begin{equation*}
     f = \frac{\omega f_s}{2 \pi} \\
@@ -640,7 +649,7 @@ analysed with the fourier transform
 - A \textcolor{blue}{multiplication} in time domain corresponds to a
   \textcolor{blue}{convolution} in frequency domain
 
-** The Short-Time Fourier Transform STFT
+*** The Short-Time Fourier Transform STFT
 - STFT is a clever way of using DFT
 - Spectrogram, is a graphical way to represent the STFT data
 **** The short-time Fourier transform
@@ -654,11 +663,12 @@ analysed with the fourier transform
   #+END_SRC
   - *m*  Starting point of the localiced DFT
   - *k*  Is the DFT index
-**** ONGOING The spectrogram
+**** TODO The spectrogram
 - color-code the magnitued: dark is small, white is large
 - use $10 log_{10}(|X[m,k]|$ to see better (powr in dBs)
 - plot spectral slices one after another
-*** STFT Example
+**** TODO Time-frequency tiling
+**** STFT Example
 #+NAME: w3_stft
 #+BEGIN_SRC octave :exports results :results file
   Fs = 80e3;

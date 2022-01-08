@@ -11,14 +11,15 @@
 #+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
 
 
-* Week 5 Module 4: Part 1 Introduction to Filtering
-** Linear  Time-Invariant Systems
-#+ATTR_LATEX: :options [couleur=yellow!10, arrondi = 0.1, logo=\bcbook, ombre=true]{LTI System}
+* Week 5 Module 4:
+** Part 1 Introduction to Filtering
+*** Linear  Time-Invariant Systems
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{LTI System}
 #+BEGIN_bclogo
 Linearity and Time Invariance taken together: A Linear Time Invariant System is completely
 charachterized by its response to the input in particular by its the Impulse Response .
 #+END_bclogo
-*** Linearity
+**** Linearity
 Linearity is expressed by the equivalence
 #+BEGIN_SRC latex
   \begin{equation}
@@ -26,8 +27,8 @@ Linearity is expressed by the equivalence
   \end{equation}
 #+END_SRC
 - Fuzz-Box, example for a none linear device
-**** TODO Add calculation examples
-*** Time invariance
+***** TODO Add calculation examples
+**** Time invariance
 - The system behaves the same way independently of when a it's switched on
   #+BEGIN_SRC latex
     \begin{equation}
@@ -35,8 +36,8 @@ Linearity is expressed by the equivalence
     \end{equation}
   #+END_SRC
 - Wah-Pedal, example of a time variant device
-**** TODO Add calculation examples
-*** Convolution
+***** TODO Add calculation examples
+**** Convolution
 The impulse response is the output of a filter when the input is the delta function.
 
 #+BEGIN_SRC latex
@@ -45,7 +46,7 @@ The impulse response is the output of a filter when the input is the delta funct
   \end{equation}
 #+END_SRC
 
-#+ATTR_LATEX: :options [couleur=yellow!10, arrondi = 0.1, logo=\bcbook, ombre=true]{Impulse Response}
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Impulse Response}
 #+BEGIN_bclogo
 Impulse response fully characterize the LTI system!
 #+END_bclogo
@@ -95,10 +96,10 @@ sequencies.
   \end{align*}
 #+END_SRC
 
-** Filtering in the Time Domain
+*** Filtering in the Time Domain
 For the convolution of two sequencies to exist, the convolution sum must be finite
 i.e. the both sequencies must be \textcolor{blue}{absolutely summable}
-*** The convolution operator
+**** The convolution operator
 #+ATTR_LATEX: :options [leftmargin=5cm,labelwidth=4.7cm,itemindent=-2pt]
 - Linearity ::
   $x[n] * (\alpha\cdot y[n]+\beta\cdot w[n]) = *\alpha\cdot x[n]*y[n] + \beta\cdot x[n] * w[n])$ \\
@@ -107,7 +108,7 @@ i.e. the both sequencies must be \textcolor{blue}{absolutely summable}
   $x[n] * y[n] = y[n] * x[n]$
 - Associative ::
   $(x[n] * y[n]) * w[n] = x[n] * (y[n] * w[n])$
-*** Convolution and inner Product
+**** Convolution and inner Product
 #+begin_src latex
 \begin{tcolorbox}
     \begin{equation*}
@@ -125,7 +126,7 @@ product of its underlaying Hilbert space:
 - Square Summable Sequence $\ell_2(\mathbb{Z})$ :: $x[n]*h[n] =  \langle\;h^*[n-k],x[k]\rangle$
 - N-Periodic Sequence :: $\tilde{x}[n]* \tilde{y}[n] ) \sum\limits_{k=0}^{N-1}\tilde{x}[n-k]\tilde{y}[k]$
 - Square Integrable Function $L_2([-\pi, \pi])$ :: $X(e^{j\omega})*Y(e^{\omega}) = \frac{1}{2\pi}\int_{-\pi}^{\pi} X(e^{j\sigma}) \cdot Y(e^{j(\omega-\sigma)})$
-*** Properties of the Impulse Response
+**** Properties of the Impulse Response
 - Causality :: A system is called causal if its output does not depend on futre values of
   the input. In practice a causual system is the only type of "real-time" syste we can
   actually implement.
@@ -133,8 +134,8 @@ product of its underlaying Hilbert space:
   output is bounded for all bounded input sequencies.
   *FIR* Filter are always stable, since only in the convolution sum only a finite number
   of terms are involved.
-*** Filtering by Example
-**** FIR Filter: Moving Average
+**** Filtering by Example
+***** FIR Filter: Moving Average
 Typicale filtering scenario: denoising
 - idea: replace each sample by the local average. Average are useually good to eliminate
   random variation from which you don't know mutch about it.
@@ -220,7 +221,7 @@ Typicale filtering scenario: denoising
 #+results: MA Signal mit Rauschen
 [[file:./image/signal_mit_rauschen.png]]
 
-***** Impulse Response
+****** Impulse Response
   #+begin_src latex
     \begin{align*}
       h[n] =  \frac{1}{M}\sum_{k=0}^{M-1}\delta[n-k]
@@ -266,11 +267,11 @@ Typicale filtering scenario: denoising
  #+results: ma impulse response
  [[file:./image/ma_imprsp.png]]
 
-***** MA Analysis
+****** MA Analysis
 - soomthin effect is proportional to M
 - number of operations and storage also proportional to M
 
-***** From the MA to first-order recursion
+****** From the MA to first-order recursion
 #+begin_src latex
   \begin{align*}
     y_{M[n]} &=  \sum_{k=0}^{M-1}x[n-k] = x[n] X \sum_{k=1}^{M-1}x[n-k] \\
@@ -280,7 +281,7 @@ Typicale filtering scenario: denoising
   \end{align*}
   #+end_src
 
-**** IIR Filter: The Leaky Integrator
+***** IIR Filter: The Leaky Integrator
 - when M is large, $y_{M-1}[n] \approx y_{M}[n] \text{and }(\lambda \approx 1)$
 - the filter becomes: $y[n] = \lambda y[n-1] + (1-\lambda)x[n]$
 - the filter is now recursive, since it uses its previous output value
@@ -372,7 +373,7 @@ Typicale filtering scenario: denoising
 #+results: Leaky Integrator Signal mit Rauschen
 [[file:./image/leaky_rauschen.png]]
 
-***** Impulse Response
+****** Impulse Response
 For the impulse we just need to plug the delta function
 #+begin_src latex
   \begin{align*}
@@ -416,7 +417,7 @@ For the impulse we just need to plug the delta function
 
 The peak at n=0 is $1-\lambda$.
 
-***** The leaky integrator why the name
+****** The leaky integrator why the name
 
 - Discrete Time integrator is a boundless accumulator
   #+begin_src latex
@@ -439,7 +440,7 @@ To prevent "explosing" we scale the accumulator with $\lambda$:
       y[n]  = \lambda \cdot y[n-1] + (1-\lambda) \cdot x[n] \Rightarrow \text{ almost leaky integrator}
     \end{equation*}
   #+end_src
-** Classification of Filters
+*** Classification of Filters
 #+ATTR_LATEX: :options [leftmargin=5cm,labelwidth=4.7cm,itemindent=-2pt]
 - FIR :: Finite Impulse Response Filter
   - Impulse response has finite support
@@ -459,20 +460,20 @@ To prevent "explosing" we scale the accumulator with $\lambda$:
 - Noncasual ::
   - impulse response in nonzero for some (or all) n < 0
   - can still be implemented in a offline fashing (e.g. image processing)
-** Filter Stability
+*** Filter Stability
 
-#+ATTR_LATEX: :options [couleur=yellow!10, arrondi = 0.1, logo=\bcbook, ombre=true]{FIR Filter}
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{FIR Filter}
 #+BEGIN_bclogo
 FIR filters are always stable
 #+END_bclogo
 
 because their impuls response only contains a finite number of non-zero values, and
 therefore the sum of their absolute values will always be finite.
-** Frequency Response
-*** References
+*** Frequency Response
+**** References
 - [[http://ece.uccs.edu/~mwickert/ece2610/lecture_notes/ece2610_chap6.pdf][Signal and System for Dummies: Frequency Response]]
   
-*** Eigensequence
+**** Eigensequence
 If a complex exponential is applied to a LTI filter its response is the DTFT of the
 impulse response of the LTI filter times the complex exponential.
 
@@ -488,7 +489,7 @@ impulse response of the LTI filter times the complex exponential.
 - DTFT of impulse response determinse the frequency characteristic of a filter
 - Complex exponential are \textcolor{blue}{eignesequences} of LTI systems, i.e. linear
   filters cannot change the frequency of a sinusoid.
-*** Magnitude and phase
+**** Magnitude and phase
 #+BEGIN_SRC latex
   \begin{align*}
     \text{if } H(j^{j\omega_0}) = Ae^{j\theta} \text{, then}  \\
@@ -501,7 +502,7 @@ impulse response of the LTI filter times the complex exponential.
 | amplification                | >1            | delay       | $< 0$    |
 | attenuation                  | $0\leq A < 1$ | advancment  | $> 0$    |
 
-*** The convolution theorem
+**** The convolution theorem
 The convolution theorem summerizes this result in
 #+BEGIN_SRC latex
   \begin{tcolorbox}
@@ -511,7 +512,7 @@ The convolution theorem summerizes this result in
     \end{tcolorbox}
 #+END_SRC
 
-*** Frequency response
+**** Frequency response
 The DTFT of the impulse response is called the frequency response
 #+BEGIN_SRC latex
   \begin{tcolorbox}
@@ -527,7 +528,7 @@ The DTFT of the impulse response is called the frequency response
 | attenuation                    | < 1                         | phase changes     |
 
 
-*** Example of Frequency Response: Moving Average Filter
+**** Example of Frequency Response: Moving Average Filter
 The difference equation from M-point averager is
 #+BEGIN_SRC latex
   \begin{equation*}
@@ -588,7 +589,7 @@ The Magnetute response of the moving average filter
   print -dpng "-S800,400" ./image/ma_freqrsp.png;
   ans = "./image/ma_freqrsp.png";
     #+END_SRC
-*** Phase and signal shape
+**** Phase and signal shape
 To understand the effects of the phase on a signal is to distinguihs three different cases
 - zero phase: the spectrum is real: $\angle{H(e^{jw})} = 0$ 
   #+BEGIN_SRC octave :exports results :results file
@@ -667,12 +668,12 @@ To understand the effects of the phase on a signal is to distinguihs three diffe
       ans = "./image/nonlinear_phase.png";
 #+END_SRC
 
-#+ATTR_LATEX: :options [couleur=yellow!10, arrondi = 0.1, logo=\bcbook, ombre=true]{Spectrum}
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Spectrum}
 #+BEGIN_bclogo
 The spectrum of all three signals x[n] remains exactely the same in magnitude.
 #+END_bclogo
 
-*** Linear Phase
+**** Linear Phase
 #+BEGIN_SRC latex
   \begin{align*}
     y[n] &= x[n-\textcolor{blue}{d}]  \\
@@ -680,7 +681,7 @@ The spectrum of all three signals x[n] remains exactely the same in magnitude.
     H(e^{j\omega}) &= e^{-j\omega\textcolor{blue}{d}} \Rightarrow \textcolor{blue}{linear phase term}
   \end{align*}
 #+END_SRC
-*** Moving Average is linear Phase
+**** Moving Average is linear Phase
 #+BEGIN_SRC latex
   \begin{align*}
     H(e^{j\omega})
@@ -694,7 +695,7 @@ The spectrum of all three signals x[n] remains exactely the same in magnitude.
   \end{align*}
 
 #+END_SRC
-*** Example of Frequency Response: Leaky Integrator
+**** Example of Frequency Response: Leaky Integrator
 The Frequency response of the leaky integrator
 #+BEGIN_SRC latex
   \begin{equation*}
@@ -860,7 +861,7 @@ The phase is nonlinear in this case
  #+results: leaky integrator magnitude response
  [[file:./image/li_phase_freqrsp.png]]
 
-*** TODO Example of Frequency Response: Karplus Strong Algorithm
+**** TODO Example of Frequency Response: Karplus Strong Algorithm
 #+BEGIN_SRC latex
   \begin{equation*}
     y[n]
@@ -872,7 +873,7 @@ The Karplus-Strong algorithm is initialized with a finite support signal x of su
 M. And then we use a feedback loop with a delay of M taps. To qproduce multiple copies of
 the original finite support signal, scaled by an exponentially decaying factor alpha.
 
-**** COMMENT KS Diagram
+***** COMMENT KS Diagram
 \vspace{1em}
 #+BEGIN_SRC latex
     \begin{dspBlocks}{2}{1}
@@ -925,7 +926,7 @@ in the time domain we have
   \end{equation*}
 #+END_SRC
 
-**** With Sawtooth Wave
+***** With Sawtooth Wave
 #+BEGIN_SRC latex
   \begin{equation*}
     \tilde{X}(j\omega)W(j\omega)
@@ -942,8 +943,8 @@ in the time domain we have
   \end{equation*}
 #+END_SRC
 
-** Ideal Filters
-*** The ideal lowpass filter frequency response
+*** Ideal Filters
+**** The ideal lowpass filter frequency response
 
 #+BEGIN_SRC octave :exports results :results file
   pkg load signal
@@ -975,7 +976,7 @@ in the time domain we have
   ans = "./image/lp.png";
 #+END_SRC
 
-*** Ideal lowpass filter impulse response
+**** Ideal lowpass filter impulse response
 - Lets low frequencies go through
 - Attenuates i.e. kills high frequencies
 
@@ -1044,7 +1045,7 @@ Calculation of the impulse response from the frequency response of an ideal low 
 - The impulse response decays slowly in time $\displaystyle \Big(\frac{1}{n}\Big)$, we need a lot
   of samples for a good approximation.
 
-**** Impulse Response: From normlized Algorithm to Octave Implementation
+***** Impulse Response: From normlized Algorithm to Octave Implementation
 
 #+BEGIN_SRC latex
   \begin{align*}
@@ -1057,7 +1058,7 @@ Calculation of the impulse response from the frequency response of an ideal low 
   #+END_SRC
 
 
-**** The sinc-rect pair:
+***** The sinc-rect pair:
 #+BEGIN_SRC latex
   \begin{align*}
     rect(x)  &=
@@ -1079,7 +1080,7 @@ Calculation of the impulse response from the frequency response of an ideal low 
 #+END_SRC
 
 - rect is the indicator function from $\displaystyle -\frac{1}{2}$ to $\displaystyle \frac{1}{2}$
-**** Canonical form of the ideal low pass filter
+***** Canonical form of the ideal low pass filter
 The sinct-rect pair can be written in canonical form as follow:
 $~$\\
 #+attr_latex: :options {0.4\textwidth} :center
@@ -1106,7 +1107,7 @@ $~$\\
 #+end_minipage
 
 - The Impulse response is normalized by $\frac{\omega_c}{\pi}$
-*** Example
+**** Example
 - Calculation of the impulse- and frequency response for an ideal low pass filter with $\omega_c$ :: $\frac{\pi}{3}$
 
 #+NAME: Ideal Filter
@@ -1154,9 +1155,9 @@ $~$\\
 
 
 
-*** TODO Ideal filters derived from the ideal low pass filter
-*** TODO Demodulation revisted
-** MP3 Encoder
+**** TODO Ideal filters derived from the ideal low pass filter
+**** TODO Demodulation revisted
+*** MP3 Encoder
 - *Goal:* Reduce number of bits to represent original signal x[n]
 
 - MP3: Motion Picture Expert G3roup
@@ -1171,13 +1172,13 @@ $~$\\
 
 - *Lossy Compression:* $x[n] \neq y[n]$
 - Put noise where not perceptible by human ear
-- *Example:*Raw Storage Consumption DVD
+- *Example:* Raw Storage Consumption DVD
   - Sample Rate: 48kHz
   - Bits per Sample: 16
   - Bit Rate: $\frac{48000\text{samples}}{second} \frac{16bits}{samples} = 768 kbits/s$
   - Duration: 60s
-  - Mono Raw Data Storage Usage: $60s*76.8 kbits/s = 46 Mbit = 5.8 MByte$
-  - Stereo Raw Data Storage Usage: $2*5.8MBytes = 12MBytes$
+  - Mono Raw Data Storage Usage: $60s \times 76.8 kbits/s = 46 Mbit = 5.8 MByte$
+  - Stereo Raw Data Storage Usage: $2 \times 5.8MBytes = 12MBytes$
   - MP3 Compressed Storage Usage: $1.5MBytes$ 
 
   #+BEGIN_SRC ditaa  :file ./image/mp3_encoding.png
@@ -1200,10 +1201,11 @@ $~$\\
   wave-form
 - Masking Effect of the human auditory system.
 
-*** Psycho Acoustic Model, How it Works
+**** Psycho Acoustic Model, How it Works
 - The psycho acoustic model is not part of the mp3 standard
 - calculate the minimum number of bits that we need to quantize each of the 32 subband
   filter outputs, so that the perceptual distortion is as little as possible
+#+ATTR_LATEX: :options [leftmargin=2cm,labelwidth=1.7cm,itemindent=-2pt]
 - step 1 :: Use FFT to estimate the energy of the signal in each subband
 - step 2 :: Distinguish beween tonal (sinusoid like) and non-tonal (nois-like) compnent
 - step 3 :: Determine indicidual masking effect of tonal and non-tonal component in each
@@ -1212,15 +1214,15 @@ $~$\\
 - step 5 :: Map this total effect to the 32 subbands
 - step 6 :: Determine bit alloction by allocating priority bits to subbands with lowest
   singal-to-mask ratio
-*** Subband Filter
+**** Subband Filter
 
 #+BEGIN_SRC latex
   \begin{equation*}
-    h_i[n]= h[n]cos(\frac{pi}{64}(2i+1)(n-16))
+    h_i[n]= h[n]cos\left(\frac{pi}{64}(2i+1)(n-16)\right)
   \end{equation*}
 #+END_SRC
 
-** Programing Assignment 1
+*** Programing Assignment 1
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+begin_src python :results file 
   import matplotlib
