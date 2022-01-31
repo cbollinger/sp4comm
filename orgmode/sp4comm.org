@@ -35,6 +35,7 @@
 # # Colored text box and frames
 #+LATEX_HEADER: \usepackage{tcolorbox}
 # # bclogo
+#+LaTeX_HEADER: \usepackage[pgfplots}
 #+LaTeX_HEADER: \usepackage[tikz]{bclogo}
 # # Highlight Formulas
 #+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}

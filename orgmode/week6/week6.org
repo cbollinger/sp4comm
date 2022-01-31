@@ -1631,23 +1631,25 @@ one half sample.
 
 #+NAME: 4_9_fir_park_mcmellon
 #+BEGIN_SRC octave :exports results :results file
-  pkg load signal
+    pkg load signal
 
-  f = [0 0.3 0.4 0.6 0.7 1];
-  a = [0 0 1 1 0 0];
-  b = remez(17,f,a);
-  [h,w] = freqz(b,1,512);
+    n = 0:1:5
+    f = [0 0.3 0.4 0.6 0.7 1];
+    a = [0 0 1 1 0 0];
+    a =[((n-2)>=0) - ((n-4)>=0)];
+    b = remez(21,f,a);
+    [h,w] = freqz(b,1,512);
 
 
-  figure( 1, "visible", "off" )               # Do not open the graphic window in org
+    figure( 1, "visible", "off" )               # Do not open the graphic window in org
 
-  plot(f,a,w/pi,abs(h), "linewidth", 2)
-  legend('Ideal','remez Design')
-  set(gca, "fontsize", 24);
-  grid on;
-  set(gca, "fontsize", 24);
-  print -dpng "-S800,400" ./image/4_9_fir_park_mcmellon.png;
-  ans = "./image/4_9_fir_park_mcmellon.png";
+    plot(f,a,w/pi,abs(h), "linewidth", 2)
+    legend('Ideal','remez Design')
+    set(gca, "fontsize", 24);
+    grid on;
+    set(gca, "fontsize", 24);
+    print -dpng "-S800,400" ./image/4_9_fir_park_mcmellon.png;
+    ans = "./image/4_9_fir_park_mcmellon.png";
 #+END_SRC
 
 #+results: 4_9_fir_park_mcmellon
@@ -1757,7 +1759,7 @@ using just discrete times filters like the fractional delay
 
  
 
-**** Implementing of Digital Filters
+**** TODO Implementing of Digital Filters
 ***** Leaky Integrator in C
 
 
@@ -1794,8 +1796,6 @@ using just discrete times filters like the fractional delay
 - we need 2 multiplications and one addition per output sampel
   
 ***** Moving Average in C
-
-  BEGIN_SRC C++ :exports both :flags -std=c++11
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+Name: moving_average 

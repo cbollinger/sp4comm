@@ -295,7 +295,7 @@ write('/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/
 ** Playing Music
 
 Let's now play some cool guitar and, arguably, no guitar chord is as cool as the
-[[https://en.wikipedia.org/wiki/A_Hard_Day%27s_Night_%28song%29#Opening_chord][opening chord of "A Hard Day's Night", by The Beatles]].
+[[https://en.wikipedia.org/wiki/A_Hard_Day%27s_Night_%28song%29#Opening_chord][opening chord of "A Hard Day's Night", by The Beatles]]
 
 [[./image/hdn.jpg]]
 
@@ -349,6 +349,11 @@ def ks_chord(chord, N, alpha):
         y = y + gain * KS(x, N, alpha)
     return y 
 #+END_SRC
+
+#+results: Playing Music
+:results:
+# Out[1]:
+:end:
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: HDN Opening Chord

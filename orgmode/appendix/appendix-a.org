@@ -5,6 +5,7 @@
 - [[https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7553559][Phase-Shift Method-Based Optical VSB]]
 - [[https://www.dsprelated.com/showarticle/176.php][Understanding the "Phasing Method" of Single Sideband Demodulation]]
 - [[https://de.wikipedia.org/wiki/Einseitenbandmodulation][Einseitenbandmodulation]]
+- [[https://www.adampanagos.org/][Adam Panagos - Really nice tutorial videos]]
 ** All About Circuits
 *** Filter Design
 - [[https://www.allaboutcircuits.com/technical-articles/design-of-fir-filters-design-octave-matlab/][Practical FIR Filter Design: Part1 - Design with Octave]] - see also m-files/fir-filter.m

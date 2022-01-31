@@ -4,7 +4,8 @@
 #+LATEX_HEADER: \usepackage[table]{xcolor}
 #+LaTeX_HEADER: \usepackage{tcolorbox}
 
-#+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usepackage{pgfplots}
+# #+LaTeX_HEADER: \usepackage{tikz}
 #+LaTeX_HEADER: \usepackage[tikz]{bclogo}
 #+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}
 
@@ -13,7 +14,6 @@
 #+LATEX_HEADER: \usepackage{mathtools} 
 #+Latex: \everymath{\displaystyle}
 #+Latex: \renewcommand{\arraystretch}{1.2}
-
 
 * Week 7 Module 5:
 ** Sampling and Quantization
@@ -124,8 +124,8 @@ Two views of the world
 
 #+begin_src latex
   \begin{align*}
-    y(t) &= (x*h)t \\
-         &= \langle{h^*(t-\tau),x(\tau)}\rangle \\
+    y(t) &= (x*h)(t) \\
+         &= \langle\h^*(t-\tau),x(\tau)\rangle \\
          &= \int_{-\infty}^{\infty}x(\tau)\;h(t-\tau)\;d\tau
   \end{align*}
 #+end_src
@@ -636,7 +636,16 @@ In the limit, local and global interpolation are the same!
 #+end_src
 
 *** Sampling of bandlimited functions
-**** Key Facts about the sinc
+**** The spectrum of interpolated signals
+****** Sinc interpolation
+the ingredients:
+- discrete-time signal $x[n] \text{, } n \in \mathbb{Z} \text{ (with DTFT } X(e^{j\omega}))$
+- interpolation interval $T_s$
+- the sinc function (properly scaled to have zero crossing at multiple of $T_s$
+the result
+- a smooth, contious-time signal $x(t) \text{, } t \in \mathbb{R}$
+What does the spectrum of x(t) look like?
+***** Key Facts about the sinc
 
 | $\phi(t) = sinc\left(\frac{t}{T_s}\right)$ | $\longleftrightarrow$ | $\Phi(j\Omega) = \frac{\pi}{\Omega_N} rect \left(\frac{\Omega}{2\Omega_N}\right)$ |
 | $T_s = \frac{\pi}{\Omega_n}$               |                       | $\Omega_N = \frac{\pi}{T_s}$                                                      |
@@ -688,22 +697,28 @@ In the limit, local and global interpolation are the same!
 #+results:
 [[file:./image/w7_key_facts_sinc.png]]
 
-
-**** The spectrum of interpolated signals
-What is the spectrum of the 
+***** Sinc interpolation
 #+begin_src latex 
   \begin{equation*}
   x(t) = \sum_{n=-\infty}^{\infty} x[n] sinc\left(\frac{t-nT_s}{T_s}\right)
   \end{equation*}
 #+end_src
 
+*** Spectral representation (I)
 #+begin_src latex
   \begin{align*}
     X(j\Omega) &= \int_{-\infty}^{\infty} x(t) \; e^{-j\Omega t}dt\\
                &= \int_{-\infty}^{\infty} \sum_{n=-\infty}^{\infty} x[n] sinc\left(\frac{t-nT_s}{T_s}\right) \; e^{-j\Omega t}dt\\
                &= \sum_{n=-\infty}^{\infty} x[n]  \int_{-\infty}^{\infty} sinc\left(\frac{\tikzmarkin{w7-a}(0.1,0.1)(-0.1,0.3)t-nT_s}{T_s}\tikzmarkend{w7-a}\right) \; e^{-j\Omega t}dt\\
                &= \sum_{n=-\infty}^{\infty} x[n]  \left(\frac{\pi}{\Omega_N}\right) rect\left(\frac{\Omega}{2 \Omega_N}\right) \; \tikzmarkin{w7-b}(0.1,-0.2)(-0.1,0.5)e^{-j n T_s \Omega}\tikzmarkend{w7-b}\\
-               &=  \left(\frac{\pi}{\Omega_N}\right) rect\left(\frac{\Omega}{2 \Omega_N}\right) \; \sum_{n=-\infty}^{\infty} x[n]  e^{-j (\pi / \Omega_N) \Omega_n}\\
+#+end_src
+
+*** Spectral representation (II)
+Let's analyse the formula
+#+begin_src latex
+  \begin{align*}
+    X(j\Omega) &= \sum_{n=-\infty}^{\infty} x[n]  \left(\frac{\pi}{\Omega_N}\right) rect\left(\frac{\Omega}{2 \Omega_N}\right) \; e^{-j n T_s \Omega}\\
+               &=  \left(\frac{\pi}{\Omega_N}\right) rect\left(\frac{\Omega}{2 \Omega_N}\right) \; \sum_{n=-\infty}^{\infty} x[n]  e^{-j (\pi / \Omega_N) \Omega \; n}\\
     \\  
                & = \left\{
                  \begin{array}{ll}
@@ -715,11 +730,64 @@ What is the spectrum of the
 
 #+end_src
 
+The DTFT is periodic and the periodic is 
+#+begin_src latex
+  \begin{align*}
+    \sum_{n=-\infty}^{\infty} x[n]  e^{-j (\pi / \Omega_N) \Omega \; n}
+    &= \sum_{n=-\infty}^{\infty} x[n]  e^{-j \omega n}
+      \text{, with } \omega = 2\cdot \Omega_N
+  \end{align*} 
+
+#+end_src
+
 #+begin_src latex
   \begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Spectrum of Sinc-Sampling]
     The spectrum of $x(t)$ is equal to the scaled version of the DTFT of the sequence between $- \Omega_N$ and $\Omega_N$. 
   \end{tcolorbox}
 #+end_src
+
+***** TODO COMMENT Not Working yet
+
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal
+  clc; clear all; close all;
+
+  n = -32:0.01:32;
+  wc = 0.01
+  N = length(n);              % length of test data vector
+  x = sinc(wc.*n)./(pi./n);
+
+  for k = 1:N
+    Y(k) = 0;
+    for m = 1:N
+         Y(k) = Y(k)+(x(m)*exp((-1j)*2*pi*(m-1)*(k-1)/N));
+    end
+  end
+
+  figure( 1, "visible", "off" )           # Do not open the graphic window in org
+  subplot(2,1,1);
+  plot(n,x, "linewidth", 3)
+  set(gca, "fontsize", 24)
+  grid on
+  title('Sinc Function')
+  xlabel('n')
+  ylabel('x[n]') 
+
+  subplot(2,1,2);
+  stem(n,fftshift(abs(Y)), "linewidth", 3)
+  set(gca, "fontsize", 24)
+  grid on
+  title('DFT Sinc Function')
+  xlabel('n')
+  ylabel('x[n]') 
+
+
+
+  print -dpng "-S800,400" ./image/w7_spectrum_int_signal-01.png;
+  ans = "./image/w7_spectrum_int_signal-01.png";
+#+END_SRC
+
+#+results:
 
 
 
@@ -727,6 +795,8 @@ Pick interpolation period T_s:
 - $X(j\Omega)$ is $\Omega_N-bandlimited$, with $\Omega_N = \pi/T_s$
 - fast interpolation ($\T_s$ small) $\Rightarrow$ wider spectrum
 - slow interpolation ($\T_s$ large) $\Rightarrow$ narrower spectrum
+
+
 **** The space of bandlimited functions
 
 *Claims:*
@@ -743,7 +813,7 @@ The space $\pi-BL$
 
 #+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Basis for $\pi-BL$}
 #+BEGIN_bclogo
-The sync function is an orthornormal basis for the $\pi-BL$ space.
+The sync function $sinc\left(\frac{t-nT_s}{T_s}\right)$is an orthornormal basis for the $\pi-BL$ space.
 #+END_bclogo
 
 
@@ -1079,7 +1149,7 @@ given a sampling period $T_s$
 **** Stochastic signal processing
 ***** Terminology ( from [[http://www.dspguide.com/ch2.htm][W.Smith]] )
 #+ATTR_LATEX: :options [leftmargin=3cm,labelwidth=2.7cm,itemindent=-2pt]
- - Mean ::
+ - Mean, Average ::
   #+begin_src latex
      \begin{equation*}
       \mu = \frac{1}{N} \sum_{i=0}^{N-1} x_i = (x_0 + x_1 + x_2 + ... + x_{N-1})/N
@@ -1090,46 +1160,53 @@ given a sampling period $T_s$
   around the mean value. For simple repetitive waveform, its excursion can be
   described by its peak-to peak value. If the signal has a random nature, a more
   generalized method must be used.
-- Standard Deviation ::
-  #+begin_src latex
+ - Standard Deviation ::
+   #+begin_src latex
+     \begin{equation*}
+       \sigma = \sqrt{\frac{1}{N-1} \sum_{i=0}^{N-1}(x_i - \mu)^2)} = \sqrt{(x_0 - \mu)^2 + (x_1 - \mu)^2 + ... + (x_{N-1} - \mu)^2 /(N-1)}
+     \end{equation*} 
+   #+end_src
+   $|x_i - \mu|$ describes how far the $i^{th}$ sample *deviates* (differs) from
+   the mean. The *average deviation* of a signal is found by summing the deviations
+   of all the individual samples, and then dividing by the number of samples
+   N. We take the absolute value of each deviation before summation; otherwise
+   the positive and the negative termss would average to zero.
+
+   The *standard deviation* is similar to the average deviation, except the
+   averaging is done with power instead of amplitude.
+
+   The standard deviation is a measure of how far the signal fluctuates from the
+   mean.
+ - Variance ::
+   #+begin_src latex
     \begin{equation*}
-      \sigma = \sqrt{\frac{1}{N-1} \sum_{i=0}^{N-1}(x_i - \mu)^2)} = \sqrt{(x_0 - \mu)^2 + (x_1 - \mu)^2 + ... + (x_{N-1} - \mu)^2 /(N-1)}
+      \sigma^2 = \frac{1}{N-1} \sum_{i=0}^{N-1}(x_i - \mu)^2) 
     \end{equation*} 
-  #+end_src
-  $|x_i - \mu|$ describes how far the $i^{th}$ sample *deviates* (differs) from
-  the mean. The *average deviation* of a signal is found by summing the deviations
-  of all the individual samples, and then dividing by the number of samples
-  N. We take the absolute value of each deviation before summation; otherwise
-  the positive and the negative termss would average to zero.
-
-  The *standard deviation* is similar to the average deviation, except the
-  averaging is done with power instead of amplitude.
-
-  The standard deviation is a measure of how far the signal fluctuates from the
-  mean.
-- Variance ::
-  #+begin_src latex
-   \begin{equation*}
-     \sigma^2 = \frac{1}{N-1} \sum_{i=0}^{N-1}(x_i - \mu)^2) 
-   \end{equation*} 
-  #+end_src
-  The variance represents the power of signal fluctuation from the mean.
-- RMS Root Mean Square ::
-  The standard deviation measures only the AC portion of a signal, while rms
-  value measures both the AC and DC components. If a signal has no DC component,
-  its rms value is identical to its standard deviation.
-- SNR Signal to Noise Ratio ::
-  #+begin_src latex
-    \begin{equation*}
-    snr = \frac{mean}{standard deviation} = \frac{\mu}{\sigma} = \frac{\frac{1}{N} \sum_{i=0}^{N-1} x_i}{\sqrt{\frac{1}{N-1} \sum_{i=0}^{N-1}(x_i - \mu)^2)}}
-    \end{equation*}
-  #+end_src
-- CV Coefficent Variation ::
-  #+begin_src latex
-    \begin{equation*}
-      CV = \frac{standard \text{ } deviation}{mean} \times 100 = \frac{\sqrt{\frac{1}{N-1} \sum_{i=0}^{N-1}(x_i - \mu)^2)}}{\frac{1}{N} \sum_{i=0}^{N-1} x_i} \times 100
-    \end{equation*}
-  #+end_src
+   #+end_src
+   The variance represents the power of signal fluctuation from the mean.
+ - RMS Root Mean Square ::
+   The standard deviation measures only the AC portion of a signal, while rms
+   value measures both the AC and DC components. If a signal has no DC component,
+   its rms value is identical to its standard deviation.
+ - SNR Signal to Noise Ratio ::
+   #+begin_src latex
+     \begin{equation*}
+     snr = \frac{mean}{standard deviation} = \frac{\mu}{\sigma} = \frac{\frac{1}{N} \sum_{i=0}^{N-1} x_i}{\sqrt{\frac{1}{N-1} \sum_{i=0}^{N-1}(x_i - \mu)^2)}}
+     \end{equation*}
+   #+end_src
+ - CV Coefficent Variation ::
+   #+begin_src latex
+     \begin{equation*}
+       CV = \frac{standard \text{ } deviation}{mean} \times 100 = \frac{\sqrt{\frac{1}{N-1} \sum_{i=0}^{N-1}(x_i - \mu)^2)}}{\frac{1}{N} \sum_{i=0}^{N-1} x_i} \times 100
+     \end{equation*}
+   #+end_src
+ - Probability Density Function PDF :: The probability density function is a
+   measure of the likelihood of a particular value occuring in some function.
+   - PDF values are never negative $f(x) \geq 0$
+   - The sum of all the PDF values is one: $\int_{- \infty}^{\infty} f(x) dx = 1$
+   - Mean: $\mu_x = \int_{- \infty}^{\infty} x \cdot f(x) dx$
+   - Variance: $\mu_x^2 = \int_{- \infty}^{\infty} (x-\mu)^2 \cdot f(x) dx = \int_{- \infty}^{\infty} x^2 \cdot p(x)dx - \mu_x^2$
+   
 ***** TODO Deterministic vs. stochastic
 ***** A simple discrete-time random signal generator
 
@@ -1335,10 +1412,14 @@ For each new sample, toss a fair coin:
 
 ***** Power spectral density
 #+begin_export latex
+\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Power Spectral Density]
 \begin{equation*}
   P[k] = E \left[ \left| X_N[k] \right|^2 / N\right]
 \end{equation*}
+\end{tcolorbox}
 #+end_export
+
+
 
 + it looks very much as if P[k] = 1
 + if $\left| X_N[k] \right|^2$ tends to the /energy/ distribution in frequnec....
@@ -1358,7 +1439,7 @@ For each new sample, toss a fair coin:
   sample or anything in between.
 
 ***** Filtering a random process
-- let's filter the process with a 2-point Moving Average filter
+- let's filter the random process with a 2-point Moving Average filter
 - y[n] = (x[n] + x[n-1])/2
 - what is the power spectral density
 
@@ -1412,6 +1493,7 @@ For each new sample, toss a fair coin:
     axis([0 N+1 0 2]);
     xlabel(realizations);
     set(gca,'XTick',0:4:32,'YTick',0:0.4:2,'fontangle','italic','fontsize', 24)
+    
     grid on;
   end
 
@@ -1421,6 +1503,105 @@ For each new sample, toss a fair coin:
 
 #+results:
 [[file:./image/w7_stoch-06.png]]
+
+The frequency response of the moving average filter
+#+begin_src latex
+  \begin{equation*}
+  H(e^{j\omega}) = \frac{1 - e^{j\omega}}{2} 
+  \end{equation*}
+#+end_src
+
+wheraes the ploted shape is nothing but the square magnitude of the moving
+average filter evaluated at the DFT point $\frac{2\pi}{N}k$
+
+#+begin_src octave :exports results :results file
+    N = 32;
+    M = 5000;
+    realizations = M;
+
+    x = rand(N,M);      # Input signals
+    y = zeros(N,M);     # output signals, all set to zeors
+    for i=1:N
+      for j=1:M
+        if(i<2)                                    # apply filter only if i > 1
+          if (10*x(i,j) > 5)
+            y(i,j) = 1;
+          else
+            y(i,j) = -1;
+          endif
+        else
+          if ((10 * ((x(i,j) + x(i-1,j))/2)) > 5)  # aplly the MA Filter
+            y(i,j) = 1;
+          else
+            y(i,j) = -1;
+          endif
+        endif
+      end
+
+      Y = abs(fft(y));            # The DFT's of the output signals
+      Q = (abs(fft(y))).^2/N;     # the square magnitudes divided by N of the signals
+      S = sum(Q,2)/(M+1);         # the average 
+
+      figure( 1, "visible", "off" )               # Do not open the graphic window in org
+      stem(1:N,S, "linewidth", 2, "filled")
+      axis([0 N+1 0 2]);
+      xlabel(realizations);
+      set(gca,'XTick',0:4:32,'YTick',0:0.4:2,'fontangle','italic','fontsize', 24)
+      legend('|(i-e^{j(2\pi/N)k})/2^2|');
+      grid on;
+    end
+
+    print -dpng "-S800,400" ./image/w7_stoch-07.png;
+    ans = "./image/w7_stoch-07.png";
+#+end_src
+
+#+results:
+[[file:./image/w7_stoch-07.png]]
+
+***** Stochaistic signal processing
+- a stochastic process is characterized by its power spectral density (PSD)
+- it can be shown (see text book) that the PSD is
+  #+begin_src latex
+    \begin{tcolorbox}
+      \begin{equation*}
+        P_x(e^{j\omega}) = DTFT\{r_x[n]\}
+      \end{equation*}
+    \end{tcolorbox}
+  #+end_src
+
+    where
+
+  #+begin_export latex
+  \begin{tcolorbox}
+    \begin{equation*}
+      r_x[n] = E\left[x[k]x[n+k] \right]
+    \end{equation*}
+  \end{tcolorbox}
+  #+end_export
+
+   is the \textcolor{blue}{autocorrelation} of the proess
+
+- for a filtered stochastic process $y[n] = H\{x[n]\}$, it is:
+   #+begin_src latex
+     \begin{tcolorbox}
+       \begin{equation*}
+         P_x(e^{j\omega}) = |H(e^{j\omega})|^2 P_x(e^{j\omega})
+       \end{equation*}
+     \end{tcolorbox}
+ #+end_src
+ 
+  #+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{In Words}
+  #+BEGIN_bclogo
+  The power spectral density of the output is equal to the power spectral density
+  of the input times the frequency response in magnitude square.
+  #+END_bclogo
+
+  - filters designed for deterministic signals work (in magnitude) in the
+    stochaistic case
+
+  - we lose the concept of phase since we don't know the shape of a realization in
+    advance.
+
 ***** TODO Noise
 ***** White noise
 - white indicates uncorrelated samples
@@ -1458,44 +1639,6 @@ Graphically the power spectral density of a white signal couldn't be any simpler
 - very often a Gaussioan distribution models the experimental data the best
 - *AWGN*: additive white Gaussian noise
  
-***** Summary
-- a stochastic process is characterized by its power spectral density (PSD)
-- it can be shown (see text book) that the PSD is
-  #+begin_src latex
-    \begin{tcolorbox}
-      \begin{equation*}
-        P_x(e^{j\omega}) = DTFT{r_x[n]}
-      \end{equation*}
-    \end{tcolorbox}
-  #+end_src
-
-    where
-
-  #+begin_export latex
-  \begin{tcolorbox}
-    \begin{equation*}
-      r_x[n] = E\left[x[k]x[n+k] \right]
-    \end{equation*}
-  \end{tcolorbox}
-  #+end_export
-
-   is the \textcolor{blue}{autocorrelation} of the proess
-
-- for a filtered stochastic process $y[n] = \mathfrak{H}{x[n]}$, it is:
-   #+begin_src latex
-   \begin{tcolorbox}
-     \begin{equation*}
-       P_x(e^{j\omega}) = |H(e^{j\omega})|^2 P_x(e^{j\omega})
-     \end{equation*}
-   \end{tcolorbox}
- #+end_src
- 
-  #+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{In Words}
-  #+BEGIN_bclogo
-  The power spectral density of the output is equal to the power spectral density
-  of the input times the frequency response in magnitude square.
-  #+END_bclogo
-
 **** Quantization
 ***** Quantization schemes
 - digital devices can only deal with integers (b bits per sample)
@@ -1523,7 +1666,7 @@ Several factors at play:
 The simplest quantizer:
 - each sample is encoded individually (hence scalar)
 - each sample is quantized independently (memoryless quantization)
-- each sampe is encoded using R bits
+- each sample is encoded using R bits
 
   #+begin_src latex
     \begin{tikzpicture}[x=5.2mm,scale=1,>=stealth]
@@ -1559,7 +1702,7 @@ The simplest quantizer:
 ***** Quantization Error
 #+begin_src latex
   \begin{equation*}
-    e[n] = Q\{x[n]\} -x[n] = \hat{x} - x[n]}
+    e[n] = Q\{x[n]\} -x[n] = \hat{x}[n] - x[n]}
   \end{equation*}
 #+end_src
 
@@ -1569,9 +1712,11 @@ The simplest quantizer:
   - all error samples have the same distribution
 - we need statistics of the input to study the error
 
-***** Uniform quantization
+****** Uniform quantization
 - simple but very general case
 - range is split into $2^R$ equal intervals of width $\Delta = (B-A)2^{-R}$
+
+- $f_x(\tau)$: PDF of the input
 
 - *With a Bit-Rate R* of 2 bits is a region split into 4 equally spaced
   intervals\\
@@ -1589,13 +1734,846 @@ The simplest quantizer:
         node[anchor=north] {i-$\x$};
       \foreach \val [count=\x] in {0,...,3}
         \draw (10* \val mm + 10mm + 10* \val mm, -1)
-           node[anchor=north] {I-$\val$};
+           node[anchor=north] {$\Delta$};
     \end{tikzpicture}
   #+end_src
 
+  Mean Square Error is the variance of the error signal
 
-  - filters designed for deterministic signals work (in magnitude) in the
-    stochaistic case
+  #+begin_src latex
+      \begin{align*}
+        \sigma_e^2 &= E\left[|Q\left{x[n]\rigth} -x[n]|^2\right] \\
+                   &= \int_A^Bf_x(\tau)(Q\left\{\tau\right\} -\tau)^2 d\tau \\
+                   &= \sum_{k=0}^{2^R-1} \int_{I_k} f_x(\tau)(\hat{x}_k - \tau)^2 d\tau
+    \end{align*}
+  #+end_src
+- $Q\left\{\tau\right\} -\tau$ : Error function
 
-  - we lose the concept of phase since we don't know the shape of a realization in
-    advance.
+error depends on the probability density of the input. The calculation is done
+in the following subsections here we already subsitutes the results.
+
+  #+begin_src latex
+    \begin{align*}
+        \sigma_e^2 &= \sum_{k=0}^{2^R-1} \int_{A+k\Delta}^{A+k\Delta+k} \frac{(A + k\Delta + \Delta/2 - \tau)^2}{B-A} d\tau \\
+                   &= 2^R \int_0^\Delta \frac{(\Delta/2 -\tau)^2}{B-A} d\tau \\
+                   &= \frac{\Delta^2}{12} \text{ with }   \Delta = \frax{B-A}{2^R}
+    \end{align*}
+  #+end_src
+
+#+begin_src latex
+    \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Quantization Error]
+    \begin{equation*}
+        \sigma_e^2 &= \frac{\Delta^2}{12} \text{ with }  \Delta = \frac{B-A}{2^R}
+    \end{equation*}
+  \end{tcolorbox}
+#+end_src
+
+****** Uniform quantization of uniform input
+
+#+begin_src octave :exports results :results file
+    # Algorithm --------------------------------------------------------------
+  N = 20;
+    A = -2;
+    B = 6;
+    x = (-N/2:0.01:N/2);
+    f = @(x) (1.0/(B-(-A))).*(((x-A)>=0)&(x<B)); # Rectpuls
+    # x = [(((n-A)>=0)&(n<B))]                   # not as anonymous function
+    # Graphik ----------------------------------------------------------------
+    figure(1, "visible", "off");      # Do not open the graphic window in org
+    # Plot 1 -----------------------------------------------------------------^
+    plot(x,f(x), "linewidth", 3);
+    axis([-N/2 N/2 -0.1 1.1]);
+    xlabel('\tau');
+    ylabel('f_x(\tau)');
+    text(-5.5,(1.0/(B+A)),'1/(B-A) \rightarrow','FontSize',32, 'horizontalalignment', 'left')
+    text(A,0.5,'A','FontSize',32, 'horizontalalignment', 'center')
+    text(A,0.38,'\downarrow','FontSize',32, 'horizontalalignment', 'center')
+    text(B,0.5,'B','FontSize',32, 'horizontalalignment', 'center')
+    text(B,0.38,'\downarrow','FontSize',32, 'horizontalalignment', 'center')
+
+    title('Continous uniform probability density function');
+    set(gca, "fontsize", 24);
+    grid on ;
+    # Org-Mode specific output -----------------------------------------------
+    print -dpng "-S800,300" ./image/w7_uniform_pdf.png; # Set print device
+    ans = "./image/w7_uniform_pdf.png";                 # The mandtory return value
+#+end_src
+
+#+results:
+[[file:./image/w7_uniform_pdf.png]]
+
+****** Uniform-input hypothesis
+#+begin_src latex
+  \begin{equation*}
+    f_x(\tau) = \frac{1}{B-A}
+  \end{equation*}
+#+end_src
+
+#+begin_src latex
+  \begin{equation*}
+    \sigma^2 = \sum_{k=0}^{2^R-1} \int_{I_k}\frac{(\hat{x} -\tau)^2}{B-A} d\tau
+  \end{equation*}
+#+end_src
+
+****** Find the optimal quantization point by minimazing the error 
+
+#+begin_src latex
+  \begin{align*}
+    \frac{\partial\sigma_e^2}{\partial\hat{x}_m} &= \frac{\partial}{\partial\hat{x}_m} \sum_{k=0}^{2^R-1} \int_{I_k}\frac{(\hat{x}_k -\tau)^2}{B-A} d\tau \\
+                                                 &= \int_{I_m}\frac{2(\hat{x}_m -\tau)^2}{B-A} d\tau \\
+                                                 &= \frac{2(\hat{x}_m -\tau)^2}{B-A} \Big|_{A+m\Delta}^{A+m\Delta+\Delta} 
+  \end{align*}
+#+end_src
+
+
+Minimizing the error:
+
+#+begin_src latex
+  \begin{equation*}
+    \frac{\partial\sigma_e^2}{\partial\hat{x}_m} = 0 \text{ for } \hat{x}_m = A + m\Delta + \frac{\Delta}{2}
+  \end{equation*}
+#+end_src
+
+optimal quantization point is the interval's midpoint, for all intervals
+
+Quantization Characteristic
+#+begin_src latex
+% linear uniform mid-tread quantizer characteristic
+\pgfplotsset{axis style={mathaxis,ytick={1,2,3,4},yticklabels={\tiny $Q$},xtick={-4,0.5,4},xticklabels={\tiny $x_\text{min}$, \tiny $\frac{Q}{2}$,\tiny $x_\text{max}$},xlabel=$x$,}}
+
+\begin{tikzpicture}
+
+\begin{axis}[ylabel={$x_Q$}]
+\addplot[blue,thick] plot coordinates{(-6,-4) (-3.5,-4) (-3.5,-3) (-2.5,-3) (-2.5,-2) (-1.5,-2) (-1.5,-1) (-.5,-1) (-.5,0) (.5,0) (.5,1) (1.5,1) (1.5,2) (2.5,2) (2.5,3) (3.5,3) (3.5,4) (6,4) };
+\addplot[red,dashed,domain=-5:5,samples=50] { x };
+\end{axis};
+
+\end{tikzpicture}
+#+end_src
+
+The quantiziser associates each quantization interval to its midpoint.  
+
+***** Error Analysis
+
+#+begin_src latex
+    \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Error Energy]
+    \begin{equation*}
+        \sigma_e^2 = \frac{\Delta^2}{12} \text{ with }  \Delta = \frac{B-A}{2^R}
+    \end{equation*}
+  \end{tcolorbox}
+#+end_src
+
+#+begin_src latex
+    \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Signal Energy]
+    \begin{equation*}
+        \sigma_x^2 = \frac{(B-A)^2}{12}
+    \end{equation*}
+  \end{tcolorbox}
+#+end_src
+
+#+begin_src latex
+  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Signal to Noise Ratio]
+    \begin{equation*}
+        SNR = 2^{2R}
+    \end{equation*}
+  \end{tcolorbox}
+#+end_src
+
+#+begin_src latex
+  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Signal to Noise Ratio in db]
+    \begin{equation*}
+        SNR_{db} = 10\cdotlog_{10}2^{2R} \approx 6R \;db
+    \end{equation*}
+  \end{tcolorbox}
+#+end_src
+
+**** The 6db/bit rule of thumb
+- a compact disk has 16 bits/sample:
+  #+begin_src latex
+    \begin{equation*}
+        max SNR_{db} =\approx 6R \;db = 6 \cdot 16\; db = 96\;db
+    \end{equation*}
+#+end_src
+
+- a DVD has 24 bits/sample:
+    #+begin_src latex
+    \begin{equation*}
+        max SNR_{db} =\approx 6R \;db = 6 \cdot 24\; db = 144\;db
+    \end{equation*}
+#+end_src
+
+*** Practical interpolation and sampling
+**** Time Domain to Discrete
+| ideally                                                                                                     | x(t) $\Rightarrow$ x[n]  | in practice                                                                                                        |
+| $x(t) = \sum_{n=-\infty}^{\infty} x[n] \sinc \left(frac{t -nT_s}{T_s} \right)$                              |                          | $x(t) =\sum_{n=-\infty}^{\infty}  x[n] i \left( \frac{t -nT_s}{T_s} \right)$                                                                |
+| $X(j\Omega) = \frac{\pi}{\Omega_N}X(e^{j\pi\Omega / \Omega_N}) rect\left( \frac{\Omega}{2\OPmega_N}\right)$ |                          | $X(j\Omega) = \frac{\pi}{\Omega_N} I \left(j\pi\frac{\Omega}{\Omega_N} \right) X(e^{j\pi\frac{\Omega}{\Omega_N}})$ |
+
+
+**** Discrete to Time Domain
+
+| ideally                                                                                                       | x[n] $\Rightarrow$ x(t)  | in practice                                                                                                          |
+| $x(t) = \sum_{-\infty}^{\infty} x[n] sinc \left( \frac{t-nT_s}{T_s} \right)$                                  |                          | $x(t) = \sum_{n=-\infty}^{\infty} x[n]\, i\, \left( \frac{t-nT_s}{T_s} \right)$                                      |
+| $X(j\Omega) = \frac{\pi}{\Omega_N} X(e^{j\pi\Omega / \Omega_n} rect\left( \frac{\Omega}{\2\Omega_N} \right)$) |                          | $X(j\Omega) = \frac{\pi}{\Omega_N} I \left(j\pi \frac{\Omega}{\Omega_N} \right) X(e^{j\pi \frac{\Omega}{\Omega_N}})$ |
+
+***** Ideal Interpolator
+- Frequency Domain: Rect
+- Time Domain: sinc
+#+begin_src octave :exports results :results file
+  N = 64                          # Size of the sequence
+  q = 5;                          # divisior for Omega_N
+  Omega_N = pi/q;                 # Nyquiste Frequency
+  omega = -pi:1/N:pi;             # Axis Discrete Time Frequency Domain
+  Omega = pi.*omega./Omega_N;     # Axis Continous Time Frequency Domain - phase term from sinc interpolation
+
+  XD = 0.43*(sin(omega+pi/2) + 0.5*cos(2*omega+pi)) + 0.66;     # DTFT{x[n]} (given)
+  XT = (0.43*(sin(Omega+pi/2) + 0.5*cos(2*Omega+pi)) + 0.66);   # FT{x(t)} => Rescaled version of DTFT{x[n]}
+  I = (((omega + Omega_N) >= 0) - ((omega - Omega_N) >= 0));    # rect:   ideal interpolator function
+  # I = abs(sinc(omega*pi/2));                                    # sinc:   Zero order hold sinc
+  # I = abs(sinc(omega*pi/2).^2)                                  # sinc^2: First order interpolator
+
+  figure( 1, "visible", "off" )     # Do not open the graphic window in org
+
+  subplot(3,1,1)
+  plot(omega, XD, "linewidth", 2 );
+  axis([-pi,pi,0,1.3]);
+  set(gca, "fontsize", 20)
+  set(gca,'XTick',-pi:pi/2:pi)
+  set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+  set(gca, 'YTick', 0:1);
+  ylabel('X(e^j^\omega)');
+  grid off;
+  title('DTFT of the sequence')
+
+  subplot(3,1,2)
+  plot(omega, XT, "linewidth", 2);
+  hold;
+  plot(omega, I, "linewidth", 2, "color", "red" );
+  axis([-pi,pi,0,1.3]);
+  set(gca, "fontsize", 20)
+  set(gca,'XTick',[-q*Omega_N:2*Omega_N:-Omega_N, 0, Omega_N:2*Omega_N:q*Omega_N])
+  set(gca,'XTickLabel',{'-3\Omega_N','-2\Omega_N', '\Omega_N','0','\Omega_N', '2\Omega_N','3\Omega_N'})
+  set(gca, 'YTick', 2);
+                                  #set(gca, 'YTickLabel',{'0', '1'})
+  ylabel('X(j\Omega)');
+  grid off;
+  title('Periodic \omega mapped to \Omega with ideal Interpolator')
+
+  subplot(3,1,3)
+  plot(omega, XT.*I, "linewidth", 2 );
+  axis([-pi,pi,0,1.3]);
+  set(gca, "fontsize", 20)
+  set(gca,'XTick',[-q*Omega_N:2*Omega_N:-Omega_N, 0, Omega_N:2*Omega_N:q*Omega_N])
+  set(gca,'XTickLabel',{'-5\Omega_N','-3\Omega_N', '\Omega_N','0','\Omega_N', '3\Omega_N','5\Omega_N'})
+  set(gca, 'YTick', 2);
+  ylabel('X(j\Omega)');
+  title('Resulting continous time spectrum')
+  grid off
+
+
+  print -dpng "-S800,600" ./image/w7_ideal_interpolation_01.png;
+  ans = "./image/w7_ideal_interpolation_01.png";
+#+end_src
+
+#+results:
+[[file:./image/w7_ideal_interpolation_01.png]]
+
+***** Zero-Order Hold Interpolator
+- Frequency Domain: sinc
+- Time Domain: rect
+#+begin_src octave :exports results :results file
+  N = 64                          # Size of the sequence
+  q = 5;                          # divisior for Omega_N
+  Omega_N = pi/q;                 # Nyquiste Frequency
+  omega = -pi:1/N:pi;             # Axis Discrete Time Frequency Domain
+  Omega = pi.*omega./Omega_N;     # Axis Continous Time Frequency Domain - phase term from sinc interpolation
+
+  XD = 0.43*(sin(omega+pi/2) + 0.5*cos(2*omega+pi)) + 0.66;     # DTFT{x[n]} (given)
+  XT = (0.43*(sin(Omega+pi/2) + 0.5*cos(2*Omega+pi)) + 0.66);   # FT{x(t)} => Rescaled version of DTFT{x[n]}
+  # I = (((omega + Omega_N) >= 0) - ((omega - Omega_N) >= 0));    # rect:   ideal interpolator function
+  I = abs(sinc(omega*pi/2));                                    # sinc:   Zero order hold sinc
+  # I = abs(sinc(omega*pi/2).^2)                                  # sinc^2: First order interpolator
+
+  figure( 1, "visible", "off" )     # Do not open the graphic window in org
+
+  subplot(3,1,1)
+  plot(omega, XD, "linewidth", 2 );
+  axis([-pi,pi,0,1.3]);
+  set(gca, "fontsize", 20)
+  set(gca,'XTick',-pi:pi/2:pi)
+  set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+  set(gca, 'YTick', 0:1);
+  ylabel('X(e^j^\omega)');
+  grid off;
+  title('DTFT of the sequence')
+
+  subplot(3,1,2)
+  plot(omega, XT, "linewidth", 2);
+  hold;
+  plot(omega, I, "linewidth", 2, "color", "red" );
+  axis([-pi,pi,0,1.3]);
+  set(gca, "fontsize", 20)
+  set(gca,'XTick',[-q*Omega_N:2*Omega_N:-Omega_N, 0, Omega_N:2*Omega_N:q*Omega_N])
+  set(gca,'XTickLabel',{'-3\Omega_N','-2\Omega_N', '\Omega_N','0','\Omega_N', '2\Omega_N','3\Omega_N'})
+  set(gca, 'YTick', 2);
+                                  #set(gca, 'YTickLabel',{'0', '1'})
+  ylabel('X(j\Omega)');
+  grid off;
+  title('Periodic \omega mapped to \Omega with zero-order hold Interpolator')
+
+  subplot(3,1,3)
+  plot(omega, XT.*I, "linewidth", 2 );
+  axis([-pi,pi,0,1.3]);
+  set(gca, "fontsize", 20)
+  set(gca,'XTick',[-q*Omega_N:2*Omega_N:-Omega_N, 0, Omega_N:2*Omega_N:q*Omega_N])
+  set(gca,'XTickLabel',{'-5\Omega_N','-3\Omega_N', '\Omega_N','0','\Omega_N', '3\Omega_N','5\Omega_N'})
+  set(gca, 'YTick', 2);
+  ylabel('X(j\Omega)');
+  title('Resulting continous time spectrum')
+  grid off
+
+
+  print -dpng "-S800,600" ./image/w7_ideal_zero_order_hold_interpolation_01.png;
+  ans = "./image/w7_ideal_zero_order_hold_interpolation_01.png";
+#+end_src
+
+#+results:
+[[file:./image/w7_ideal_zero_order_hold_interpolation_01.png]]
+
+***** First-Order Interpolator
+
+- Frequency Domain: $sinc^2$
+- Time Domain: Triangle
+#+begin_src octave :exports results :results file
+  N = 64                          # Size of the sequence
+  q = 5;                          # divisior for Omega_N
+  Omega_N = pi/q;                 # Nyquiste Frequency
+  omega = -pi:1/N:pi;             # Axis Discrete Time Frequency Domain
+  Omega = pi.*omega./Omega_N;     # Axis Continous Time Frequency Domain - phase term from sinc interpolation
+
+  XD = 0.43*(sin(omega+pi/2) + 0.5*cos(2*omega+pi)) + 0.66;     # DTFT{x[n]} (given)
+  XT = (0.43*(sin(Omega+pi/2) + 0.5*cos(2*Omega+pi)) + 0.66);   # FT{x(t)} => Rescaled version of DTFT{x[n]}
+  # I = (((omega + Omega_N) >= 0) - ((omega - Omega_N) >= 0));    # rect:   ideal interpolator function
+  # I = abs(sinc(omega*pi/2));                                    # sinc:   Zero order hold sinc
+  I = abs(sinc(omega*pi/2).^2)                                  # sinc^2: First order interpolator
+
+  figure( 1, "visible", "off" )     # Do not open the graphic window in org
+
+  subplot(3,1,1)
+  plot(omega, XD, "linewidth", 2 );
+  axis([-pi,pi,0,1.3]);
+  set(gca, "fontsize", 20)
+  set(gca,'XTick',-pi:pi/2:pi)
+  set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'})
+  set(gca, 'YTick', 0:1);
+  ylabel('X(e^j^\omega)');
+  grid off;
+  title('DTFT of the sequence')
+
+  subplot(3,1,2)
+  plot(omega, XT, "linewidth", 2);
+  hold;
+  plot(omega, I, "linewidth", 2, "color", "red" );
+  axis([-pi,pi,0,1.3]);
+  set(gca, "fontsize", 20)
+  set(gca,'XTick',[-q*Omega_N:2*Omega_N:-Omega_N, 0, Omega_N:2*Omega_N:q*Omega_N])
+  set(gca,'XTickLabel',{'-3\Omega_N','-2\Omega_N', '\Omega_N','0','\Omega_N', '2\Omega_N','3\Omega_N'})
+  set(gca, 'YTick', 2);
+                                  #set(gca, 'YTickLabel',{'0', '1'})
+  ylabel('X(j\Omega)');
+  grid off;
+  title('Periodic \omega mapped to \Omega with first-order Interpolator')
+
+  subplot(3,1,3)
+  plot(omega, XT.*I, "linewidth", 2 );
+  axis([-pi,pi,0,1.3]);
+  set(gca, "fontsize", 20)
+  set(gca,'XTick',[-q*Omega_N:2*Omega_N:-Omega_N, 0, Omega_N:2*Omega_N:q*Omega_N])
+  set(gca,'XTickLabel',{'-5\Omega_N','-3\Omega_N', '\Omega_N','0','\Omega_N', '3\Omega_N','5\Omega_N'})
+  set(gca, 'YTick', 2);
+  ylabel('X(j\Omega)');
+  title('Resulting continous time spectrum')
+  grid off
+
+
+  print -dpng "-S800,600" ./image/w7_first_order_interpolation_01.png;
+  ans = "./image/w7_first_order_interpolation_01.png";
+#+end_src
+
+#+results:
+[[file:./image/w7_first_order_interpolation_01.png]]
+
+*** TODO Multirate Signal Processing
+[[http://home.etf.rs/~milic/book_MR.html][Book: Multirate Filtering for Digital Signal Processing Matlab Applications]]
+**** Upsampling
+
+
+#+begin_src latex
+  \begin{equation*}
+    x_{NU}[n] = \left\{
+      \begin{array}{ll}
+        x[k] \text{  for } n = kN \text{, } k \in \mathbb{Z} \\
+        0 \text{     otherwise}
+      \end{array}
+    \right.
+  \end{equation*}
+#+end_src
+
+#+ATTR_LATEX: :width 5cm
+[[./drawing/w7_upsampler.png]]
+
+We create an upsampled sequence from any discrete time sequence simply by
+building a sequence where we output one sample of the original sequence followed
+by captial N minus 1 samples.
+
+
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal
+
+  clear all, close all;
+  N = 64;
+  n = -N/2:N/2-1;                                      % Time index
+  L = 4;                                           % Up-sampling factors
+  x = sin(2*pi*n/64) + sin(3*2*pi*n/64)/3;       % Generating the original signal
+  v1 = upsample(x,L);                              % Up-sampling
+  r = -(length(v1))/2:(length(v1))/2-1;                              % new Time index
+  figure( 1, "visible", "off" ); # Do not open the graphic window in org
+
+  subplot(3,1,1), stem(n,x,"linewidth", 3, "filled", "markersize", 4), ylabel('x[n]')
+  title('Original signal x[n]')
+  axis([-N/2,N/2-1,-1,1]), grid on;
+  set(gca, "fontsize", 24);
+
+  subplot(3,1,2), stem(n,x,"linewidth", 3, "filled", "markersize", 4), ylabel('x[n]')
+  title('Excerpt from x[n]')
+  set(gca, "fontsize", 24);
+  axis([-8, 8, -1, 1]);
+  set(gca, 'YTick', 0:1.5);
+  set(gca, 'XTick', -8:2:8);
+
+  subplot(3,1,3), stem(r,v1,"linewidth", 3, "filled", "markersize", 4), ylabel('v_1[r]')
+  title('Up-sampled-by-4 signal v_1[r]')
+  axis([-32, 32, -1, 1]);
+  set(gca, "fontsize", 24);
+  set(gca, 'YTick', 0:1.5);
+  set(gca, 'XTick', -40:10:40);
+  grid off;
+  title('Excerpt upsampled by 4');
+
+
+  print -dpng "-S800,600" ./image/5_8_upsampling_01.png;
+  ans = "./image/5_8_upsampling_01.png";
+ #+END_SRC
+
+ #+results:
+ [[file:./image/5_8_upsampling_01.png]]
+
+
+***** Spectral Representation
+
+
+#+begin_src latex
+  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Spectral Representation]
+  \begin{equation*}
+    X_{NU}(e^{j\omega}) = X(e^{j\omega N})
+  \end{equation*}
+  \end{tcolorbox}
+#+end_src
+
+The spectrum of the upsampled sequence is equal to the spectrum of the original
+sequence contracted by a factor N.
+
+#+BEGIN_SRC octave :exports results :results file
+   pkg load signal
+
+   clear all, close all;
+   N = 64;
+
+   L = 1; omega    = -L*pi:1/(N-1):pi*L;   % Up-sampling factors
+   L = 2; omega_u2 = -L*pi:1/(N-1):pi*L;   % Up-sampling factors
+   L = 3; omega_u3 = -L*pi:1/(N-1):pi*L;   % Up-sampling factors
+   P = 5; omega_p5 = -P*pi:1/(N-1):pi*P;   % For 5-pi periodic space
+
+   X        = abs(-sawtooth(10/N*pi*omega,0.5));
+   X_period = abs(-sawtooth(10/N*pi*omega_p5,0.5));
+   XU2      = abs(-sawtooth(10/N*pi*omega_u2,0.5));
+   XU3      = abs(-sawtooth(10/N*pi*omega_u3,0.5));
+
+   figure( 1, "visible", "off" ); # Do not open the graphic window in org
+
+   subplot(4,1,1), plot(omega,X,"linewidth", 3), ylabel('X(e^j^\omega)')
+   axis([-pi,pi,0,1]);
+   set(gca, "fontsize", 20)
+   set(gca,'YTick', 0:1)
+   set(gca,'XTick',-pi:pi:pi)
+   set(gca,'XTickLabel',{'-\pi','0','\pi'})
+   title('Spectrum')
+
+   subplot(4,1,2), plot(omega_p5,X_period,"linewidth", 3), ylabel('X(e^j^\omega)')
+   axis([-pi*P,pi*P,0,1]);
+   set(gca, "fontsize", 20)
+   set(gca,'YTick', 0:1)
+   set(gca,'XTick',-pi*P:pi:pi*P)
+   set(gca,'XTickLabel',{'-5\pi','-4\pi','-3\pi','-2\pi','-\pi','0','\pi','2\pi','3\pi','4\pi','5\pi'})
+   title('2\pi periodic spectrum')
+
+  subplot(4,1,3),
+  plot(omega_u2,XU2,"linewidth", 3), ylabel('X_2_U(e^j^\omega)')
+  axis([-2*pi,2*pi,0,1]);
+  set(gca, "fontsize", 20)
+  set(gca,'YTick', 0:1)
+  set(gca,'XTick',-2*pi:2*pi:2*pi)
+  set(gca,'XTickLabel',{'-\pi','0','\pi'})
+  grid off;
+  title('Contracted Spectrum by Factor 2')
+
+  subplot(4,1,4),
+  plot(omega_u3,XU3,"linewidth", 3), ylabel('X_2_U(e^j^\omega)')
+  axis([-3*pi,3*pi,0,1]);
+  set(gca, "fontsize", 20)
+  set(gca,'YTick', 0:1)
+  set(gca,'XTick',-3*pi:3*pi:3*pi)
+  set(gca,'XTickLabel',{'-\pi','0','\pi'})
+  grid off;
+  title('Contracted Spectrum by Factor 3')
+
+  print -dpng "-S800,600" ./image/5_8_upsampling_freq_01.png;
+  ans = "./image/5_8_upsampling_freq_01.png";
+     #+END_SRC
+
+ #+results:
+ [[file:./image/5_8_upsampling_freq_01.png]]
+ 
+
+***** Non fullband spectrum
+
+#+BEGIN_SRC octave :exports results :results file
+         pkg load signal
+
+         clear all, close all;
+         N = 64;
+
+         L = 1; omega    = -L*pi:1/(N-1):pi*L;   % Up-sampling factors
+         L = 2; omega_u2 = -L*pi:1/(N-1):pi*L;   % Up-sampling factors
+         L = 4; omega_u4 = -L*pi:1/(N-1):pi*L;   % Up-sampling factors
+         P = 5; omega_p5 = -P*pi:1/(N-1):pi*P;   % For 5-pi periodic space
+
+         X       =  tripuls(omega,4/3*pi);
+         XP5      = [X,X,X,X,X];
+         XU2      = [X,X];
+         XU4      = [X(199:396),X,X,X,X(1:198)];
+         XU4      = [X(length(X)/2+1:length(X)),X,X,X,X(1:length(X)/2)];
+
+         figure( 1, "visible", "off" ); # Do not open the graphic window in org
+
+       subplot(3,1,1), plot(omega,X,"linewidth", 3), ylabel('X(e^j^\omega)')
+       axis([-pi,pi,0,1]);
+       set(gca, "fontsize", 20)
+       set(gca,'YTick', 0:1)
+       set(gca,'YTick', 0:1)
+       set(gca,'XTick',-pi:pi:pi)
+       set(gca,'XTickLabel',{'-\pi','0','\pi'})
+       title('Spectrum')
+
+       subplot(3,1,2),
+       plot(omega_p5,XP5,"linewidth", 3), ylabel('X(e^j^\omega)')
+       axis([-pi*P,pi*P,0,1]);
+       set(gca,'YTick', 0:1)
+       set(gca, "fontsize", 20)
+       set(gca,'XTick',-pi*P:pi:pi*P)
+       set(gca,'XTickLabel',{'-5\pi','-4\pi','-3\pi','-2\pi','-\pi','0','\pi','2\pi','3\pi','4\pi','5\pi'})
+       title('2\pi periodic spectrum')
+
+       subplot(3,1,3),
+       plot(omega_u4,XU4,"linewidth", 3), ylabel('X_2_U(e^j^\omega)')
+       axis([-4*pi,4*pi,0,1]);
+       set(gca, "fontsize", 20)
+       set(gca,'YTick', 0:1)
+       set(gca,'XTick',-4*pi:4*pi:4*pi)
+       set(gca,'XTickLabel',{'-\pi','0','\pi'})
+       grid off;
+       title('Contracted Spectrum by Factor 3')
+
+       print -dpng "-S800,600" ./image/5_8_upsampling_freq_02.png;
+       ans = "./image/5_8_upsampling_freq_02.png";
+  #  ans = length(XU4)
+     #+END_SRC
+
+     #+results:
+     [[file:./image/5_8_upsampling_freq_02.png]]
+***** What we don't like
+- in the time domain: zeors between nonzero samples are not "natural"
+- in the frequency domain: extra replicas of the spectrum; can we get rid of them?
+
+  We need to interpolate the signals in the Frequency domain:
+  - zero-order hold interpolator
+  - first-order interpolator
+    
+***** The ideal digital interpolator
+
+#+begin_src latex
+  \begin{align*}
+    H(e^{j\omega}) &= rect\left( frac{\omega N}{2\pi}\right) \\
+    h[n] &= \frac{1}{N}sinc\left( \frac{n}{N}\right)
+  \end{align*}
+#+end_src
+
+This can not be achieved but as good as possible add an Low Pass with cut off frequency $\frac{pi}{N}$,
+
+#+ATTR_LATEX: :width 6cm
+[[./drawing/w7_upsampler_LP.png]]
+
+with a discrete time ideal low pass filter with cut off frequency $\pi/N$
+**** Downsampling
+
+#+begin_src latex
+  \begin{equation*}
+    x_{ND}[n] = x[nN]
+  \end{equation*}
+#+end_src
+
+
+Every $N - 1$ input sample is discareded resp. only every N-th sample is used.
+#+ATTR_LATEX: :width 5cm
+[[./drawing/w7_downsampler.png]]
+
+
+#+BEGIN_SRC octave :exports results :results file
+  pkg load signal
+
+  clear all, close all;
+  n = 0:15;                                        % Time index
+  L = 4; M = 3;                                    % Up-sampling and down-sampling factors
+  x = cos(0.2*pi*n);                               % Generating the original signal
+  v1 = upsample(x,L);                              % Up-sampling
+  y1 = downsample(v1,M);                           % Down-sampling
+  r = 0:length(v1)-1;                              % Time index
+  m = 0:length(y1)-1;                              % Time index
+  figure( 1, "visible", "off" ); # Do not open the graphic window in org
+
+  v2 = downsample(x,M);                           % Down-sampling
+  r = 0:length(v2)-1;                             % Time index
+  y2 = upsample(v2,L);                            % Up-sampling
+  m = 0:length(y2)-1;                             % Time index
+
+  subplot(2,1,1), stem(n,x, "linewidth", 3, "filled", "markersize", 8), ylabel('x[n]')
+  title('Original signal x[n]');
+  axis([0,15,-1,1]), grid on;
+  set(gca, "fontsize", 24);
+
+  subplot(2,1,2), stem(r,v2, "linewidth", 3, "filled", "markersize", 8), ylabel('v_2[r]')
+  title('Down-sampled-by-3 signal v_2[r]')
+  axis([0,5,-1,1]), grid on;
+  set(gca, "fontsize", 24);
+
+  print -dpng "-S800,400" ./image/5_8_downsampling_01.png;
+  ans = "./image/5_8_downsampling_01.png";
+ #+END_SRC
+
+ #+results:
+ [[file:./image/5_8_downsampling_01.png]]
+
+***** Spectral Representation
+
+#+begin_src latex
+  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Spectral Representation]
+  \begin{equation*}
+    X_{ND}(e^{j\omega}) = \frac{1}{N} \sum_{m=0}^{N-1} X(e^{j\frac{\omega - 2\pi m}{N})
+  \end{equation*}
+  \end{tcolorbox}
+#+end_src
+
+There's 1/N normalization factor in front, that multiplies the sum of capital N
+copies of the original spectrum, where each copy has been shifted by a multiple
+of 2 pi/N, and where the frequency axis has been stretched out by a factor of
+capital N.  So the interval -pi/N, pi/N becomes the interval -pi, pi.
+
+
+#+BEGIN_SRC octave :exports results :results file
+    pkg load signal
+
+    clear all, close all;
+    N = 64;
+
+    L = 1; omega    = -pi:1/(N-1):pi;   % Down-sampling factors
+    L = 2; omega_d2 = -(2*pi/L):1/(N-1):(2*pi/L);   % Down-sampling factors
+    P = 3; omega_p3 = -P*pi:1/(N-1):pi*P;   % For 5-pi periodic space
+
+    # X       =  tripuls(omega,pi);
+    X       =  tripuls(omega,pi);
+    XP3     = [X,X,X];
+    XP3_S   = [X(199:396),X,X,X(1:198)];
+    XD2     = 1/L*[X];
+
+    figure( 1, "visible", "off" ); # Do not open the graphic window in org
+
+  subplot(3,1,1), plot(omega,X,"linewidth", 3), ylabel('X(e^j^\omega)')
+  axis([-pi,pi,0,1]);
+  set(gca, "fontsize", 20)
+  set(gca,'YTick', 0:1)
+  set(gca,'YTick', 0:1)
+  set(gca,'XTick',-pi:pi/2:pi)
+  set(gca,'XTickLabel',{'-\pi', '-\pi/2','0','\pi/2','\pi'})
+  title('Spectrum')
+
+  subplot(3,1,2)
+  plot(omega_p3,XP3, "linewidth", 3, omega_p3,XP3_S,"linewidth", 3), ylabel('X(e^j^\omega)')
+  axis([-pi*P,pi*P,0,1]);
+  set(gca,'YTick', 0:1)
+  set(gca, "fontsize", 20)
+  set(gca,'XTick',-pi*P:pi/2:pi*P)
+  set(gca,'XTickLabel',{'-3\pi','-5\pi/2','-2\pi','-3\pi/2','-\pi','-\pi/2','0','\pi/2','\pi','3\pi/2','2\pi','5\pi/2','3\pi'})
+  title('2\pi periodic spectrum')
+
+  subplot(3,1,3),
+  plot(omega_d2,XD2,"linewidth", 3), ylabel('X_2_U(e^j^\omega)')
+  axis([-pi/L,pi/L,0,1]);
+  set(gca, "fontsize", 20)
+  set(gca,'YTick', 0:1)
+  set(gca,'XTick',-pi/L:pi/L:pi/L)
+  set(gca,'XTickLabel',{'-\pi','0','\pi'})
+  grid off;
+  title('Contracted Spectrum by Factor 3')
+
+  print -dpng "-S800,600" ./image/5_8_downsampling_freq_02.png;
+  ans = "./image/5_8_downsampling_freq_02.png";
+  #ans = length(omega_u2)
+     #+END_SRC
+
+     #+results:
+     [[file:./image/5_8_downsampling_freq_02.png]]
+
+
+
+***** Downsampling by 2 with aliasing
+
+#+BEGIN_SRC octave :exports results :results file
+    pkg load signal
+
+    clear all, close all;
+    N = 64;
+
+    L = 1; omega    = -pi:1/(N-1):pi;   % Down-sampling factors
+    L = 2; omega_d2 = -(2*pi/L):1/(N-1):(2*pi/L);   % Down-sampling factors
+    P = 3; omega_p3 = -P*pi:1/(N-1):pi*P;   % For 5-pi periodic space
+
+    # X       =  tripuls(omega,pi);
+    X       =  tripuls(omega,3*pi/2);
+    XP3     = [X,X,X];
+    XP3_S   = [X(199:396),X,X,X(1:198)];
+    XD2     = 1/L*[X];
+
+    figure( 1, "visible", "off" ); # Do not open the graphic window in org
+
+  subplot(3,1,1), plot(omega,X,"linewidth", 3), ylabel('X(e^j^\omega)')
+  axis([-pi,pi,0,1]);
+  set(gca, "fontsize", 20)
+  set(gca,'YTick', 0:1)
+  set(gca,'YTick', 0:1)
+  set(gca,'XTick',-pi:pi/2:pi)
+  set(gca,'XTickLabel',{'-\pi', '-\pi/2','0','\pi/2','\pi'})
+  title('Spectrum')
+
+  subplot(3,1,2)
+  plot(omega_p3,XP3, "linewidth", 3, omega_p3,XP3_S,"linewidth", 3), ylabel('X(e^j^\omega)')
+  axis([-pi*P,pi*P,0,1]);
+  set(gca,'YTick', 0:1)
+  set(gca, "fontsize", 20)
+  set(gca,'XTick',-pi*P:pi/2:pi*P)
+  set(gca,'XTickLabel',{'-3\pi','-5\pi/2','-2\pi','-3\pi/2','-\pi','-\pi/2','0','\pi/2','\pi','3\pi/2','2\pi','5\pi/2','3\pi'})
+  title('2\pi periodic spectrum')
+
+  subplot(3,1,3),
+  plot(omega_d2,XD2,"linewidth", 3), ylabel('X_2_U(e^j^\omega)')
+  axis([-pi/L,pi/L,0,1]);
+  set(gca, "fontsize", 20)
+  set(gca,'YTick', 0:1)
+  set(gca,'XTick',-pi/L:pi/L:pi/L)
+  set(gca,'XTickLabel',{'-\pi','0','\pi'})
+  grid off;
+  title('Contracted Spectrum by Factor 3')
+
+  print -dpng "-S800,600" ./image/5_8_downsampling_freq_alias-01.png;
+  ans = "./image/5_8_downsampling_freq_alias-01.png";
+  #ans = length(omega_u2)
+     #+END_SRC
+
+     #+results:
+     [[file:./image/5_8_downsampling_freq_alias-01.png]]
+
+
+
+     #+BEGIN_SRC octave :exports results :results file
+                pkg load signal
+
+                clear all, close all;
+                N = 64;
+
+                L = 1; omega    = -pi:1/(N-1):pi;   % Down-sampling factors
+                L = 2; omega_d2 = -(2*pi/L):1/(N-1):(2*pi/L);   % Down-sampling factors
+                P = 3; omega_p3 = -P*pi:1/(N-1):pi*P;   % For 5-pi periodic space
+
+                X       =  tripuls(omega,pi);
+                X       =  tripuls(omega,3*pi/2);
+               #X       = [zeros(1,102), X(102:293), zeros(1,102)];
+                X       = [zeros(1,100), X(100:295), zeros(1,100)];
+                XP3     = [X,X,X];
+                XP3_S   = [X(199:396),X,X,X(1:198)];
+                XD2     = 1/L*[X];
+
+              figure( 1, "visible", "off" ); # Do not open the graphic window in org
+
+              subplot(3,1,1), plot(omega,X,"linewidth", 3), ylabel('X(e^j^\omega)')
+              axis([-pi,pi,0,1]);
+              set(gca, "fontsize", 20)
+              set(gca,'YTick', 0:1)
+              set(gca,'YTick', 0:1)
+              set(gca,'XTick',-pi:pi/2:pi)
+              set(gca,'XTickLabel',{'-\pi', '-\pi/2','0','\pi/2','\pi'})
+              title('Spectrum')
+
+              subplot(3,1,2)
+              plot(omega_p3,XP3, "linewidth", 3, omega_p3,XP3_S,"linewidth", 3), ylabel('X(e^j^\omega)')
+              axis([-pi*P,pi*P,0,1]);
+              set(gca,'YTick', 0:1)
+              set(gca, "fontsize", 20)
+              set(gca,'XTick',-pi*P:pi/2:pi*P)
+              set(gca,'XTickLabel',{'-3\pi','-5\pi/2','-2\pi','-3\pi/2','-\pi','-\pi/2','0','\pi/2','\pi','3\pi/2','2\pi','5\pi/2','3\pi'})
+              title('2\pi periodic spectrum')
+
+              subplot(3,1,3),
+              plot(omega_d2,XD2,"linewidth", 3), ylabel('X_2_U(e^j^\omega)')
+              axis([-pi/L,pi/L,0,1]);
+              set(gca, "fontsize", 20)
+              set(gca,'YTick', 0:1)
+              set(gca,'XTick',-pi/L:pi/L:pi/L)
+              set(gca,'XTickLabel',{'-\pi','0','\pi'})
+              grid off;
+              title('Contracted Spectrum by Factor 3')
+
+              print -dpng "-S800,600" ./image/5_8_downsampling_freq_alias-02.png;
+              ans = "./image/5_8_downsampling_freq_alias-02.png";
+       ##       ans = length(X)
+     #+END_SRC
+
+     #+results:
+     [[file:./image/5_8_downsampling_freq_alias-02.png]]
+
+
+**** TODO Sampling Rate Change
+
+#+ATTR_LATEX: :width 7cm
+[[./drawing/w7_updownsampler_LP.png]]
+*** TODO FIR-based sampling
+- Sampling rate change through time-varying local interpolation
+**** Subsample interpolation
+- First Study
+
+**** 2nd-order Lagrange interpolation polynomials
+
+**** Lagrange interpolation (N=1)
+
+**** CD to DVD revisted
+*** TODO Analog-to-digital and digital-to-analog converters
+*** TODO Oversampling
+- Oversampled A/D -> reduce quantization error
+- Oversampled D/A -> use cheaper hardware for interpolation
