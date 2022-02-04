@@ -297,6 +297,7 @@ write('test8.wav', Fs, KS(np.random.rand(10), Fs*2))
 Let's now play some cool guitar and, arguably, no guitar chord is as cool as the
 [[https://en.wikipedia.org/wiki/A_Hard_Day%27s_Night_%28song%29#Opening_chord][opening chord of "A Hard Day's Night", by The Beatles]]
 
+#+ATTR_LATEX: :width 4cm :float wrap
 [[./image/hdn.jpg]]
 
 Much has been written about the chord (which, in fact, is made up of 2 guitars, one of

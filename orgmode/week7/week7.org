@@ -226,7 +226,7 @@ Two views of the world
   text(-40     ,  -0.2, '\fontsize{24}-\it\Omega_N  ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "center");
   text(-60      ,  1 , '\fontsize{24}\it{G} ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "center");
                                   # Org-Mode specific setting
-  print -dpng "-S800,300" ./image/w7_bandlimited.png;
+  print -dpng "-S800,200" ./image/w7_bandlimited.png;
   ans = "./image/w7_bandlimited.png";
 #+END_SRC
 
@@ -537,7 +537,7 @@ What does the spectrum of x(t) look like?
    grid on ;
 
 
-   print -dpng "-S800,600" ./image/w7_key_facts_sinc.png;
+   print -dpng "-S800,400" ./image/w7_key_facts_sinc.png;
    ans = "./image/w7_key_facts_sinc.png";
 #+end_src
 
@@ -845,7 +845,7 @@ with
   hold on;
   plot(t3, a3, "color","r", 'o', "markersize", 5, "linewidth", 3 );
   
-  print -dpng "-S800,600" ./image/w7_sampling_01.png;
+  print -dpng "-S800,400" ./image/w7_sampling_01.png;
   ans = "./image/w7_sampling_01.png";
 #+end_src
 
@@ -871,7 +871,7 @@ with
   hold on;
   plot(T, A, 'b', "linewidth", 0.5);
   
-  print -dpng "-S800,300" ./image/w7_sampling.png;
+  print -dpng "-S800,200" ./image/w7_sampling.png;
   ans = "./image/w7_sampling.png";
 #+end_src
 
@@ -1362,7 +1362,7 @@ The frequency response of the moving average filter
   \end{equation*}
 #+end_src
 
-wheraes the ploted shape is nothing but the square magnitude of the moving
+whereas the ploted shape is nothing but the square magnitude of the moving
 average filter evaluated at the DFT point $\frac{2\pi}{N}k$
 
 #+begin_src octave :exports results :results file
@@ -1402,7 +1402,7 @@ average filter evaluated at the DFT point $\frac{2\pi}{N}k$
       grid on;
     end
 
-    print -dpng "-S800,400" ./image/w7_stoch-07.png;
+    print -dpng "-S800,200" ./image/w7_stoch-07.png;
     ans = "./image/w7_stoch-07.png";
 #+end_src
 
@@ -1488,7 +1488,7 @@ Graphically the power spectral density of a white signal couldn't be any simpler
   set(gca,'XTickLabel',{'-\pi','-\pi/2','0','\pi/2','\pi'});
   text(-3.25      ,  1, '\fontsize{24}\it\sigma^2   ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "center");
   ylabel("P_{w}(e^{jw})");
-  print -dpng "-S400,200" ./image/5_5_white_noise_01.png;
+  print -dpng "-S800,200" ./image/5_5_white_noise_01.png;
   ans = "./image/5_5_white_noise_01.png";
  #+END_SRC
 
@@ -1667,7 +1667,7 @@ in the following subsections here we already subsitutes the results.
     set(gca, "fontsize", 24);
     grid on ;
     # Org-Mode specific output -----------------------------------------------
-    print -dpng "-S800,300" ./image/w7_uniform_pdf.png; # Set print device
+    print -dpng "-S800,200" ./image/w7_uniform_pdf.png; # Set print device
     ans = "./image/w7_uniform_pdf.png";                 # The mandtory return value
 #+end_src
 
