@@ -6,8 +6,8 @@ to synthesize interesting musical sounds.
 Let's start with a basic implementation of K-S loop:
 
 #+ATTR_LATEX: :options bgcolor=gray!10
-#+NAME: KS1 Algorithm
-#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+file#+NAME: KS1 Algorithm
+#+BEGIN_SRC ipython :session dspKS :exports code :results value :python python3
 def KS_1(x, N):
     # given the initial buffer x, produce a N-sample output
     #  by concatenating identical copies of the buffer
@@ -78,22 +78,22 @@ Let's now generate a 2-second audio clip:
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: wave1
-#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
-  write('/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test1.wav', Fs, y)
+#+BEGIN_SRC ipython :session dspKS :exports code :results value file :file test1.wav :output-dir sound/ :python python3
+  write('test1.wav', Fs, y)
 #+END_SRC
 
-[[/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test1.wav][Play wave 1]]
+[[./sound/test1.wav][Play wave 1]]
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: wave2
-#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+#+BEGIN_SRC ipython :session dspKS :exports code :results value file :file test2.wav :output-dir sound/ :python python3
 # let's play an octave lower: just double the initial buffer's length
 b = np.random.randn(100)
 y = KS_1(b, Fs * 2)
-write('/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test2.wav', Fs, y)
+write('test2.wav', Fs, y)
 #+END_SRC
 
-[[/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test2.wav][Play wave 2]]
+[[./sound/test2.wav][Play wave 2]]
 
 \vspace{2em}
 - The Block Diagram ::
@@ -155,7 +155,7 @@ assuming that the signal is the finite support signal
 Let's implement the K-S algorithm as a signal processing loop
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: Karplus Strong Algorithm 2
-#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+#+BEGIN_SRC ipython :session dspKS :exports code :results value :python python3
   def KS_2(x, N):
       # length of the input
       M = len(x)
@@ -170,14 +170,14 @@ Let's implement the K-S algorithm as a signal processing loop
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: wave2
-#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+#+BEGIN_SRC ipython :session dspKS :exports code :results value file :file test3.wav :output-dir sound/ :python python3
 # let's play an octave lower: just double the initial buffer's length
 b = np.random.randn(50)
 y = KS_2(b, Fs * 2)
-write('/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test3.wav', Fs, y)
+write('test3.wav', Fs, y)
 #+END_SRC
 
-[[/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test3.wav][Play wave 3]]
+[[./sound/test3.wav][Play wave 3]]
 
 By looking at block diagram we can see a simple modification that adds a lot of realism to
 the sound: by setting 𝛼 to a value close to but less that one, we can introuce a decay in
@@ -193,7 +193,7 @@ the note that produces guitar-like sounds:
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: Karplus Strong Algorithm 2
-#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+#+BEGIN_SRC ipython :session dspKS :exports code :results value :python python3
   def KS_3(x, N, alpha = 0.99):
     M = len(x)
     y = np.zeros(N)
@@ -215,12 +215,12 @@ plt.stem(y[0:2000]);
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: wave4
-#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+#+BEGIN_SRC ipython :session dspKS :exports code :results value file :file test4.wav :output-dir sound/ :python python3
 # let's play an octave lower: just double the initial buffer's length
-write('/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test4.wav', Fs, y)
+write('test4.wav', Fs, y)
 #+END_SRC
 
-[[/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test4.wav][Play wave 4]]
+[[./sound/test4.wav][Play wave 4]]
 
 
 There is just one last detail (the devil's in the details, here as everywhere
@@ -242,27 +242,27 @@ its decay. For instance:
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: wave5
-#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
-write('/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test5.wav', Fs, KS_3(np.random.rand(50), Fs*2))
+#+BEGIN_SRC ipython :session dspKS :exports code :results value file :file test5.wav :output-dir sound/ :python python3
+write('test5.wav', Fs, KS_3(np.random.rand(50), Fs*2))
 #+END_SRC
 
-[[/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test5.wav][Play wave 5]]
+[[./sound/test5.wav][Play wave 5]]
 
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: wave6
-#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
-write('/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test6.wav', Fs, KS_3(np.random.rand(10), Fs*2))
+#+BEGIN_SRC ipython :session dspKS :exports code :results value file :file test5.wav :output-dir sound/ :python python3
+write('test6.wav', Fs, KS_3(np.random.rand(10), Fs*2))
 #+END_SRC
 
-[[/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test5.wav][Play wave 6]]
+[[./sound/test5.wav][Play wave 6]]
 
 This is no good and therefore we need to compensate so that, if \alpha is the same, the
 decay rate is the same. This leads us to the last implementation of the K-S algorithm:
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: Final Implementation of Karplus Strong Algorithm
-#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+#+BEGIN_SRC ipython :session dspKS :exports code :results value :python python3
 def KS(x, N, alpha = 0.99):
     # we will adjust alpha so that all notes have a decay
     #  comparable to that of a buf len of 50 samples
@@ -278,19 +278,19 @@ def KS(x, N, alpha = 0.99):
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: wave7
-#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
-write('/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test7.wav', Fs, KS(np.random.rand(50), Fs*2))
+#+BEGIN_SRC ipython :session dspKS :exports code :results value file :file test7.wav :output-dir sound/ :python python3
+write('test7.wav', Fs, KS(np.random.rand(50), Fs*2))
 #+END_SRC
 
-[[/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test7.wav][Play wave 7]]
+[[./sound/test7.wav][Play wave 7]]
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: wave8
-#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
-write('/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test8.wav', Fs, KS(np.random.rand(10), Fs*2))
+#+BEGIN_SRC ipython :session dspKS :exports code :results value file :file test8.wav :output-dir sound/ :python python3
+write('test8.wav', Fs, KS(np.random.rand(10), Fs*2))
 #+END_SRC
 
-[[/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test8.wav][Play wave 8]]
+[[./sound/test8.wav][Play wave 8]]
 
 ** Playing Music
 
@@ -315,7 +315,7 @@ Paul's D note on the bass a bit longer by changing the corresponding decay facto
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: Playing Music
-#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+#+BEGIN_SRC ipython :session dspKS :exports code :results value :python python3
   def freq(note):
     # general purpose function to convert a note  in standard notation 
     #  to corresponding frequency
@@ -357,7 +357,7 @@ def ks_chord(chord, N, alpha):
 
 #+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: HDN Opening Chord
-#+BEGIN_SRC ipython :session dspKS :exports code :results raw drawer :python python3
+#+BEGIN_SRC ipython :session dspKS :exports code :results value file :file hdn.wav :output-dir sound/ :python python3
   # A Hard Day's Night's chord
 hdn_chord = {
     'D2' : 2.2, 
@@ -370,9 +370,9 @@ hdn_chord = {
     'G5' : 3.5,
 }
 
-# write('/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/test4.wav', Fs, y)
-write('/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/hdn.wav', 2*Fs, ks_chord(hdn_chord, Fs * 4, 0.995))
+# write('test4.wav', Fs, y)
+write('hdn.wav', 2*Fs, ks_chord(hdn_chord, Fs * 4, 0.995))
 #+END_SRC
 
-[[/home/christian/Daten/learning/Digital-Signal-Processing/sp4comm/orgmode/appendix/sound/hdn.wav][A Hard Day's Night openeing chord]]
+[[./sound/hdn.wav][A Hard Day's Night openeing chord]]
 

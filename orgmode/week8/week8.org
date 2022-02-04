@@ -1,8 +1,55 @@
 #+CATEGORY: SP4COMM
 
+#+LATEX_HEADER: \usepackage{enumitem}
+#+LATEX_HEADER: \usepackage[table]{xcolor}
+#+LaTeX_HEADER: \usepackage{tcolorbox}
+
+#+LaTeX_HEADER: \usepackage{pgfplots}
+# #+LaTeX_HEADER: \usepackage{tikz}
+#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
+#+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}
+
+#+LaTeX_HEADER: \usepackage{amsmath}
+#+LaTeX_HEADER: \usepackage{amsxtra}
+#+LATEX_HEADER: \usepackage{mathtools} 
+#+Latex: \everymath{\displaystyle}
+#+Latex: \renewcommand{\arraystretch}{1.2}
+
 #+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
 
 * Week 8 Module 6: 
 ** Digital Communication Systems
+*** Introduction to digital communications
+**** The success factors for digital communications
+1. Power of the DSP paradigmw
+   - integers are easy to *regnerate*
+   - good phase control
+   - adaptive algorithms
+2. Algorithmic nature of DSP is a perfect match with information therory:
+   - Image Coding: JPEG's entropy coding
+   - Encoding of of accustic or video informatiion: CD's and DVD's error
+     correction
+   - Communication Systems: trellis-coded modulation and Vierbi coding
+3. Hardware advancement
+   - minituarization
+   - general-purpose platforms
+   - power efficiency
+     
+**** The analog channel constraints
++ unescapable "limits" of physical channels:
+  - Bandwith
+  - Power
++ Both constraints will affect the final \textcolor{blue}{capacity} of the
+  channel.
++ The maximum amound of information that can be reliably delivered over a
+  channel - bits per second -
++ Bandwidth vs. capacity:
+  - small sampling period $T_s$ $\Rightarrow$ high capacity
+  - but the bandwidth signal grows as $\frac{1}{T_s} \Rightarrow$
+    $ \Omega_N =  \frac{\pi}{T_s}$
+    
+**** The design Problem
+- The all-digital paradigm
+  
 * Week 8 Module 7: 
 ** Image Processing

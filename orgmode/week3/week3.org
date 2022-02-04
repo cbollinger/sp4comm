@@ -59,7 +59,7 @@ is an orthogonal basis in $\mathbb{C}^{N}$.
 - k: is the index that indicates different vectors (signals), k = 0,...,N-1
 - n: is the index that indicates different elements within the vector, n = 0,..,N-1
 - $w_k[n] = e^{j\frac{2\pi}{N}nk}$: Form of the N-Signals
-- $\omega = \frac{2\pi}{N}nk}$ : The index of the signal makes up the *Fundamental
+- $\omega = \frac{2\pi}{N}nk$ : The index of the signal makes up the *Fundamental
   Frequency* of the complex exponential.
 
 *In Vector Notation:*
@@ -82,7 +82,7 @@ is an orthogonal basis in $\mathbb{C}^N$
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}0} = 0
+          \omega = \frac{2\pi}{N}0 = 0
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -126,7 +126,7 @@ is an orthogonal basis in $\mathbb{C}^N$
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}1} = \frac{2\pi}{N}
+          \omega = \frac{2\pi}{N}1 = \frac{2\pi}{N}
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -170,7 +170,7 @@ is an orthogonal basis in $\mathbb{C}^N$
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}2}
+          \omega = \frac{2\pi}{N}2
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -214,7 +214,7 @@ is an orthogonal basis in $\mathbb{C}^N$
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}3}
+          \omega = \frac{2\pi}{N}3
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -258,7 +258,7 @@ is an orthogonal basis in $\mathbb{C}^N$
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}4}
+          \omega = \frac{2\pi}{N}4
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -299,7 +299,7 @@ is an orthogonal basis in $\mathbb{C}^N$
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}5}
+          \omega = \frac{2\pi}{N}5
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -340,7 +340,7 @@ is an orthogonal basis in $\mathbb{C}^N$
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}2} = \frac{\pi}{2}
+          \omega = \frac{2\pi}{N}2 = \frac{\pi}{2}
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -383,7 +383,7 @@ is an orthogonal basis in $\mathbb{C}^N$
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}20}
+          \omega = \frac{2\pi}{N}20
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -423,7 +423,7 @@ is an orthogonal basis in $\mathbb{C}^N$
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}21}
+          \omega = \frac{2\pi}{N}21
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -463,7 +463,7 @@ is an orthogonal basis in $\mathbb{C}^N$
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}30}
+          \omega = \frac{2\pi}{N}30
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -503,7 +503,7 @@ is an orthogonal basis in $\mathbb{C}^N$
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}20}
+          \omega = \frac{2\pi}{N}20
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -544,7 +544,7 @@ The sign alternation is a tell tale sign of a high frequency sinusoid.
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}32} = \frac{2\pi}{64}32} = pi 
+          \omega = \frac{2\pi}{N}32 = \frac{2\pi}{64}32 = pi 
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -585,7 +585,7 @@ At k equal to 32 the highest fundamental frequency is reached.
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}33}
+          \omega = \frac{2\pi}{N}33
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -628,7 +628,7 @@ the directon of the rotation changes from counter clockwise to clockwise.
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}34}
+          \omega = \frac{2\pi}{N}34
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -669,7 +669,7 @@ the directon of the rotation changes from counter clockwise to clockwise.
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}60}
+          \omega = \frac{2\pi}{N}60
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -709,7 +709,7 @@ the directon of the rotation changes from counter clockwise to clockwise.
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}62}
+          \omega = \frac{2\pi}{N}62
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -753,7 +753,7 @@ inversion.
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}63}
+          \omega = \frac{2\pi}{N}63
   \end{equation*}
   \end{tcolorbox}
 #+end_src
@@ -793,7 +793,7 @@ inversion.
 #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
   \begin{equation*}
-          \omega = \frac{2\pi}{N}64}
+          \omega = \frac{2\pi}{N}64
   \end{equation*}
   \end{tcolorbox}
 #+end_src
