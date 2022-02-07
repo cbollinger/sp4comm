@@ -2174,7 +2174,6 @@ sequence contracted by a factor N.
 
        print -dpng "-S800,600" ./image/5_8_upsampling_freq_02.png;
        ans = "./image/5_8_upsampling_freq_02.png";
-  #  ans = length(XU4)
      #+END_SRC
 
      #+results:
