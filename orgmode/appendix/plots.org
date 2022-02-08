@@ -1,4 +1,31 @@
-** DFT Plots
+** Plots
+*** Sqaurewave Fourier Series
+#+begin_src octave :exports results :results file
+  pkg load signal
+    clear all, close all;                          # Size of the sequence
+    t = 0:0.01:10;              # Axis Discrete Time Frequency Domain
+    k = 1:2:32;
+    x3 = zeros(1, length(t));
+    x7 = zeros(1, length(t));
+
+    for nk = k
+      x7 += sin(2*pi*nk/10*t)/nk;
+      if (nk <= 3)
+        x3 += sin(2*pi*nk/10*t)/nk;
+      endif
+    end
+    # Generation of the original Frequency response
+    figure( 1, "visible", "off" )     # Do not open the graphic window in org
+    plot(t, x7, "linewidth", 3, t, x3, "linewidth", 3);
+    set(gca, "fontsize", 20)
+
+    print -dpng "-S800,600" ./image/appx_fourier_series.png;
+    ans = "./image/appx_fourier_series.png";
+#+end_src
+
+#+results:
+[[file:./image/appx_fourier_series.png]]
+
 *** DFT Unit Step
 - [[http://www.phys.nsu.ru/cherk/fft.pdf][FFT Tutorial University Rhode Island]]
 #+ATTR_LATEX: :options bgcolor=gray!10
@@ -325,4 +352,5 @@
     print -dpng "-S600,600" ./image/4_8_but_LP_DSP_Ex.png;
     ans = "./image/4_8_but_LP_DSP_Ex.png";
  #+END_SRC
+
 

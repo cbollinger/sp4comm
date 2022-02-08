@@ -23,3 +23,5 @@
 - [[https://www.allaboutcircuits.com/technical-articles/how-to-use-i-q-signals-to-design-a-robust-fsk-decoder/][How to Use I/Q Signals to Design a Robust FSK Decoder]]
 * Books
 - Flatland: A Romance of Many Dimensions
+- Starting Digital Signal Processing in Telecommunication Engineering
+  A Laboratory-based Course
