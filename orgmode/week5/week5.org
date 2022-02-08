@@ -1,15 +1,22 @@
 #+CATEGORY: SP4COMM W5
 
-#+OPTIONS: H:5
-#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
-#+LaTeX_HEADER: \usepackage{tcolorbox}
-#+LATEX_HEADER: \usepackage{colortbl}
 #+LATEX_HEADER: \usepackage{enumitem}
-#+LaTex_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
-# #+LATEX: \setcounter{secnumdepth}{5}
+#+LATEX_HEADER: \usepackage[table]{xcolor}
+#+LaTeX_HEADER: \usepackage{tcolorbox}
+
+#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
+#+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}
+
+#+LaTeX_HEADER: \usepackage{amsmath}
+#+LaTeX_HEADER: \usepackage{amsxtra}
+#+LATEX_HEADER: \usepackage{mathtools} 
+#+LATEX_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
+
+#+Latex: \newenvironment{gbar}[2]{\def\FrameCommand{{\color{#1}\vrule width 3pt}\colorbox{#2}}\MakeFramed{\advance\hsize-\width\FrameRestore}}{\endMakeFramed}
+#+Latex: \renewcommand{\arraystretch}{1.2}
+#+Latex: \everymath{\displaystyle}
 
 #+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
-
 
 * Week 5 Module 4:
 ** Part 1 Introduction to Filtering

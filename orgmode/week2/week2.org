@@ -1,13 +1,23 @@
 #+CATEGORY: SP4COMM W2:
 
-#+OPTIONS: H:5
-#+LATEX_HEADER: \usepackage[table]{xcolor}
-#+LATEX_HEADER: \definecolor{contiYellow}{RGB}{255,165,0}
-#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
-#+LaTeX_HEADER: \usepackage{tcolorbox}
 #+LATEX_HEADER: \usepackage{enumitem}
-#+LATEX: \setcounter{secnumdepth}{5}
+#+LATEX_HEADER: \usepackage[table]{xcolor}
+#+LaTeX_HEADER: \usepackage{tcolorbox}
+
+#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
+#+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}
+
+#+LaTeX_HEADER: \usepackage{amsmath}
+#+LaTeX_HEADER: \usepackage{amsxtra}
+#+LATEX_HEADER: \usepackage{mathtools}
+#+LATEX_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
+
+#+Latex: \newenvironment{gbar}[2]{\def\FrameCommand{{\color{#1}\vrule width 3pt}\colorbox{#2}}\MakeFramed{\advance\hsize-\width\FrameRestore}}{\endMakeFramed}
+#+Latex: \renewcommand{\arraystretch}{1.2}
+#+Latex: \everymath{\displaystyle}
+
 #+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
+
 * Week 2 Module 2:
 ** Vector Spaces
 #+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Vector Space}
@@ -57,7 +67,7 @@ Measure of similarity between vectors
 
 Not all vector spaces have got a graphical representation. The following table shows the
 graphical representation of vector spaces
-#+ATTR_LATEX: :caption \rowcolors[]{1}{contiYellow!5}{} :center t :align c | c
+#+ATTR_LATEX: :caption \rowcolors[]{1}{yellow!5}{} :center t :align c | c
 | graphical representation | no graphical respresentation |
 | $\mathbb{R}^2$           | $\mathbb{C}^N$ for N>1       |
 | $\mathbb{R}^3$           | $\mathbb{R}^N$ for N>3       |

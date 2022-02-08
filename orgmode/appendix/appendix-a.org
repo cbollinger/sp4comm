@@ -1,3 +1,23 @@
+#+CATEGORY: SP4COMM APPENDIX_A
+
+#+LATEX_HEADER: \usepackage{enumitem}
+#+LATEX_HEADER: \usepackage[table]{xcolor}
+#+LaTeX_HEADER: \usepackage{tcolorbox}
+
+#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
+#+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}
+
+#+LaTeX_HEADER: \usepackage{amsmath}
+#+LaTeX_HEADER: \usepackage{amsxtra}
+#+LATEX_HEADER: \usepackage{mathtools} 
+#+LATEX_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
+
+#+Latex: \newenvironment{gbar}[2]{\def\FrameCommand{{\color{#1}\vrule width 3pt}\colorbox{#2}}\MakeFramed{\advance\hsize-\width\FrameRestore}}{\endMakeFramed}
+#+Latex: \renewcommand{\arraystretch}{1.2}
+#+Latex: \everymath{\displaystyle}
+
+#+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
+
 * Links 
 - [[https://www.drmprsk.com/digitalsignalprocessing/][DSP Professor Murugan Pallikonda Rajasekaran]]
 - [[https://greatscottgadgets.com/sdr/][Software Defined Radio with HackRF]]
