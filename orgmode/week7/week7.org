@@ -1988,7 +1988,6 @@ The quantiziser associates each quantization interval to its midpoint.
 [[http://home.etf.rs/~milic/book_MR.html][Book: Multirate Filtering for Digital Signal Processing Matlab Applications]]
 ***** Upsampling
 
-
 #+begin_src latex
   \begin{equation*}
     x_{NU}[n] = \left\{
@@ -2049,22 +2048,18 @@ by captial N minus 1 samples.
  #+results:
  [[file:./image/5_8_upsampling_01.png]]
 
-
-****** Spectral Representation
-
-
-#+begin_src latex
+- Spectral Representation
+   #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Spectral Representation]
   \begin{equation*}
     X_{NU}(e^{j\omega}) = X(e^{j\omega N})
   \end{equation*}
   \end{tcolorbox}
 #+end_src
+  The spectrum of the upsampled sequence is equal to the spectrum of the
+  original sequence contracted by a factor N.
 
-The spectrum of the upsampled sequence is equal to the spectrum of the original
-sequence contracted by a factor N.
-
-#+BEGIN_SRC octave :exports results :results file
+  #+BEGIN_SRC octave :exports results :results file
    pkg load signal
 
    clear all, close all;
@@ -2125,13 +2120,8 @@ sequence contracted by a factor N.
  #+results:
  [[file:./image/5_8_upsampling_freq_01.png]]
 
-
- 
- 
-
-****** Non fullband spectrum
-
-#+BEGIN_SRC octave :exports results :results file
+- Non fullband spectrum
+  #+BEGIN_SRC octave :exports results :results file
          pkg load signal
 
          clear all, close all;
@@ -2220,7 +2210,6 @@ Every $N - 1$ input sample is discareded resp. only every N-th sample is used.
 #+ATTR_LATEX: :width 5cm
 [[./drawing/w7_downsampler.png]]
 
-
 #+BEGIN_SRC octave :exports results :results file
   pkg load signal
 
@@ -2254,24 +2243,22 @@ Every $N - 1$ input sample is discareded resp. only every N-th sample is used.
  #+END_SRC
 
  #+results:
- [[file:./image/5_8_downsampling_01.png]
+ [[file:./image/5_8_downsampling_01.png]]
 
-****** Spectral Representation
-
-#+begin_src latex
+- Spectral Representation
+  #+begin_src latex
   \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Spectral Representation]
   \begin{equation*}
     X_{ND}(e^{j\omega}) = \frac{1}{N} \sum_{m=0}^{N-1} X(e^{j\frac{\omega - 2\pi m}{N}})
   \end{equation*}
   \end{tcolorbox}
-#+end_src
+  #+end_src
 
-There's 1/N normalization factor in front, that multiplies the sum of capital N
-copies of the original spectrum, where each copy has been shifted by a multiple
-of 2 pi/N, and where the frequency axis has been stretched out by a factor of
-capital N.  So the interval -pi/N, pi/N becomes the interval -pi, pi.
-
-
+  There's 1/N normalization factor in front, that multiplies the sum of capital
+  Ncopies of the original spectrum, where each copy has been shifted by a
+  multiple of 2 pi/N, and where the frequency axis has been stretched out by a
+  factor of capital N.  So the interval -pi/N, pi/N becomes the interval -pi,
+  pi.
 #+BEGIN_SRC octave :exports results :results file
         pkg load signal
 
@@ -2328,11 +2315,8 @@ capital N.  So the interval -pi/N, pi/N becomes the interval -pi, pi.
      #+results:
      [[file:./image/5_8_downsampling_freq_02.png]]
 
-
-
-****** Downsampling by 2 with aliasing
-
-#+BEGIN_SRC octave :exports results :results file
+- Downsampling by 2 with aliasing
+  #+BEGIN_SRC octave :exports results :results file
     pkg load signal
 
     clear all, close all;
@@ -2387,9 +2371,8 @@ capital N.  So the interval -pi/N, pi/N becomes the interval -pi, pi.
      #+results:
      [[file:./image/5_8_downsampling_freq_alias-01.png]]
 
-****** Downsampling by 2 with antialiasing filter
-
-     #+BEGIN_SRC octave :exports results :results file
+- Downsampling by 2 with antialiasing filter
+  #+BEGIN_SRC octave :exports results :results file
          pkg load signal
 
          clear all, close all;
@@ -2450,6 +2433,7 @@ capital N.  So the interval -pi/N, pi/N becomes the interval -pi, pi.
      To avoid alisasing we have to filter the input sequence with a low-pass
      filter with cutoff frequency $\pi/N$, where N is the downsampling factor that will follow.
      
+
 ***** Sampling Rate Change
 
 Downsampling and upsampling change the implicit sampling rate by integer
