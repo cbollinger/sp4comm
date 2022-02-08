@@ -13,7 +13,7 @@
 #+LATEX_HEADER: \usepackage{mathtools} 
 #+LATEX_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
 
-#+Latex: \newenvironment{gbar}[2]{\def\FrameCommand{{\color{#1}\vrule width 3pt}\colorbox{#2}}\MakeFramed{\advance\hsize-\width\FrameRestore}}{\endMakeFramed}
+# +Latex: \newenvironment{gbar}[2]{\def\FrameCommand{{\color{#1}\vrule width 3pt}\colorbox{#2}}\MakeFramed{\advance\hsize-\width\FrameRestore}}{\endMakeFramed}
 #+Latex: \renewcommand{\arraystretch}{1.2}
 #+Latex: \everymath{\displaystyle}
 

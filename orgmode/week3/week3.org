@@ -12,7 +12,7 @@
 #+LATEX_HEADER: \usepackage{mathtools} 
 #+LATEX_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
 
-#+Latex: \newenvironment{gbar}[2]{\def\FrameCommand{{\color{#1}\vrule width 3pt}\colorbox{#2}}\MakeFramed{\advance\hsize-\width\FrameRestore}}{\endMakeFramed}
+# +Latex: \newenvironment{gbar}[2]{\def\FrameCommand{{\color{#1}\vrule width 3pt}\colorbox{#2}}\MakeFramed{\advance\hsize-\width\FrameRestore}}{\endMakeFramed}
 #+Latex: \renewcommand{\arraystretch}{1.2}
 #+Latex: \everymath{\displaystyle}
 
@@ -90,18 +90,8 @@ with
 
 is an orthogonal basis in $\mathbb{C}^N$
 
-****** Basis vector $\textbf{w}^{(0)} \in \mathbb{C}^{64}$
-
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}0 = 0
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-
-#+BEGIN_SRC octave :exports results :results file
+- Basis vector $\textbf{w}^{(0)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}0 = 0$
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
   k = 0
@@ -131,21 +121,8 @@ is an orthogonal basis in $\mathbb{C}^N$
   ans = "./image/w3_w0.png";
 #+END_SRC
 
-#+results:
-[[file:./image/w3_w0.png]]
-
-****** Basis vector $\textbf{w}^{(1)} \in \mathbb{C}^{64}$
-
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}1 = \frac{2\pi}{N}
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-
-#+BEGIN_SRC octave :exports results :results file
+- Basis vector $\textbf{w}^{(1)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}1 = \frac{2\pi}{N}$
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
   k = 1;
@@ -175,21 +152,8 @@ is an orthogonal basis in $\mathbb{C}^N$
   ans = "./image/w3_w1.png";
 #+END_SRC
 
-#+results:
-[[file:./image/w3_w1.png]]
-
-****** Basis vector $\textbf{w}^{(2)} \in \mathbb{C}^{64}$
-
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}2
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-
-#+BEGIN_SRC octave :exports results :results file
+- Basis vector $\textbf{w}^{(2)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}2$
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
   k = 2;
@@ -219,21 +183,9 @@ is an orthogonal basis in $\mathbb{C}^N$
   ans = "./image/w3_w2.png";
 #+END_SRC
 
-#+results:
-[[file:./image/w3_w2.png]]
 
-****** Basis vector $\textbf{w}^{(3)} \in \mathbb{C}^{64}$
-
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}3
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-
-#+BEGIN_SRC octave :exports results :results file
+- Basis vector $\textbf{w}^{(3)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}3$
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
   k = 3;
@@ -263,21 +215,8 @@ is an orthogonal basis in $\mathbb{C}^N$
   ans = "./image/w3_w3.png";
 #+END_SRC
 
-#+results:
-[[file:./image/w3_w3.png]]
-
-****** Basis vector $\textbf{w}^{(4)} \in \mathbb{C}^{64}$
-
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}4
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-
-#+BEGIN_SRC octave :exports results :results file
+- Basis vector $\textbf{w}^{(4)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}4$
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
   k = 4;
@@ -307,18 +246,8 @@ is an orthogonal basis in $\mathbb{C}^N$
   ans = "./image/w3_w4.png";
 #+END_SRC
 
-****** Basis vector $\textbf{w}^{(5)} \in \mathbb{C}^{64}$
-
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}5
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-
-#+BEGIN_SRC octave :exports results :results file
+- Basis vector $\textbf{w}^{(5)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}5$
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
   k = 5;
@@ -348,17 +277,8 @@ is an orthogonal basis in $\mathbb{C}^N$
   ans = "./image/w3_w5.png";
 #+END_SRC
 
-****** Basis vector $\textbf{w}^{(16)} \in \mathbb{C}^{64}$
-
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}2 = \frac{\pi}{2}
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-#+BEGIN_SRC octave :exports results :results file
+- Basis vector $\textbf{w}^{(16)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}2 = \frac{\pi}{2}$
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
   k = 16;
@@ -388,20 +308,9 @@ is an orthogonal basis in $\mathbb{C}^N$
   ans = "./image/w3_w16.png";
 #+END_SRC
 
-#+results:
-[[file:./image/w3_w16.png]]
 
-****** Basis vector $\textbf{w}^{(20)} \in \mathbb{C}^{64}$
-
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}20
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-#+BEGIN_SRC octave :exports results :results file
+- Basis vector $\textbf{w}^{(20)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}20$
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
   k = 20;
@@ -431,17 +340,8 @@ is an orthogonal basis in $\mathbb{C}^N$
   ans = "./image/w3_w20.png";
 #+END_SRC
 
-****** Basis vector $\textbf{w}^{(21)} \in \mathbb{C}^{64}$
-
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}21
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-#+BEGIN_SRC octave :exports results :results file
+- Basis vector $\textbf{w}^{(21)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}21$
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
   k = 21;
@@ -471,17 +371,8 @@ is an orthogonal basis in $\mathbb{C}^N$
   ans = "./image/w3_w21.png";
 #+END_SRC
 
-****** Basis vector $\textbf{w}^{(30)} \in \mathbb{C}^{64}$
-
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}30
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-#+BEGIN_SRC octave :exports results :results file
+- Basis vector $\textbf{w}^{(30)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}30$
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
   k = 30;
@@ -511,21 +402,13 @@ is an orthogonal basis in $\mathbb{C}^N$
   ans = "./image/w3_w30.png";
 #+END_SRC
 
-****** Basis vector $\textbf{w}^{(31)} \in \mathbb{C}^{64}$
+- Basis vector $\textbf{w}^{(31)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}31$
 
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}20
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-The sign alternation is a tell tale sign of a high frequency sinusoid.
-#+BEGIN_SRC octave :exports results :results file
+  The sign alternation is a tell tale sign of a high frequency sinusoid.
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
-  k = 20;
+  k = 31;
   w = exp(j*(2*pi/N)*n*k)
 
   figure( 1, "visible", "off" )               # Do not open the graphic window in org
@@ -537,7 +420,7 @@ The sign alternation is a tell tale sign of a high frequency sinusoid.
   xlabel("Samples")
   ylabel("Re")
   set(gca, "fontsize", 24);
-  title("Basis vector w^{(20)} \in C^{64}")
+  title("Basis vector w^{(31)} \in C^{64}")
   
   subplot(2,1,2);
   stem(n, imag(w), "filled", "linewidth", 2, "markersize", 6);
@@ -548,22 +431,14 @@ The sign alternation is a tell tale sign of a high frequency sinusoid.
   set(gca, "fontsize", 24);
 
                                   # Org-Mode specific setting
-  print -dpng "-S800,400" ./image/w3_w20.png;
-  ans = "./image/w3_w20.png";
+  print -dpng "-S800,400" ./image/w3_w31.png;
+  ans = "./image/w3_w31.png";
 #+END_SRC
 
-****** Basis vector $\textbf{w}^{(32)} \in \mathbb{C}^{64}$
+- Basis vector $\textbf{w}^{(32)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}32 = \frac{2\pi}{64}32 = pi $
 
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}32 = \frac{2\pi}{64}32 = pi 
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-At k equal to 32 the highest fundamental frequency is reached.
-#+BEGIN_SRC octave :exports results :results file
+  At k equal to 32 the highest fundamental frequency is reached.
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
   k = 32;
@@ -593,20 +468,11 @@ At k equal to 32 the highest fundamental frequency is reached.
   ans = "./image/w3_w32.png";
 #+END_SRC
 
-****** Basis vector $\textbf{w}^{(33)} \in \mathbb{C}^{64}$
+- Basis vector $\textbf{w}^{(33)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}33$
 
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}33
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-If we go forward with the index the apparent speed of the point decreases and
-the directon of the rotation changes from counter clockwise to clockwise.
-
-#+BEGIN_SRC octave :exports results :results file
+  If we go forward with the index the apparent speed of the point decreases and
+  the directon of the rotation changes from counter clockwise to clockwise.
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
   k = 33;
@@ -636,17 +502,8 @@ the directon of the rotation changes from counter clockwise to clockwise.
   ans = "./image/w3_w33.png";
 #+END_SRC
 
-****** Basis vector $\textbf{w}^{(34)} \in \mathbb{C}^{64}$
-
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}34
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-#+BEGIN_SRC octave :exports results :results file
+- Basis vector $\textbf{w}^{(34)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}34$
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
   k = 34;
@@ -677,17 +534,8 @@ the directon of the rotation changes from counter clockwise to clockwise.
 #+END_SRC
 
 
-****** Basis vector $\textbf{w}^{(60)} \in \mathbb{C}^{64}$
-
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}60
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-#+BEGIN_SRC octave :exports results :results file
+- Basis vector $\textbf{w}^{(60)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}60$
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
   k = 60;
@@ -717,21 +565,12 @@ the directon of the rotation changes from counter clockwise to clockwise.
   ans = "./image/w3_w60.png";
 #+END_SRC
 
-****** Basis vector $\textbf{w}^{(62)} \in \mathbb{C}^{64}$
+- Basis vector $\textbf{w}^{(62)} \in \mathbb{C}^{64}: \omega =\frac{2\pi}{N}62$
 
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}62
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-So here, for instance, if you compare this basis vector to $\textbf{w}^{(2)}$,
-you would see that the real part is the same, but the imaginary part has a sign
-inversion.
-
-#+BEGIN_SRC octave :exports results :results file
+  So here, for instance, if you compare this basis vector to $\textbf{w}^{(2)}$,
+  you would see that the real part is the same, but the imaginary part has a
+  sign inversion.
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
   k = 62;
@@ -761,17 +600,8 @@ inversion.
   ans = "./image/w3_w62.png";
 #+END_SRC
 
-****** Basis vector $\textbf{w}^{(63)} \in \mathbb{C}^{64}$
-
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}63
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
-#+BEGIN_SRC octave :exports results :results file
+- Basis vector $\textbf{w}^{(63)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}63$
+  #+BEGIN_SRC octave :exports results :results file
   N=63;
   n=0:N-1;
   k = 63;
@@ -801,18 +631,8 @@ inversion.
   ans = "./image/w3_w63.png";
 #+END_SRC
 
-****** Basis vector $\textbf{w}^{(64)} \in \mathbb{C}^{64}$
-
-#+begin_src latex
-  \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Fundamental Frequency]
-  \begin{equation*}
-          \omega = \frac{2\pi}{N}64
-  \end{equation*}
-  \end{tcolorbox}
-#+end_src
-
- 
-#+BEGIN_SRC octave :exports results :results file
+- Basis vector $\textbf{w}^{(64)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}64$
+  #+BEGIN_SRC octave :exports results :results file
   N=64;
   n=0:N-1;
   k = 64;
@@ -842,7 +662,6 @@ inversion.
   ans = "./image/w3_w64.png";
 #+END_SRC
 
-
 *** The Discrete Fourier Transform (DFT)
 **** DFT definition
 ***** The Fourier Basis for $\mathbb{C}^{N}$ in "Signal" Notation
@@ -855,6 +674,7 @@ inversion.
   \end{tcolorbox}
 #+END_SRC
 ***** The Fourier Basis in Vector Notation
+
 #+BEGIN_SRC latex
   \begin{tcolorbox}
     \begin{equation}

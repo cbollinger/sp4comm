@@ -13,7 +13,7 @@
 #+LATEX_HEADER: \usepackage{mathtools} 
 #+Latex: \everymath{\displaystyle}
 
-#+LaTex_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
+# +LaTex_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
 #+LATEX_HEADER: \newenvironment{gbar}[2]{\def\FrameCommand{{\color{#1}\vrule width 3pt}\colorbox{#2}}\MakeFramed{\advance\hsize-\width\FrameRestore}}{\endMakeFramed}
 #+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
 
