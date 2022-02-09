@@ -1270,8 +1270,7 @@ Filterdesign was established art long before digital processing appeared
 
 ***** Butterworth lowpass
 
-#+LATEX: \rowcolors[]{1}{yellow!5}{}
-#+ATTR_LATEX: :placement [h] :align  p{4cm}  p{4cm} p{4cm}
+#+ATTR_LATEX: :caption \rowcolors[]{1}{yellow!5}{} :placement [h] :align  p{4cm}  p{4cm} p{4cm}
 #+CAPTION: Butterworth lowpass
 | <20>                                                              | <20>                                        | <20>                                  |
 |-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
@@ -1363,8 +1362,7 @@ Filterdesign was established art long before digital processing appeared
 
 ***** Chebyshev lowpass
 
-#+LATEX: \rowcolors[]{1}{yellow!5}{}
-#+ATTR_LATEX: :placement [h] :align  p{4cm} p{4cm} p{4cm}
+#+ATTR_LATEX: :caption \rowcolors[]{1}{yellow!5}{} :placement [h] :align  p{4cm} p{4cm} p{4cm}
 #+CAPTION: Chebyshev lowpass
 | <20>                                                              | <20>                                        | <20>                                  |
 |-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
@@ -1459,8 +1457,7 @@ Filterdesign was established art long before digital processing appeared
  
 ***** Elliptic Lowpass
 
-#+LATEX: \rowcolors[]{1}{yellow!5}{}
-#+ATTR_LATEX: :placement [h] :align  p{4cm}  p{4cm} p{4cm}
+#+ATTR_LATEX: :caption \rowcolors[]{1}{yellow!5}{} :placement [h] :align  p{4cm}  p{4cm} p{4cm}
 #+CAPTION: Elliptic Lowpass
 | <20>                                                              | <20>                                        | <20>                                  |
 |-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
@@ -1621,8 +1618,8 @@ fall in between samples. And so they both introduce a non integer linear phase f
 one half sample.
 
 **** The Park McMellon Design Algorithm
-#+LATEX: \rowcolors[]{1}{yellow!5}{}
-#+ATTR_LATEX: :placement [h] :align  p{4cm}  p{4cm} p{4cm}
+
+#+ATTR_LATEX: :caption \rowcolors[]{1}{yellow!5}{} :placement [h] :align  p{4cm}  p{4cm} p{4cm}
 #+CAPTION: Park McMellon 
 | <20>                                                              | <20>                                                           | <20>                                  |
 |-------------------------------------------------------------------+----------------------------------------------------------------+---------------------------------------|
@@ -1904,7 +1901,7 @@ delay cells together.
   - process the value in a casual filter
   - play the output $x_o[n]$
 
-#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{}
+#+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Real Time Processing}
 #+BEGIN_bclogo
 Everything needs to happen in at most $T_s$ seconds!
 #+END_bclogo

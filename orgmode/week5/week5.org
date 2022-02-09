@@ -622,9 +622,6 @@ To understand the effects of the phase on a signal is to distinguihs three diffe
     ans = "./image/zero_phase.png";
 #+END_SRC
 
-#+results:
-[[file:./image/zero_phase.png]]
-
 - linear phase: the phase is proportional to the frequency via a real factor, d:
   $\angle{H(e^{jw})} = d\omega$
   the phase is proportional to the frequency of the sinusoid. The net effect is a shift of

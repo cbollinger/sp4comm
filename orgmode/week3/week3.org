@@ -183,7 +183,6 @@ is an orthogonal basis in $\mathbb{C}^N$
   ans = "./image/w3_w2.png";
 #+END_SRC
 
-
 - Basis vector $\textbf{w}^{(3)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}3$
   #+BEGIN_SRC octave :exports results :results file
   N=64;
@@ -435,7 +434,7 @@ is an orthogonal basis in $\mathbb{C}^N$
   ans = "./image/w3_w31.png";
 #+END_SRC
 
-- Basis vector $\textbf{w}^{(32)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}32 = \frac{2\pi}{64}32 = pi $
+- Basis vector $\textbf{w}^{(32)} \in \mathbb{C}^{64}: \omega = \frac{2\pi}{N}32 = \frac{2\pi}{64}32 = \pi$
 
   At k equal to 32 the highest fundamental frequency is reached.
   #+BEGIN_SRC octave :exports results :results file
@@ -567,7 +566,7 @@ is an orthogonal basis in $\mathbb{C}^N$
 
 - Basis vector $\textbf{w}^{(62)} \in \mathbb{C}^{64}: \omega =\frac{2\pi}{N}62$
 
-  So here, for instance, if you compare this basis vector to $\textbf{w}^{(2)}$,
+  So here, for instance, if you compare this basis vector to $\textbf{w}^{(2)}$ ,
   you would see that the real part is the same, but the imaginary part has a
   sign inversion.
   #+BEGIN_SRC octave :exports results :results file

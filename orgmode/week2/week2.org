@@ -67,6 +67,7 @@ Measure of similarity between vectors
 
 Not all vector spaces have got a graphical representation. The following table shows the
 graphical representation of vector spaces
+
 #+ATTR_LATEX: :caption \rowcolors[]{1}{yellow!5}{} :center t :align c | c
 | graphical representation | no graphical respresentation |
 | $\mathbb{R}^2$           | $\mathbb{C}^N$ for N>1       |

@@ -82,8 +82,7 @@ class, the continuous-time Fourier transform.
 
 Two views of the world
 
-#+LATEX: \rowcolors[]{1}{yellow!5}{}
-#+ATTR_LATEX: font \footnotesize :placement [ht] :align  p{5cm}  p{5cm} 
+#+ATTR_LATEX: :caption \rowcolors[]{1}{yellow!5}{} :placement [ht] :align  p{5cm}  p{5cm} 
 #+CAPTION: Two views of the world 1
 | <40>                                                         | <40>                                   |
 |--------------------------------------------------------------+----------------------------------------|
@@ -95,8 +94,7 @@ Two views of the world
 |--------------------------------------------------------------+----------------------------------------|
 
 
-#+LATEX: \rowcolors[]{1}{yellow!5}{}
-#+ATTR_LATEX: font \footnotesize :placement [ht] :align  p{5cm}  p{5cm} 
+#+ATTR_LATEX: :caption \rowcolors[]{1}{yellow!5}{} :placement [ht] :align  p{5cm}  p{5cm} 
 #+CAPTION: Two views of the world 2
 | <40>                                                         | <40>                                              |
 |--------------------------------------------------------------+---------------------------------------------------|
@@ -764,8 +762,7 @@ The continous-time complex exponential
 - $FT \left\{e^{j \Omega_0 t} \right\} = 2\pi\delta(\Omega - \Omega_0)$
 - bandlimited to $\Omega_0$
 
-#+LATEX: \rowcolors[]{1}{yellow!5}{}
-#+ATTR_LATEX: :placement [ht] :align  p{4cm} p{4cm} p{4cm}
+#+ATTR_LATEX: :caption \rowcolors[]{1}{yellow!5}{} :placement [ht] :align  p{4cm} p{4cm} p{4cm}
 #+CAPTION: Aliasing
 | <20>                                                           | <20>                                        | <20>                                                       |
 |----------------------------------------------------------------+---------------------------------------------+------------------------------------------------------------|
