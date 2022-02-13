@@ -591,5 +591,39 @@ relieved symbol.
 #+end_src
 
 
+**** Summery
+In our communication system design problem, we introduced a mapper. We did not
+say much about this operation so far. We only said that this block maps the
+scrambled input into a sequence of symbols belonging to a certain alphabet. In
+this lesson, we have explored in greater details this operation and how it is
+related to the problem of satisfying the power constraints.
+
+The sequence received at the receiver inevitably contains some form of
+noise. For each symbol, if the noise level is high, the receiver wrongly
+interpret the symbol for another one in the alphabet. It makes a decoding
+error. The probability of decoding error depends on three factors
+
+    the signal-to-noise ratio, i.e., the power of the signal with respect to the
+    power of the noise, SNR is expressed in dB. Through SNR, the power
+    constraints of the channel enters in the design problem and we cannot
+    operate at an arbitrarily high SNR
+
+    the decoding strategy, i.e., how smart we are at circumventing the effect of
+    noise
+
+    the choice of alphabet. If we increase the size of the alphabet, we can
+    transmit more information per symbol but symbols are closer in the alphabet
+    and the probability of error increases.
+
+We have also studied two encoding schemes, pulse amplitude modulation (PAM) and
+quadrature amplitude modulation (QAM) and analyzed their probability of
+error. In the case of QAM, the choice of constellation size MMM can be picked as
+to match a desired probability of error and SNR imposed by the channel
+constraints. The final throughput of the system is MWMWMW. Our analysis of QAM
+is based on the assumption that we transmit complex numbers over a real
+channel. How to do this in practice is the topic of the next lesson.
+
+
+
 * Week 8 Module 7: 
 ** Image Processing
