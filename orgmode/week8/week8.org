@@ -808,8 +808,35 @@ low passing the sequence with a filter with cutoff frequency pi over K.
 - the gap can be narrowed by more advanced coding techniques
 
 *** Receiver Design
+- What is goining on by the sound made by a V.34 modem, while connecting to the
+  internet?
+- ToDo Draw the receiver concept
+- Receiver has to cope with four potential sources of problem:
+  - interference $\Rightarrow$ \textcolor{blue}{handshake and line porbing}
+  - propagation delay $\Rightarrow$ \textcolor{blue}{delay estimation procedure}
+  - linear distortion $\Rightarrow$ \textcolor{blue}{adaptive equalization techniques}
+  - clock dirfts $\Rightarrow$ \textcolor{blue}{timing recovery}
+- The 2 main problems
+  - ToDo draw the chain of events
+  - channel distortion D(j\Omega)
+  - (time-varying) discrepancies in clocks T'_s = T_s
+**** Delay Compensation
 
+Assume the channel is a simple delay: $\hat{s}$ = s(t-d) = D(j\Omega) = e^{j\Omega d}
+- channel introduces a delay of d seconds
+- we can write d = (b + \tau) T_s with b $\in \mathbb{N}$ and |\tau| < 1/2
+- b is called the bulk delay
+- \tau is the fractional delay
 
+- Estimate Fractional Delay ::
+
+- Compute Lagrange Coefficients :: 
+  
+Compensation steps:
+1. Estimate the fractional delay
+2. Compute the Lagrange coefficients
+3. Filter with FIR filter
+**** Adaptive Equalization
 *** ADSL
 
 *** Notes and Suplementatry materials
