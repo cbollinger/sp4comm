@@ -732,7 +732,7 @@ DEADLINE: <2021-06-20 So>
  
 ****** Impulse response
 #+NAME: 4_8_lki_impulse_response
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
     pkg load signal;
     lambda = 0.8;
     b = [1];
@@ -752,7 +752,7 @@ DEADLINE: <2021-06-20 So>
 
 ****** Frequency Response
 #+NAME: 4_8_lki_frequency_response
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
     pkg load signal;
     w = -pi:pi/500:pi;
     lambda = 0.9;
@@ -815,7 +815,7 @@ The coeffience to be used in the CCDE
   conjugate pole at an angle that is $-\omega_0$.
 
 #+NAME: 4_8_resonator_pole-zero-plot
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
   pkg load signal;
   G0 = 1;
   w0 = pi/3;
@@ -839,7 +839,7 @@ The coeffience to be used in the CCDE
 
 ****** Impulse response
 #+NAME: 4_8_resonator_impulse_response
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
     pkg load signal;
     N = 101
     G0 = 1;
@@ -861,7 +861,7 @@ The coeffience to be used in the CCDE
 
 ****** Frequency Response
 #+NAME: 4_8_resonator_frequency_response
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
     pkg load signal;
     w = -pi:pi/500:pi;
     G0 = 1;
@@ -921,7 +921,7 @@ The coeffience to be used in the CCDE
 ****** Pole-Zero Plot
 - Simply place a zero at $ z = 1$
 #+NAME: 4_8_dc-removal_pole-zero-plot
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
   pkg load signal;
   b = [1 -1];
   a = [1];
@@ -942,7 +942,7 @@ The coeffience to be used in the CCDE
 
 ****** Impulse response
 #+NAME: 4_8_dc-removal_impulse_response
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
     pkg load signal;
     N = 101
     b = [1 -1];
@@ -961,7 +961,7 @@ The coeffience to be used in the CCDE
 
 ****** Frequency response
 #+NAME: 4_8_dc-removal_frequency_response
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
   pkg load signal;
   w = -pi:pi/500:pi;
   N = 101
@@ -1016,7 +1016,7 @@ almost the entety of the frequency support.
   therefore, the effect of a 0 and 1 with the effect of a pole close to one, and inside
   the unit circle, for obvious reasons of stability.
 #+NAME: 4_8_notch_pole-zero-plot
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
   pkg load signal;
   lambda = 0.9
   b = [1 -1];
@@ -1038,7 +1038,7 @@ almost the entety of the frequency support.
 
 ****** Impulse response
 #+NAME: 4_8_notch_impulse_response
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
     pkg load signal;
     N = 101
     lambda = 0.9
@@ -1058,7 +1058,7 @@ almost the entety of the frequency support.
 
 ****** Frequency Response
 #+NAME: 4_8_notch_frequency_response
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
     pkg load signal;
     w = -pi:pi/500:pi;
     N = 101
@@ -1134,7 +1134,7 @@ The coeffience to be used in the CCDE
   therefore, the effect of a 0 and 1 with the effect of a pole close to one, and inside
   the unit circle, for obvious reasons of stability.
 #+NAME: 4_8_hum-removal_pole-zero-plot
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
   pkg load signal;
   lambda = 0.9
   omega =pi/3;
@@ -1157,7 +1157,7 @@ The coeffience to be used in the CCDE
  
 ****** Impulse response
 #+NAME: 4_8_hum-removal_impulse_response
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
   pkg load signal;
   N = 101
   lambda = 0.9
@@ -1178,7 +1178,7 @@ The coeffience to be used in the CCDE
 
 ****** Frequency Response
 #+NAME: 4_8_hum-removal_frequency_response
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
   pkg load signal;
   w = -pi:pi/500:pi;
   N = 101
@@ -1221,7 +1221,7 @@ lambda = 0.9
 - Freqz :: The frequency response can be plotted most easily using freqz() function.
 
 #+NAME: ma z-transform frequency response
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
   w = -pi:pi/500:pi;
   M = 10;
   H = freqz(ones(1,M)/M,1,w);
@@ -1281,8 +1281,9 @@ Filterdesign was established art long before digital processing appeared
 #+TBLFM: 
 
 ****** Pole-Zero Plot
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: 4_9_butterworth_pole-zero-plot
- #+BEGIN_SRC octave :exports results :results file
+ #+BEGIN_SRC octave :exports both :results file
   pkg load signal;
   wc = 1/3
   order = 5;  % Filter order
@@ -1304,8 +1305,9 @@ Filterdesign was established art long before digital processing appeared
  [[file:./image/4_9_butterworth_pole-zero-plot.png]]
 
 ****** Impulse Response
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: 4_9_butterworth_impulse_response
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
   pkg load signal;
   wc = 1/3
   order = 5;  % Filter order
@@ -1325,8 +1327,9 @@ Filterdesign was established art long before digital processing appeared
  [[file:./image/4_9_butterworth_impulse_response.png]]
 
 ****** Frequency Response
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: 4_9_butterworth_LP_
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
   pkg load signal
   w = -pi:pi/500:pi;
   wc = 1/3
@@ -1373,8 +1376,9 @@ Filterdesign was established art long before digital processing appeared
 |-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
 
 ****** Pole-Zero Plot
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: 4_9_chebyshev_pole-zero-plot
- #+BEGIN_SRC octave :exports results :results file
+ #+BEGIN_SRC octave :exports both :results file
   pkg load signal;
   wc = 1/3;                         % 0.5 pi
   rp = 1;                           % 1db passband ripple
@@ -1397,8 +1401,9 @@ Filterdesign was established art long before digital processing appeared
  [[file:./image/4_9_chebyshev_pole-zero-plot.png]]
 
 ****** Impulse Response
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: 4_9_chebyshev_impulse_response
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
   pkg load signal;
   wc = 1/3;                         % 0.5 pi
   rp = 1;                           % 1db passband ripple
@@ -1418,8 +1423,9 @@ Filterdesign was established art long before digital processing appeared
  #+results: 4_9_chebyshev_impulse_response
 
 ****** Frequency Response
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: 4_9_chebyshev_LP_
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
   pkg load signal
   w = -pi:pi/500:pi;
   wc = 1/3;                         % 0.5 pi
@@ -1469,8 +1475,9 @@ Filterdesign was established art long before digital processing appeared
 |-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
 
 ****** Pole-Zero Plot
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: 4_9_elliptic_pole-zero-plot
- #+BEGIN_SRC octave :exports results :results file
+ #+BEGIN_SRC octave :exports both :results file
   pkg load signal;
   wc = 1/3;                         % 0.5 pi
   rp = 1;                           % 1db passband ripple
@@ -1491,10 +1498,11 @@ Filterdesign was established art long before digital processing appeared
  #+ATTR_LATEX: :width 6cm
  #+results: 4_9_elliptic_pole-zero-plot
  [[file:./image/4_9_elliptic_pole-zero-plot.png]]
-
+ 
 ****** Impulse Response
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: 4_9_elliptic_impulse_response
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
   pkg load signal;
   wc = 1/3;                         % 0.5 pi
   rp = 1;                           % 1db passband ripple
@@ -1516,8 +1524,9 @@ Filterdesign was established art long before digital processing appeared
  [[file:./image/4_9_elliptic_impulse_response.png]]
 
 ****** Frequency Response
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: 4_9_elliptic_LP_
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
     pkg load signal
     w = -pi:pi/500:pi;
     wc = 1/3;                         % 0.5 pi
@@ -1562,8 +1571,9 @@ algorithm proceeds by *minimizing* the maximum error in passpand and stopband
 ****** Linear Phase
 Linear phase derives from a symmetric or antisymmetric impulse respones
 
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: 4_9_fir_linear_phase
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
      N = 5;
      n1 =-(N-1)/2;
      n2 = (N-1)/2;
@@ -1630,8 +1640,9 @@ one half sample.
 |                                                                   | ratio of passband to stopband error $\frac{\delta_p}{delta_s}$ |                                       |
 |-------------------------------------------------------------------+----------------------------------------------------------------+---------------------------------------|
 
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: 4_9_fir_park_mcmellon
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
     pkg load signal
 
     n = 0:1:5
@@ -1683,9 +1694,9 @@ what happens if, in $H(e^{j \omega}$ we use a non-integer $d \in \mathbb{R}$?
   \end{align*}
 #+END_SRC
 
-
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: 4_8b_fractional_delay_impulse
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
     pkg load signal;
     N = 21;
     n1=-(N-1)/2; n2=(N-1)/2;
@@ -1978,8 +1989,9 @@ time:
   \end{equation*}
 #+END_SRC
 
+#+ATTR_LATEX: :options bgcolor=gray!10
 #+NAME: 4_10_simple_echo
-#+BEGIN_SRC octave :exports results :results file
+#+BEGIN_SRC octave :exports both :results file
   L = 50;
   n = [0:L-1];
   N =10
