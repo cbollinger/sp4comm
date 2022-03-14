@@ -20,7 +20,7 @@
 
 * Week 6 Module 4 Part 2: 
 
-** Introduction to Filtering 
+** Filter Design
 - First strategy of filter design: Imitation
   - uuImpulse truncation
   - Window Method

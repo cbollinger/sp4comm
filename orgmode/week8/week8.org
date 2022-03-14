@@ -22,7 +22,6 @@
 ** Digital Communication Systems
 *** Introduction to digital communications
 **** The success factors for digital communications
-sdk kasdf as
 1. Power of the DSP paradigm
    - integers are easy to *regnerate*
    - good phase control
@@ -30,8 +29,9 @@ sdk kasdf as
 2. Algorithmic nature of DSP is a perfect match with information therory:
    - Image Coding: JPEG's entropy coding
    - Encoding of of accustic or video informatiion: CD's and DVD's error
-     correctionh
-   - Communication Systems: trellis-coded modulation and Vierbi coding
+     correction
+   - Communication Systems: \textcolor{blue}{trellis-coded modulation} and
+     \textcolor{blue}{Viterbi-code modulation}
 3. Hardware advancement
    - minituarization
    - general-purpose platforms
@@ -39,7 +39,7 @@ sdk kasdf as
      
 **** The analog channel constraints
 + unescapable "limits" of physical channels:
-  - *Bandwith:* the signal that canbe send over a channel has a limited frequency band
+  - *Bandwith:* the signal that can be send over a channel has a limited frequency band
   - *Power:* the signal has limited power over this band, e.g. due to power limit
     of the equipment
 + Both constraints will affect the final \textcolor{blue}{capacity} of the
@@ -118,7 +118,7 @@ sdk kasdf as
   - convert a bitstream into a sequence of symbols a[n] via a mapper
   - model a[n] as \textcolor{blue}{white random sequence} $\Rightarrow$ add a
     \textcolor{blue}{scrambler}
-  - no we need to convert a[n] into a continuous-time signal within the constraints
+  - no need to convert a[n] into a continuous-time signal within the constraints
 
       #+BEGIN_SRC ditaa  :file ./image/6.1_transmitter-01.png 
 
@@ -133,12 +133,51 @@ sdk kasdf as
 #+END_SRC
 
 If we assume that the data is randomized and therefore the symbol sequence is a
-white sequence, we know that the power spectral density is simply equal to the
-variance.  And so the power of the signal will be constant over the entire
-frequency band.  But we actually need to fit it into the small band here as
-specified by the bandwidth constraint.  So how do we do this?  Well, in order to
-do that, we need to introduce a new technique called
-\textcolor{blue}{upsampling}, and we will see this in the next module.
+white sequence, we know that the \textcolor{blue}{power spectral density} is
+simply equal to the \textcolor{blue}{variance}. And so the power of the signal
+will be constant over the entire frequency band.  But we actually need to fit it
+into the small band here as specified by the bandwidth constraint.
+
+#+begin_src octave :exports results :results file
+  pkg load signal
+    clear all, close all;       
+    N = 1000;                   # Vector size
+    w = -pi:pi/N:pi;            # frequency axis
+    X = zeros(1,length(w))      # passband
+    P = ones(1,length(w))       # Power spectral density
+    w_min = pi/4;
+    w_max = pi/2;
+
+    index = find(abs(w) <= (w_max - w_min)); # Pulse length
+    X(index - length(index)) = 0.2.*ones(1, length(index));
+    X(index + length(index)) = 0.2.*ones(1, length(index));
+
+    figure( 1, "visible", "off" )     # Do not open the graphic window in org
+
+    plot(w, X, 'linewidth', 3, w, P, '-', 'linewidth', 3, "color", "r");
+    hold;
+    area(w,X);
+    axis([-pi,pi,0,1.2]);
+    set(gca, "fontsize", 20)
+    set(gca,'XTick',-pi:pi:pi)
+    set(gca,'XTickLabel',{'-\pi','0','\pi'})
+    set(gca, 'YTick', 0:0);
+    ## ylabel('X_U(e^j^\omega)');
+    title("Bandwidth Constraint");
+    text(-3.3,1, '\fontsize{24}\it\sigma^2   ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "center");
+    ## text(-pi/3-0.1, -0.4, '\fontsize{24}\it-\pi/K   ',  "color",  "red",  "interpreter",  "tex",  "horizontalalignment",  "center");
+
+    print -dpng "-S 800,200" ./image/6_2_bw_constraint.png;
+    ans = "./image/6_2_bw_constraint.png";
+  #+end_src
+
+#+results:
+[[file:./image/6_2_bw_constraint.png]]
+
+
+So how do we do this?  Well, in order to do that, we need to introduce a new
+technique called \textcolor{blue}{upsampling}, and we will see this in the next
+module.
 
 We are talking about digital communication systems and in this lesson we will
 talk about how to fulfill the \textcolor{blue}{bandwidth constraint}. The way we
@@ -304,11 +343,11 @@ there will be a shrinkage of the frequency axis.
 
 - Upsampling in the digital domain: Time Domain
   1. insert K-1 zeros after every sample
-  2. ideal lowpass filtering with $\omega_c = >frac{\pi}{K}$
+  2. ideal lowpass filtering with $\omega_c => \frac{\pi}{K}$
 
      #+begin_src latex
        \begin{align*}
-              x^[n] &= x_U(n) * sinc(n/K) \\
+              x[n] &= x_U(n) * sinc(n/K) \\
                     &= x_U[i] sinc \left( \frac{n-i}{K}\right) \\
                     &= x[m] sinc \left( \frac{n}{K} - m\right) \text{, with } i = mK \\ 
        \end{align*}
@@ -330,7 +369,7 @@ preceeding steps:
   #+BEGIN_bclogo
   And so we can simply upsample the sample sequence by K, so that its bandwidth
   will move from 2pi to 2pi/K, and therefore, its width will fit on the band
-  allowed for by the channel.
+  allowed by the channel.
   #+END_bclogo
 
 #+BEGIN_SRC ditaa  :file ./image/6.1_transmitter-02.png 
@@ -370,10 +409,10 @@ preceeding steps:
   sequence. The following low pass filter is known as the
   \textcolor{blue}{shaper}, since it determines the time domain shape of the
   transmitted symbols.
-- b[n] :: The \textcolor{blue}{baseband} signal. Produced
+- b[n] :: The \textcolor{blue}{baseband} signal.
 - s[n] :: The \textcolor{blue}{passand} signal. $s[n] = Re\{c[n]\} = Re\{b[n]e^{j\omega_c n}\}$ The signal which is
   fed to the D/A converter is simply the real part of the complex bandpass
-  signal. With $\omega_c = \frac{\omega_max - \omega_min}{2}$ 
+  signal. With $\omega_c = \frac{\omega_{max} - \omega_{min}}{2}$ 
 
 - Data Rates
   - up-sampling does not change the data rate
