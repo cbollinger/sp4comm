@@ -1,0 +1,46 @@
+% dsp_setup.tex
+% -------------
+\ifcsname DSPSETUP\endcsname
+  % Already loaded → do nothing
+\else
+  \newcommand{\DSPSETUP}{}
+
+   \usepackage[Lenny]{fncychap}
+   \usepackage{microtype}
+   \usepackage{pgfplots}
+   \pgfplotsset{compat=1.18}
+   \sloppy
+
+   \setmathfont{Latin Modern Math} % or another math font installed
+   \setmainfont{TeX Gyre Termes} % or any other font you prefer and have installed
+
+   % Gray Header around everything
+   \tcbuselibrary{skins} % important for enhanced features
+   \newtcolorbox{gbar}[2]{
+     sharp corners,
+     boxrule=3pt,
+     colframe=#1,
+     colback=#2,
+     left=5pt,
+     right=5pt,
+     top=5pt,
+     bottom=5pt,
+     enhanced,
+   }
+
+  % Force all math in displaystyle
+   \everymath{\displaystyle}
+
+   % Enumeration related configuration: removes extra vertical space between items and before/after the list
+   \setlist{nolistsep}
+
+   % Paragraphs start flush left without indentation
+   \setlength\parindent{0pt}
+
+   % Table of contents depth
+   %% \setcounter{tocdepth}{3}
+
+   % Increase vertical space in tables
+   \renewcommand{\arraystretch}{1.2}
+
+ 

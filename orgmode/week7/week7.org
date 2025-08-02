@@ -1,28 +1,9 @@
 #+CATEGORY: SP4COMM W7
 
-#+LATEX_HEADER: \usepackage{enumitem}
-#+LATEX_HEADER: \usepackage[table]{xcolor}
-#+LaTeX_HEADER: \usepackage{tcolorbox}
+# #+LATEX_CLASS: koma-report                                   
+# #+LATEX_HEADER: \input{../dsp_setup.tex}
 
-#+LaTeX_HEADER: \usepackage{pgfplots}
-#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
-#+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}
-
-#+LaTeX_HEADER: \usepackage{amsmath}
-#+LaTeX_HEADER: \usepackage{amsxtra}
-#+LATEX_HEADER: \usepackage{mathtools} 
-#+LATEX_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
-
-# +Latex: \newenvironment{gbar}[2]{\def\FrameCommand{{\color{#1}\vrule width 3pt}\colorbox{#2}}\MakeFramed{\advance\hsize-\width\FrameRestore}}{\endMakeFramed}
-#+Latex: \renewcommand{\arraystretch}{1.2}
-#+Latex: \everymath{\displaystyle}
-
-#+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
-
-
-
-* Week 7 Module 5:
-** Sampling and Quantization
+* Sampling and Quantization
 Interpolation describes the process of building a continuous-time signal *x(t)* from
 a sequence of samples *x[n]*. In other words, interpolation allows moving from the
 discrete-time world to the continuous-time world. Interpolation raises two interesting
@@ -70,15 +51,15 @@ this class where the Shannon sampling theorem appears in the form that we use to
 but not least, in 1949 Someya in Japan also proved the sampling theorem. You can see that
 it’s a very varied history, it’s a fundamental result where many people independently came
 up with this result.
-*** The Continous-Time World
-**** Introduction
+** The Continous-Time World
+*** Introduction
 The continuous-time world is the world we live in, the physical reality of the world, in
 contrast with the discrete-time world, the world inside a computer. We are first going to
 look at models of the world and compare digital with analog views of the world. Then we
 are going to study continuous-time signal processing in greater details. Furthermore, we
 will introduce the last form of Fourier transform we have not yet encountered in this
 class, the continuous-time Fourier transform.
-**** The continous-time paradigm
+*** The continous-time paradigm
 
 Two views of the world
 
@@ -111,7 +92,7 @@ Two views of the world
  - Sampling :: $x(t) \rightarrow x[n]$
  - Interpolation :: $x[n] \rightarrow x(t)$
 
-**** Continuous-time signal processing
+*** Continuous-time signal processing
 #+ATTR_LATEX: :options [leftmargin=5cm,labelwidth=4.7cm,itemindent=-2pt]
 - time ::
   real variable t
@@ -124,7 +105,7 @@ Two views of the world
 - energy ::
   $||x(t)||^2 = \langle{x(t),x(t)}\rangle$
 
-***** Analog LTI filters
+**** Analog LTI filters
 
 #+begin_src latex
   \begin{align*}
@@ -134,7 +115,7 @@ Two views of the world
   \end{align*}
 #+end_src
 
-***** Fourier analysis
+**** Fourier analysis
 - in discrete time max angular frequency is $\pm \pi$
 - in continous time no max frequency: $\Omega \in \mathbb{R}$
 - concept is the same:
@@ -157,12 +138,12 @@ Two views of the world
   \end{tcolorbox}
 #+end_src
 
-***** Real-world frequency
+**** Real-world frequency
 - \Omega expresse in rad/s
 - $F=\frac{\Omega}{2\;\pi}$, expressed in Hertz (1/s)
 - period $T = \frac{1}{F} = \frac{2\;\pi}{\Omega}$
 
-***** Example
+**** Example
 
 #+BEGIN_SRC octave :exports results :results file
   pkg load signal
@@ -199,7 +180,7 @@ Two views of the world
 
 #+results:
 [[file:./image/w7_gauss-01.png]]
-***** Convolution theorem
+**** Convolution theorem
 #+begin_src latex
   \begin{tcolorbox}
     \begin{equation*}
@@ -208,7 +189,7 @@ Two views of the world
   \end{tcolorbox}
 #+end_src
 
-***** Prototypical Bandlimited Functions
+**** Prototypical Bandlimited Functions
 
 #+BEGIN_SRC octave :exports results :results file
   pkg load signal
@@ -281,23 +262,23 @@ This leads to the normalized prototypical bandlimted function:
 #+end_src
 
 
-**** TODO Plot Normalized prototypicale bandlimited function
+*** TODO Plot Normalized prototypicale bandlimited function
 
-*** Interpolation
+** Interpolation
 #+ATTR_LATEX: :options [leftmargin=5cm,labelwidth=4.7cm,itemindent=-2pt]
 - Main Task :: $x[n] \Rightarrow x(t)$
 - Gaps :: fill the gaps between samples
 
-**** Interpolation requirements
+*** Interpolation requirements
 - decide on $T_s$
 - make sure $x(nT_s) = x[n]$
 - make sure x(t) is smooth
-**** Why smoothness
+*** Why smoothness
 - jumps (1st order discontinuities) would require the signal to move "faster than light"
 - 2nd order discontinuities would require infinite acceleration
 - the interpolation should be infinitely differentiable
 - "natural" solution: polynomial interpolation
-**** Polynomial interpolation
+*** Polynomial interpolation
 + N points $\Rightarrow$ polynomial of degree (N-1)
 + $p(t) = a_0 + a_1t +a_2t^2 a ... + a_{N-1} t^{(N-1)}$
 + "naive" approach
@@ -330,7 +311,7 @@ Without loss of generality:
     \end{equation*}
   #+end_src
 
-**** Lagrange interpolation
+*** Lagrange interpolation
 The natural solution to this interpolation problem is given by Lagrange interpolation
 - $P_N:$ space of degree-2N polynominals over I_N
 - a basis for P_N is the family of 2N + 1 Lagrange polynominals
@@ -379,7 +360,7 @@ The Lagrange interpolation is the sought-after polynominal interpolation:
 - drawback :: interpolation "bricks" depend on N
   
 
-**** Sinc interpolation formula
+*** Sinc interpolation formula
 
 A remarkable result:
 
@@ -399,7 +380,7 @@ In the limit, local and global interpolation are the same!
   \end{tcolorbox}
 #+end_src
 
-**** Octave Interpolation Overview
+*** Octave Interpolation Overview
 - Octave manual :: Chapter 29.1 One-dimensional Interpolation
 
 #+BEGIN_SRC octave :exports results :results file
@@ -486,9 +467,9 @@ In the limit, local and global interpolation are the same!
     \end{equation*}
 #+end_src
 
-*** Sampling of bandlimited functions
-**** The spectrum of interpolated signals
-****** Sinc interpolation
+** Sampling of bandlimited functions
+*** The spectrum of interpolated signals
+***** Sinc interpolation
 the ingredients:
 - discrete-time signal $x[n] \text{, n} \in \mathbb{Z} \text{ (with DTFT } X(e^{j\omega})\text{)}$
 - interpolation interval $T_s$
@@ -496,7 +477,7 @@ the ingredients:
 - a smooth, contious-time signal $x(t) \text{, } t \in \mathbb{R}$
   
 What does the spectrum of x(t) look like?
-****** Key Facts about the sinc
+***** Key Facts about the sinc
 
 | $\phi(t) = sinc\left(\frac{t}{T_s}\right)$ | $\longleftrightarrow$ | $\Phi(j\Omega) = \frac{\pi}{\Omega_N} rect \left(\frac{\Omega}{2\Omega_N}\right)$ |
 | $T_s = \frac{\pi}{\Omega_n}$               |                       | $\Omega_N = \frac{\pi}{T_s}$                                                      |
@@ -548,7 +529,7 @@ What does the spectrum of x(t) look like?
 #+results:
 [[file:./image/w7_key_facts_sinc.png]]
 
-****** Sinc interpolation
+***** Sinc interpolation
 
 #+begin_src latex 
   \begin{equation*}
@@ -556,7 +537,7 @@ What does the spectrum of x(t) look like?
   \end{equation*}
 #+end_src
 
-****** Spectral representation (I)
+***** Spectral representation (I)
 
 
 #+begin_src latex
@@ -568,7 +549,7 @@ What does the spectrum of x(t) look like?
 \end{align*}
                #+end_src
 
-****** Spectral representation (II)
+***** Spectral representation (II)
 Let's analyse the formula
 #+begin_src latex
   \begin{align*}
@@ -600,7 +581,7 @@ The spectrum of $x(t)$ is equal to the scaled version of the DTFT of the
 sequence between $- \Omega_N$ and $\Omega_N$.
 #+END_bclogo
 
-******* TODO COMMENT Not Working yet
+****** TODO COMMENT Not Working yet
 
 #+BEGIN_SRC octave :exports results :results file
   pkg load signal
@@ -650,7 +631,7 @@ Pick interpolation period T_s:
 - fast interpolation ($\T_s$ small) $\Rightarrow$ wider spectrum
 - slow interpolation ($\T_s$ large) $\Rightarrow$ narrower spectrum
 
-**** The space of bandlimited functions
+*** The space of bandlimited functions
 
 *Claims:*
  - the space of $\Omega_N-bandlimited$ functions is a Hilbert space
@@ -708,8 +689,8 @@ A basis for the $\pi-BL$ space
   \end{equation*}
 #+end_src
 
-**** The sampling Theorem
-****** Sampling as a basis expansion
+*** The sampling Theorem
+***** Sampling as a basis expansion
 To see sampling as an orthonormal expansion, we take our sample of orthonormal
 vectors $\phi^(n)$, taking a product with x and we look what comes out.
 
@@ -746,8 +727,8 @@ Any signal x(t) bandlimited to $F_N$ Hz can be sampled with no loss of informati
 $T_s \leq 1/2\;F_N$
 #+END_bclogo
 
-*** Sampling of nonbandlimited functions
-**** Raw Sampling
+** Sampling of none bandlimited functions
+*** Raw Sampling
 Raw sampling is when we don't care about first taking the inner product with the
 sinc function. So we just take x(t) and every T_s seconds, we take a sample.\\
 
@@ -772,7 +753,7 @@ The continous-time complex exponential
 | T_s > 2\pi/\Omega_0                                            | \omega_0 > 2\pi                             | $e^{j\Omega_2}\text{: } \Omega_2 = \Omega_0 mod(2\pi/T_s)$ |
 |----------------------------------------------------------------+---------------------------------------------+------------------------------------------------------------|
 
-**** Sinusoidal Aliasing
+*** Sinusoidal Aliasing
 
 #+begin_src latex
 \begin{align*}
@@ -789,7 +770,7 @@ with
 #+end_src
 
 
-***** Aliasing: Sampling a Sinusoid
+**** Aliasing: Sampling a Sinusoid
 #+begin_src octave :exports results :results file
   w=1
   T = [0:1/1000:w];     %1000Hz sampling frequency
@@ -881,7 +862,7 @@ with
 #+results:
 [[file:./image/w7_sampling.png]]
 
-**** Aliasing for arbitrary spectra
+*** Aliasing for arbitrary spectra
 A contiuous time signal $x_c$ sampled every $T_s$ seconds gives a sequence
 x[n]. Which is equal to the contious time signals at multiples of the sampling
 intervals $T_s$.
@@ -915,7 +896,7 @@ So in general, if we have two frequencies sampled, the higher frequency is
 aliased back onto the lower frequency and we simply see the sum of these two.
 #+END_bclogo
 
-****** Spectrum of raw-sampled signals
+***** Spectrum of raw-sampled signals
 
 - start with the inverse Fourier Transform
   #+begin_src latex
@@ -972,12 +953,12 @@ aliased back onto the lower frequency and we simply see the sum of these two.
     X(e^{j\omega})  = \frac{1}{T_s} \sum_{k=-\infty}^{\infty} \tilde{X}_c \left( j\frac{\omega}{T_s} - j\frac{2\pi k}{T_s} \right) \\
 \end{equation*}
 #+end_src
-****** TODO Example: signal bandlimited to \Omega_0 and \Omega_N > \Omega_0
-****** TODO Example: signal bandlimited to \Omega_0 and \Omega_N = \Omega_0
-****** TODO Example: signal bandlimited to \Omega_0 and \Omega_N < \Omega_0
-****** TODO Example: non-bandlimited signal
+***** TODO Example: signal bandlimited to \Omega_0 and \Omega_N > \Omega_0
+***** TODO Example: signal bandlimited to \Omega_0 and \Omega_N = \Omega_0
+***** TODO Example: signal bandlimited to \Omega_0 and \Omega_N < \Omega_0
+***** TODO Example: non-bandlimited signal
 
-**** Sampling strategies
+*** Sampling strategies
 
 given a sampling period $T_s$
 - if the signal is bandlimited to $\pi/T_s$ or less, raw sampling is fine
@@ -987,7 +968,7 @@ given a sampling period $T_s$
   - or raw sample the signal an incur aliasing
 - aliasing sounds horrible, so usualle we choose to bandlimit in continuous time
 
-****** Sinc Sampling and Interpolation
+***** Sinc Sampling and Interpolation
 
 #+begin_src latex
 \begin{align*}
@@ -998,9 +979,9 @@ given a sampling period $T_s$
 
 [[file:./drawing/sinc_sampling.png]]
 
-*** Quantization
-**** Stochastic signal processing
-***** Terminology ( from [[http://www.dspguide.com/ch2.htm][W.Smith]] )
+** Quantization
+*** Stochastic signal processing
+**** Terminology ( from [[http://www.dspguide.com/ch2.htm][W.Smith]] )
 #+ATTR_LATEX: :options [leftmargin=3cm,labelwidth=2.7cm,itemindent=-2pt]
  - Mean, Average ::
   #+begin_src latex
@@ -1013,11 +994,13 @@ given a sampling period $T_s$
   around the mean value. For simple repetitive waveform, its excursion can be
   described by its peak-to peak value. If the signal has a random nature, a more
   generalized method must be used.
+
  - Standard Deviation ::
    #+begin_src latex
-     \begin{equation*}
-       \sigma = \sqrt{\frac{1}{N-1} \sum_{i=0}^{N-1}(x_i - \mu)^2)} = \sqrt{(x_0 - \mu)^2 + (x_1 - \mu)^2 + ... + (x_{N-1} - \mu)^2 /(N-1)}
-     \end{equation*} 
+     \begin{align*}
+       \sigma &= \sqrt{\frac{1}{N-1} \sum_{i=0}^{N-1}(x_i - \mu)^2)} \\
+              &= \sqrt{(x_0 - \mu)^2 + (x_1 - \mu)^2 + ... + (x_{N-1} - \mu)^2 /(N-1)}\\
+     \end{align*} 
    #+end_src
    $|x_i - \mu|$ describes how far the $i^{th}$ sample *deviates* (differs) from
    the mean. The *average deviation* of a signal is found by summing the deviations
@@ -1060,8 +1043,8 @@ given a sampling period $T_s$
    - Mean: $\mu_x = \int_{- \infty}^{\infty} x \cdot f(x) dx$
    - Variance: $\mu_x^2 = \int_{- \infty}^{\infty} (x-\mu)^2 \cdot f(x) dx = \int_{- \infty}^{\infty} x^2 \cdot p(x)dx - \mu_x^2$
    
-***** TODO Deterministic vs. stochastic
-***** A simple discrete-time random signal generator
+**** TODO Deterministic vs. stochastic
+**** A simple discrete-time random signal generator
 
 For each new sample, toss a fair coin:
 
@@ -1113,7 +1096,7 @@ For each new sample, toss a fair coin:
 - we know the "mechanics" behind each instance
 - but how can we analyze a random signal?
 
-***** Spectral Properties
+**** Spectral Properties
 - let's try with the DFT of a finite set of random samples
 
 #+begin_src octave :exports results :results file
@@ -1182,7 +1165,7 @@ For each new sample, toss a fair coin:
 
 - no clear pattern
 
-***** Averaging
+**** Averaging
 - when faced with random data an intuitive response is to take "averages"
 - in probability theory the average is across realizations and it's called
   \textcolor{blue}{Expectation}
@@ -1199,8 +1182,8 @@ For each new sample, toss a fair coin:
 - as a consequence, averaging the DFT will not work
 - $E[x[n]] = 0$
 - however the signal "moves", so its energy over power must be nonzero
-***** TODO Averaging the DFT
-***** Energy and power
+**** TODO Averaging the DFT
+**** Energy and power
 - the coin-toss signal has infinite energy
 #+begin_src latex
 \begin{equation*}
@@ -1215,7 +1198,7 @@ For each new sample, toss a fair coin:
 \end{equation*}
 #+end_src
   
-***** Averaging the DFT's square magnitude, normalized
+**** Averaging the DFT's square magnitude, normalized
 
 - pick an interval length N
 - pick an number of iterations M
@@ -1263,7 +1246,7 @@ For each new sample, toss a fair coin:
 #+results:
 [[file:./image/w7_stoch-05.png]]
 
-***** Power spectral density
+**** Power spectral density
 #+begin_src latex
 \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Power Spectral Density]
 \begin{equation*}
@@ -1285,14 +1268,14 @@ For each new sample, toss a fair coin:
   $P[k] = \left| \frac{1}{N} X_N[k] \right|^2$
   #+END_bclogo
 
-***** Power spectral density: Intuition
+**** Power spectral density: Intuition
 - P[k] = 1 means that the power is equally distributed over all frequencies
 - i.e. we cannot predict the signal moves "slowly" or "super-fast"
 - this is because each sample is independent of each other: we could have a
   realization of all ones or a realization in which the sign changes every other
   sample or anything in between.
 
-***** Filtering a random process
+**** Filtering a random process
 - let's filter the random process with a 2-point Moving Average filter
 - y[n] = (x[n] + x[n-1])/2
 - what is the power spectral density
@@ -1412,7 +1395,7 @@ average filter evaluated at the DFT point $\frac{2\pi}{N}k$
 #+results:
 [[file:./image/w7_stoch-07.png]]
 
-***** Stochaistic signal processing
+**** Stochaistic signal processing
 - a stochastic process is characterized in frequency by its power spectral density (PSD)
 - it can be shown (see text book) that the PSD is the DTFT of the
   autocorrelation of the process:
@@ -1459,7 +1442,7 @@ average filter evaluated at the DFT point $\frac{2\pi}{N}k$
     - we lose the concept of phase since we don't know the shape of a realization in
       advance. All we know is the PSD in frequency
 
-***** Noise
+**** Noise
 - Noise is everywhere ::
   - thermal noise
   - sum of extraneous interferences
@@ -1467,7 +1450,7 @@ average filter evaluated at the DFT point $\frac{2\pi}{N}k$
   - ...
 - *we can model noise as a stochastic signal*
 - the most important noise is white noise 
-***** White noise
+**** White noise
 - white indicates uncorrelated samples
 - $r_w[n] = \sigma^2\delta[n]$: The autocorrleation is zero except at zero where
   it will take the value of the variance
@@ -1514,8 +1497,8 @@ Graphically the power spectral density of a white signal couldn't be any simpler
   response.
 #+END_bclogo
 
-**** Quantization
-***** Quantization schemes
+*** Quantization
+**** Quantization schemes
 - digital devices can only deal with integers (b bits per sample)
 - we need to map the range of a signal onto a finite set of values
 - irreverible loss of information $\longrightarrow$ \textcolor{blue}{Quantization Noise}
@@ -1536,7 +1519,7 @@ Several factors at play:
 - storage scheme (fixed point, floating point)
 - properties of the input (input \in $\mathbb{C} \rightarrow$ output $\in \mathbb{N}$
 
-***** Scalar quantization
+**** Scalar quantization
 
 The simplest quantizer:
 - each sample is encoded individually (hence scalar)
@@ -1574,7 +1557,7 @@ The simplest quantizer:
 
 - what are the optimal quantization values $\hat{x}_k$ ?
 
-***** Quantization Error
+**** Quantization Error
 #+begin_src latex
   \begin{equation*}
     e[n] = Q \left\{x[n] \right\} -x[n] = \hat{x}[n] - x[n]
@@ -1587,7 +1570,7 @@ The simplest quantizer:
   - all error samples have the same distribution
 - we need statistics of the input to study the error
 
-****** Uniform quantization
+***** Uniform quantization
 - simple but very general case
 - range is split into $2^R$ equal intervals of width $\Delta = (B-A)2^{-R}$
 
@@ -1643,7 +1626,7 @@ in the following subsections here we already subsitutes the results.
   \end{tcolorbox}
 #+end_src
 
-****** Uniform quantization of uniform input
+***** Uniform quantization of uniform input
 
 #+begin_src octave :exports results :results file
     # Algorithm --------------------------------------------------------------
@@ -1677,7 +1660,7 @@ in the following subsections here we already subsitutes the results.
 #+results:
 [[file:./image/w7_uniform_pdf.png]]
 
-****** Uniform-input hypothesis
+***** Uniform-input hypothesis
 #+begin_src latex
   \begin{equation*}
     f_x(\tau) = \frac{1}{B-A}
@@ -1690,7 +1673,7 @@ in the following subsections here we already subsitutes the results.
   \end{equation*}
 #+end_src
 
-****** Find the optimal quantization point by minimazing the error 
+***** Find the optimal quantization point by minimazing the error 
 
 #+begin_src latex
   \begin{align*}
@@ -1710,7 +1693,7 @@ Minimizing the error:
 #+end_src
 
 optimal quantization point is the interval's midpoint, for all intervals
-****** TODO Correct this PGF Plot
+***** TODO COMMENT Correct this PGF Plot
 Quantization Characteristic
 #+begin_src latex
   % linear uniform mid-tread quantizer characteristic
@@ -1728,8 +1711,8 @@ Quantization Characteristic
 
 The quantiziser associates each quantization interval to its midpoint.  
 
-***** Error Analysis
-
+**** Error Analysis 
+dummy - text
 #+begin_src latex
     \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Error Energy]
     \begin{equation*}
@@ -1762,7 +1745,7 @@ The quantiziser associates each quantization interval to its midpoint.
   \end{tcolorbox}
 #+end_src
 
-**** The 6db/bit rule of thumb
+*** The 6db/bit rule of thumb
 - a compact disk has 16 bits/sample:
   #+begin_src latex
     \begin{equation*}
@@ -1777,23 +1760,23 @@ The quantiziser associates each quantization interval to its midpoint.
     \end{equation*}
 #+end_src
 
-*** Notes and External Resources
+** Notes and External Resources
 
-**** TODO Clipping, saturation and interpolation
-**** Practical interpolation and sampling
-***** Time Domain to Discrete
+*** TODO Clipping, saturation and interpolation
+*** Practical interpolation and sampling
+**** Time Domain to Discrete
 | ideally                                                                                                     | x(t) $\Rightarrow$ x[n]  | in practice                                                                                                        |
 | $x(t) = \sum_{n=-\infty}^{\infty} x[n] sinc \left(frac{t -nT_s}{T_s} \right)$                               |                          | $x(t) =\sum_{n=-\infty}^{\infty}  x[n] i \left( \frac{t -nT_s}{T_s} \right)$                                                                |
 | $X(j\Omega) = \frac{\pi}{\Omega_N}X(e^{j\pi\Omega / \Omega_N}) rect\left( \frac{\Omega}{2\Omega_N}\right)$  |                          | $X(j\Omega) = \frac{\pi}{\Omega_N} I \left(j\pi\frac{\Omega}{\Omega_N} \right) X(e^{j\pi\frac{\Omega}{\Omega_N}})$ |
 
 
-***** Discrete to Time Domain
+**** Discrete to Time Domain
 
 | ideally                                                                                                       | x[n] $\Rightarrow$ x(t)  | in practice                                                                                                          |
 | $x(t) = \sum_{-\infty}^{\infty} x[n] sinc \left( \frac{t-nT_s}{T_s} \right)$                                  |                          | $x(t) = \sum_{n=-\infty}^{\infty} x[n]\, i\, \left( \frac{t-nT_s}{T_s} \right)$                                      |
 | $X(j\Omega) = \frac{\pi}{\Omega_N} X(e^{j\pi\Omega / \Omega_n} rect\left( \frac{\Omega}{2\Omega_N} \right)$)  |                          | $X(j\Omega) = \frac{\pi}{\Omega_N} I \left(j\pi \frac{\Omega}{\Omega_N} \right) X(e^{j\pi \frac{\Omega}{\Omega_N}})$ |
 
-****** Ideal Interpolator
+***** Ideal Interpolator
 - Frequency Domain: Rect
 - Time Domain: sinc
 #+begin_src octave :exports results :results file
@@ -1855,7 +1838,7 @@ The quantiziser associates each quantization interval to its midpoint.
 #+results:
 [[file:./image/w7_ideal_interpolation_01.png]]
 
-****** Zero-Order Hold Interpolator
+***** Zero-Order Hold Interpolator
 - Frequency Domain: sinc
 - Time Domain: rect
 #+begin_src octave :exports results :results file
@@ -1917,7 +1900,7 @@ The quantiziser associates each quantization interval to its midpoint.
 #+results:
 [[file:./image/w7_ideal_zero_order_hold_interpolation_01.png]]
 
-****** First-Order Interpolator
+***** First-Order Interpolator
 
 - Frequency Domain: $sinc^2$
 - Time Domain: Triangle
@@ -1980,10 +1963,10 @@ The quantiziser associates each quantization interval to its midpoint.
 #+results:
 [[file:./image/w7_first_order_interpolation_01.png]]
 
-**** TODO Bandbass sampling
-**** Multirate Signal Processing
+*** TODO Bandbass sampling
+*** Multirate Signal Processing
 [[http://home.etf.rs/~milic/book_MR.html][Book: Multirate Filtering for Digital Signal Processing Matlab Applications]]
-***** Upsampling
+**** Upsampling
 
 #+begin_src latex
   \begin{equation*}
@@ -1997,7 +1980,7 @@ The quantiziser associates each quantization interval to its midpoint.
 #+end_src
 
 #+ATTR_LATEX: :width 5cm
-[[./drawing/w7_upsampler.png]]
+[[file:./drawing/w7_upsampler.png]]
 
 We create an upsampled sequence from any discrete time sequence simply by
 building a sequence where we output one sample of the original sequence followed
@@ -2171,7 +2154,7 @@ by captial N minus 1 samples.
 
      #+results:
      [[file:./image/5_8_upsampling_freq_02.png]]
-****** What we don't like
+***** What we don't like
 - in the time domain: zeors between nonzero samples are not "natural"
 - in the frequency domain: extra replicas of the spectrum; can we get rid of them?
 
@@ -2179,7 +2162,7 @@ by captial N minus 1 samples.
   - zero-order hold interpolator
   - first-order interpolator
     
-****** The ideal digital interpolator
+***** The ideal digital interpolator
 
 #+begin_src latex
   \begin{align*}
@@ -2191,10 +2174,10 @@ by captial N minus 1 samples.
 This can not be achieved but as good as possible add an Low Pass with cut off frequency $\frac{pi}{N}$,
 
 #+ATTR_LATEX: :width 6cm
-[[./drawing/w7_upsampler_LP.png]]
+[[file:./drawing/w7_upsampler_LP.png]]
 
 with a discrete time ideal low pass filter with cut off frequency $\pi/N$
-***** Downsampling
+**** Downsampling
 
 #+begin_src latex
   \begin{equation*}
@@ -2205,7 +2188,7 @@ with a discrete time ideal low pass filter with cut off frequency $\pi/N$
 
 Every $N - 1$ input sample is discareded resp. only every N-th sample is used.
 #+ATTR_LATEX: :width 5cm
-[[./drawing/w7_downsampler.png]]
+[[file:./drawing/w7_downsampler.png]]
 
 #+BEGIN_SRC octave :exports results :results file
   pkg load signal
@@ -2425,13 +2408,10 @@ Every $N - 1$ input sample is discareded resp. only every N-th sample is used.
      #+results:
      [[file:./image/5_8_downsampling_freq_alias-02.png]]
 
-
-
      To avoid alisasing we have to filter the input sequence with a low-pass
      filter with cutoff frequency $\pi/N$, where N is the downsampling factor that will follow.
      
-
-***** Sampling Rate Change
+**** Sampling Rate Change
 
 Downsampling and upsampling change the implicit sampling rate by integer
 factor. But we can combine them so that the resulting sampling rate change will
@@ -2439,24 +2419,24 @@ be an aribtrary fractional number. The combination always goes in the sense that
 we first upsample the signal, which is the operation that does not change the
 information content of the original sequence, and then we perfrom downsampling.
 #+ATTR_LATEX: :width 7cm
-[[./drawing/w7_updownsampler_LP.png]]
+[[file:./drawing/w7_updownsampler_LP.png]]
 Example:
 - CD: $F_s = 44100Hz$
 - DVD: $F_s = 48000Hz$
 - $\frac{N}{M} = \frac{160}{147}$
 - in practice,we use time-varying local interpolation
-**** TODO FIR-based sampling rate conversion
+*** TODO FIR-based sampling rate conversion
 - Sampling rate change through time-varying local interpolation
-***** Subsample interpolation
+**** Subsample interpolation
 
 
-***** 2nd-order Lagrange interpolation polynomials
+**** 2nd-order Lagrange interpolation polynomials
 
-***** Lagrange interpolation (N=1)
+**** Lagrange interpolation (N=1)
 
-***** CD to DVD revisted
-**** TODO Analog-to-digital and digital-to-analog converters
-**** TODO Oversampling
+**** CD to DVD revisted
+*** TODO Analog-to-digital and digital-to-analog converters
+*** TODO Oversampling
 - Oversampled A/D -> reduce quantization error
 - Oversampled D/A -> use cheaper hardware for interpolation
 

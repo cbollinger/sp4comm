@@ -1,22 +1,7 @@
 #+CATEGORY: SP4COMM DFT
 
-#+LATEX_HEADER: \usepackage{enumitem}
-#+LATEX_HEADER: \usepackage[table]{xcolor}
-#+LaTeX_HEADER: \usepackage{tcolorbox}
-
-#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
-#+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}
-
-#+LaTeX_HEADER: \usepackage{amsmath}
-#+LaTeX_HEADER: \usepackage{amsxtra}
-#+LATEX_HEADER: \usepackage{mathtools} 
-#+LATEX_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
-
-# +Latex: \newenvironment{gbar}[2]{\def\FrameCommand{{\color{#1}\vrule width 3pt}\colorbox{#2}}\MakeFramed{\advance\hsize-\width\FrameRestore}}{\endMakeFramed}
-#+Latex: \renewcommand{\arraystretch}{1.2}
-#+Latex: \everymath{\displaystyle}
-
-#+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
+# #+LATEX_CLASS: koma-report                                   
+# #+LATEX_HEADER: \input{../dsp_setup.tex}
 
 ** Plotting the DFT
 *** With Python
@@ -170,7 +155,7 @@ Fs, x = wavfile.read("./sound/piano.wav")
 # IPython.display.Audio(x, rate=Fs) not used in orgmode
 #+END_SRC
 
-[[./sound/piano.wav][Play piano sound]]
+[[file:./sound/piano.wav][Play piano sound]]
 
 In order to look at the spectrum of the sound file with a DFT we need to map the digital
 frequency "bins" of the DFT to real-world frequencies.

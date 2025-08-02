@@ -1,4 +1,8 @@
 
+# #+LATEX_CLASS: koma-report                                   
+# #+LATEX_HEADER: \input{../dsp_setup.tex}
+
+
 ** Homework Module 3
 
 *** Excersice 4

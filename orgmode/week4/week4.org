@@ -1,27 +1,11 @@
 #+CATEGORY: SP4COMM W4
 
-#+LATEX_HEADER: \usepackage{enumitem}
-#+LATEX_HEADER: \usepackage[table]{xcolor}
-#+LaTeX_HEADER: \usepackage{tcolorbox}
+# #+LATEX_CLASS: koma-report                                   
+# #+LATEX_HEADER: \input{../dsp_setup.tex}
 
-#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
-#+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}
-
-#+LaTeX_HEADER: \usepackage{amsmath}
-#+LaTeX_HEADER: \usepackage{amsxtra}
-#+LATEX_HEADER: \usepackage{mathtools} 
-#+LATEX_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
-
-# +Latex: \newenvironment{gbar}[2]{\def\FrameCommand{{\color{#1}\vrule width 3pt}\colorbox{#2}}\MakeFramed{\advance\hsize-\width\FrameRestore}}{\endMakeFramed}
-#+Latex: \renewcommand{\arraystretch}{1.2}
-#+Latex: \everymath{\displaystyle}
-
-#+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
-
-* Week 4 Module 3:
-** Part 2 - Advanced Fourier Analysise
-*** Discrete Fourier Series DFS
-**** TODO Discrete Fourier series
+* Advanced Fourier Analysise
+** Discrete Fourier Series DFS
+*** TODO Discrete Fourier series
 #+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Discrete Fourier Series}
  #+BEGIN_bclogo
 DFS = DFT with periodicity explicit
@@ -32,7 +16,7 @@ $\tilde{X}[k] = DFS\{x[n]\}$
   signal
 - DFS is an extension of the DFT for periodic sequencies
 - A circular time-shift is an natural extension of a shift fo finite length signals.
-***** Finite-length time shifts revisted
+**** Finite-length time shifts revisted
 - The DFS helps us understand how to define time shifts for finite-lenght signals.
 test
 - For an N-periodic sequence $\tilde{x}[n]$ ::
@@ -61,8 +45,8 @@ test
 Shifts for finite-length signals are "naturally" circular
 #+END_bclogo
 
-**** TODO Karplus-Strong revisted and DFS
-***** Analysis Formula for a N-Periodic Signal in the frequency domain
+*** TODO Karplus-Strong revisted and DFS
+**** Analysis Formula for a N-Periodic Signal in the frequency domain
 #+BEGIN_SRC latex
 \begin{equation}
  \tilde{X}[k] = \sum_{n=0}^{N-1} \tilde{x}[n] e^{-j\frac{2\pi}{N}nk} \text{, } k \in \mathbb{Z}
@@ -72,7 +56,7 @@ Shifts for finite-length signals are "naturally" circular
 - $x[n]$ :: Signal vector in the (discrete) time domain
 - Reminder :: This is the inner Product in explicite form
 \par
-***** Synthesis Formula for a N-Periodic Signal in the time domain
+**** Synthesis Formula for a N-Periodic Signal in the time domain
 #+BEGIN_SRC latex
 \begin{equation}
   \tilde{x}[n] = \frac{1}{N} \sum_{n=0}^{N-1} \tilde{X}[k] e^{j\frac{2\pi}{N}nk} \text{, } k \in \mathbb{Z}
@@ -82,22 +66,22 @@ Shifts for finite-length signals are "naturally" circular
   - $X[k]$ :: Signal vector in the frequency domain 
   - $\frac{1}{N}$ :: Normalisation coeficent
   - Reminder :: This is the inner Product in explicite fashion  
-*** The Discret-Time Fourier Transform (DTFT)
-**** Overview Fourier Transform
+** The Discret-Time Fourier Transform (DTFT)
+*** Overview Fourier Transform
 - N-Point finite-length siganls: DFT
 - N-Point periodic signals: DFS
 - Infinite length (non periodic) signals: DTFT
  
-**** Karplus Strong revisted and the DTFT
-***** Plotting the DTFT
+*** Karplus Strong revisted and the DTFT
+**** Plotting the DTFT
 - Frequencies go from $-\pi$ to $\pi$
 - Positive frequencies are on the right hand side of the x-axis
 - Negative frequencies are on the left hand side of the x-axis
 - Low frequencies are centered around 0
 - High frequnecies will be on the extreme of the bound
 
-*** Existence and properties of the DTFT
-**** Formal Definition of the DTFT
+** Existence and properties of the DTFT
+*** Formal Definition of the DTFT
 - $x[n] \in \ell_2(\mathbb{Z})$, the space of square summable infinity sequneces
 - define the function of $\omega \in \mathbb{R}$ \\
   #+BEGIN_SRC latex
@@ -119,7 +103,7 @@ Shifts for finite-length signals are "naturally" circular
 
    #+END_SRC
 
-**** Properties of the DTFT
+*** Properties of the DTFT
 #+ATTR_LATEX: :options [leftmargin=5cm,labelwidth=4.7cm,itemindent=-2pt]
 - linearity ::
   $\displaystyle DTFT \{\alpha x[n] + \beta y[n]\} = \alpha X(e^{j \omega}) + \beta Y(e^{j\omega})$
@@ -131,18 +115,18 @@ Shifts for finite-length signals are "naturally" circular
   $\displaystyle DTFT\{x[-n]\} = X(e^{-jw})$
 - conjugation ::
   $\displaystyle DTFT\{x^*[n] \} = X^*X(e^{-j\;\omega})$
-**** Some particular cases
+*** Some particular cases
 - if $\displaystyle x[n]$ is symmetric, the DTFT is symmetric: $\displaystyle x[n] = x[-n] \iff X(e^{j \omega}) = X(e^{-j \omega})$ 
 - if $\displaystyle x[n]$ is real, the DTFT is Hemitian-symmetric: $\displaystyle x[n] = x^*[n] \iff X(e^{j \omega}) =X^*(e^{-j \omega})$
 - if $\displaystyle x[n]$ is real, the magnitude of th eDTFT is symmetric $\displaystyle x[n] \in \mathbb{R} \implies |X(e^{j \omega}) | = |X(e^{-j \omega})|$
 - if $\displaystyle x[n]$ is real and symmetric, $\displaystyle X(e^{j \omega})$  is also real and symmetric
-**** TODO The DTFT as a change of basis
-*** TODO Sinusoidal Modulation
-**** TODO Sinusoidal modulation
+*** TODO The DTFT as a change of basis
+** TODO Sinusoidal Modulation
+*** TODO Sinusoidal modulation
 
-**** TODO Tuning a guitar 
+*** TODO Tuning a guitar 
 
-**** TODO Signal of the day: Tristan Chord
-*** TODO Notes and Supplementary Material
-**** TODO Relation Ship between transforms
-**** TODO The fast fourier transform
+*** TODO Signal of the day: Tristan Chord
+** TODO Notes and Supplementary Material
+*** TODO Relation Ship between transforms
+*** TODO The fast fourier transform

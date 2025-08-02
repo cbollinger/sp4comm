@@ -1,25 +1,9 @@
 #+CATEGORY: SP4COMM W2:
 
-#+LATEX_HEADER: \usepackage{enumitem}
-#+LATEX_HEADER: \usepackage[table]{xcolor}
-#+LaTeX_HEADER: \usepackage{tcolorbox}
+# #+LATEX_CLASS: koma-report                                   
+# #+LATEX_HEADER: \input{../dsp_setup.tex}
 
-#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
-#+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}
-
-#+LaTeX_HEADER: \usepackage{amsmath}
-#+LaTeX_HEADER: \usepackage{amsxtra}
-#+LATEX_HEADER: \usepackage{mathtools}
-#+LATEX_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
-
-# +Latex: \newenvironment{gbar}[2]{\def\FrameCommand{{\color{#1}\vrule width 3pt}\colorbox{#2}}\MakeFramed{\advance\hsize-\width\FrameRestore}}{\endMakeFramed}
-#+Latex: \renewcommand{\arraystretch}{1.2}
-#+Latex: \everymath{\displaystyle}
-
-#+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
-
-* Week 2 Module 2:
-** Vector Spaces
+* Vector Spaces
 #+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Vector Space}
 #+BEGIN_bclogo
 Vector spaces build among others a common framework to work with the four classes of signals:
@@ -40,7 +24,7 @@ square-summabe $\sum_{n=-\infty}^{\infty} |x[n]|^2$
 - $\ell_2(\mathbb{Z})$ :: Square-Summable infinite sequences
 - $L_2([a,b])$ :: Square-integrable functions over an interval
 
-*** Operationl Definitions
+** Operationl Definitions
 
 #+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Inner Product}
  #+BEGIN_bclogo
@@ -63,7 +47,7 @@ Measure of similarity between vectors
   inner product = 0
 - Distance :: $d(x,y) = \mathbf{x} -\mathbf{y}_2$
   
-*** Some Examples
+** Some Examples
 
 Not all vector spaces have got a graphical representation. The following table shows the
 graphical representation of vector spaces
@@ -75,7 +59,7 @@ graphical representation of vector spaces
 | $\mathbb{L}_{[-1,1]}$    |                              |
 
 
-#+BEGIN_SRC gnuplot :exports none :file image/smult.png :eval query-export
+#+BEGIN_SRC gnuplot :exports none :file image/smult.png
   # Reset all plotting variables to their default values.
   reset
   #set size square
@@ -108,7 +92,7 @@ Scalar Multiplication in $\mathbb{L}_2[-1,1]$
 [[file:image/smult.png]]
  #+end_minipage
 
-#+BEGIN_SRC gnuplot :exports none :file image/vadd.png :eval query-export
+#+BEGIN_SRC gnuplot :exports none :file image/vadd.png
 # Reset all plotting variables to their default values.
 # reset
 #set size square
@@ -143,7 +127,7 @@ Summation of two Vectors in $\mathbb{L}_2[-1,1]$
 [[file:image/vadd.png]]
  #+end_minipage
 
-#+BEGIN_SRC gnuplot :exports none :file image/iproduct_sin.png :eval query-export
+#+BEGIN_SRC gnuplot :exports none :file image/iproduct_sin.png
  Reset all plotting variables to their default values.
 # reset
 #set size square
@@ -184,16 +168,16 @@ Inner Product in $\mathbb{L}_2[-1,1]$ - The Norm: \\
 [[file:image/iproduct_sin.png]]
 #+end_minipage
 
-*** Hilbert Space
+** Hilbert Space
 A hilbert space is  an *inner product space* which fulfills completeness. 
 
-*** Signal Spaces
+** Signal Spaces
 Finite length signal live in $\mathbb{C}^{N}$
 - all operations well defined and intuitive
 - space of N-periodic signals sometimes indicated by $\tilde{\mathbb{C}}^{ N}$  
-*** TODO Vecotor Bases
-*** TODO Subspace Approximations
-**** Least-Square Approximation
+** TODO Vecotor Bases
+** TODO Subspace Approximations
+*** Least-Square Approximation
 Consider a orthonormal basis for subspace S, called S of K
 #+begin_src latex
   \begin{equation*}

@@ -1,83 +1,16 @@
 #+TITLE: Signal Processing for Communication
-#+DATE: <2020-07-20 Mo>
+#+DATE: <2025-08-02 Sa>
 #+AUTHOR: Ch. Bollinger
 #+EMAIL: christian.bollinger@hispeed.ch
-#+OPTIONS: ':nil *:t -:t ::t <:t H:6 \n:nil ^:t arch:headline
-#+OPTIONS: author:t c:nil creator:comment d:(not "LOGBOOK") date:t
-#+OPTIONS: e:t email:nil f:t inline:t num:4 p:nil pri:nil stat:t
-#+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:t title:t todo:t |:t
-#+CREATOR: Emacs 24.3.1 (Org mode 8.2.5h)
-#+DESCRIPTION:
-#+EXCLUDE_TAGS: noexport
-#+KEYWORDS:
-#+LANGUAGE: de
-#+STARTUP: hideblocks 
-#+bind: org-export-publishing-directory "./exports"
-#+SELECT_TAGS: export
+#+DESCRIPTION: Notes and analysis on digital modulation techniques with Matlab examples.
+# #+OPTIONS: ':nil *:t -:t ::t <:t num:5 H:6 toc:5 \n:nil ^:t arch:headline author:t c:nil creator:comment d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t p:nil pri:nil stat:t tags:t tasks:t tex:t timestamp:t title:t todo:t |:t
+#+OPTIONS: toc:t
+#+CREATOR: Emacs 30.1  (Org mode 9.7.11)
+#+LANGUAGE: en
+#+STARTUP: hideblocks
 
-#+LATEX_COMPILER: xelatex                                    
-#+LATEX_CLASS: koma-report                                   
-#+LATEX_CLASS_OPTIONS: [a4paper,10pt,DIV=15,draft=false]      
-
-#+LATEX_HEADER_EXTRA: \usepackage{fontspec}                     
-#+LATEX_HEADER_EXTRA: \usepackage{lmodern}                     
-#+LATEX_HEADER_EXTRA: \usepackage{rotfloat}
-
-# Miscellaneous setting
-# show hyperlinks in blue font
-#+LATEX_HEADER: \hypersetup{colorlinks=true, linkcolor=blue}
-#+LATEX_HEADER_EXTRA: \usepackage{units}                       
-#+LATEX_HEADER_EXTRA: \usepackage{comment}                     
-#+LaTeX_HEADER_EXTRA: \usepackage{lipsum} 
-
-# Colored Tables
-#+LATEX_HEADER: \usepackage[table]{xcolor}
-# # Colored text box and frames
-#+LATEX_HEADER: \usepackage{tcolorbox}
-# # bclogo
-#+LaTeX_HEADER: \usepackage{pgfplots}
-#+LaTeX_HEADER: \usepackage[tikz]{bclogo}
-# # Highlight Formulas
-#+LaTeX_HEADER: \usepackage[customcolors]{hf-tikz}
-# #+OPTIONS: tex:imagemagick                            # HTML EXPORT Comment this option!!!!!
-
-# Math Packages
-#+LaTeX_HEADER: \usepackage{amsmath}
-#+LaTeX_HEADER: \usepackage{amsxtra}
-#+LATEX_HEADER: \usepackage{mathtools} 
-#+Latex: \everymath{\displaystyle}
-# Electronic Circuit Diagarams
-#+LaTeX_HEADER: \usepackage[siunitx, europeanresistors]{circuitikz}
-# DSP Diagrams
-#+LaTex_HEADER: \usepackage{dsptricks,dspfunctions,dspblocks}
-# Gray Header around everything
-#+LATEX_HEADER: \newenvironment{gbar}[2]{\def\FrameCommand{{\color{#1}\vrule width 3pt}\colorbox{#2}}\MakeFramed{\advance\hsize-\width\FrameRestore}}{\endMakeFramed}
-
-# Enumeration releated configuration
-#+LATEX_HEADER: \usepackage{enumitem}
-# #+LATEX_HEADER: \setlist{nolistsep}
-#+LATEX: \setlength\parindent{0pt}
-# subsubsub section for latex export 
-# #+LATEX: \setcounter{secnumdepth}{5}
-
-# Koma-Script Document Layout
-#+LATEX_HEADER: \newcommand{\versiondate}{\today}
-#+LATEX_HEADER: \newcommand{\firstAuthor}{Christian Bollinger}
-#+LATEX_HEADER: \newcommand{\shortAuthors}{Ch. Bollinger}
-#+LATEX_HEADER: \newcommand{\authorname}{\firstAuthor}
-
-#+LaTeX_HEADER: \usepackage{lastpage} %For getting page x of y
-#+LATEX_HEADER: \usepackage[headsepline=true,footsepline=true]{scrlayer-scrpage}
-#+LATEX_HEADER: \pagestyle{scrheadings}
-#+LATEX_HEADER: \automark{section}{}
-
-#+LATEX_HEADER: \ifoot*{\shortAuthors}
-#+LATEX_HEADER: \cfoot*{page \thepage}
-#+LATEX_HEADER: \ofoot*{\today}
-
-#+SETUPFILE: ~/.emacs.d/git-submodules/org-html-themes/org/theme-readtheorg.setup
-
-\renewcommand{\arraystretch}{2.0}
+#+LATEX_CLASS: koma-report                               
+#+LATEX_HEADER: \input{dsp_setup.tex}
 
 \newpage
 #+INCLUDE: "./week1/week1.org"
@@ -87,13 +20,13 @@
 #+INCLUDE: "./week3/week3.org"
 \newpage
 #+INCLUDE: "./week4/week4.org"
-\newpage
+fr\newpage
 #+INCLUDE: "./week5/week5.org"
 \newpage
 #+INCLUDE: "./week6/week6.org"
 \newpage
 #+INCLUDE: "./week7/week7.org"
-\newpagey
+\newpage
 #+INCLUDE: "./week8/week8.org"
 
 \newpage
