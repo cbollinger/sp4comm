@@ -18,13 +18,158 @@ To represent infinite length signals we need something more. We require sequnece
 square-summabe $\sum_{n=-\infty}^{\infty} |x[n]|^2$
 #+END_bclogo
 
+
+- Why using vector space in DSP :: Easier math and unified framework for signal processing:
+  - same framework for different classes of signals
+  - same framework for continous-time signals
+  - easy explanation of the Fourier Transform
+  - easy explanation of sampling and interpolation
+  - useful in approximation and compression
+  - fundamental in communication systems
+
+
+** Important Vector Space Classes
 #+ATTR_LATEX: :options [leftmargin=5cm, labelwidth=4.7cm, itemindent=-2pt]
 - $\mathbb{R}^2$, $\mathbb{R}^3$ :: Euclidean space, geomtery
 - $\mathbb{R}^n$, $\mathbb{C}^n$  :: Linear algebra
-- $\ell_2(\mathbb{Z})$ :: Square-Summable infinite sequences
-- $L_2([a,b])$ :: Square-integrable functions over an interval
+- $\ell_2(\mathbb{Z})$ :: Space of square-summable infinite sequences
+- $L_2([a,b])$ :: Space of square-integrable functions over an interval
+
+
+
+*** Some Spaces can be drawn
+
+
+
+#+begin_src octave :results file :exports none
+  v1 = 5; % x-component
+  v2 = 3; % y-component
+
+  figure('Visible','off'); % no GUI
+  hold on; grid on; axis equal;
+  xlabel('X'); ylabel('Y');
+
+  % Axis limits
+  xlim([-1 9]);
+  ylim([-1 5]);
+
+    % X and Y axes
+  plot([-1 9],[0 0],'r','LineWidth',2); % X-axis
+  plot([0 0],[-1 5],'g','LineWidth',2); % Y-axis
+
+  % Vector (arrow from origin)
+  quiver(0,0,v1,v2,0,'b','LineWidth',2,'MaxHeadSize',0.1);
+
+  % Labels
+  text(9.2,0,'X','FontSize',12,'Color','r');
+  text(0,5.2,'Y','FontSize',12,'Color','g');
+
+  % Grid lines
+  xticks(-1:1:9);
+  yticks(-1:1:5);
+  set(gca,'XGrid','on','YGrid','on');
+
+  hold off;
+  % Save as PNG
+  print('./image/coord2d.png','-dpng','-r300');
+  ans = "./image/coord2d.png";
+#+end_src
+
+#+RESULTS:
+[[file:./image/coord2d.png]]
+
+#+begin_export latex
+\begin{minipage}[c]{0.45\textwidth}
+\[
+    \mathbf{v} =
+    \begin{bmatrix}
+      v_1 \\
+      v_2
+    \end{bmatrix}
+    \in \mathbb{R}^2
+\]
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.45\textwidth}
+\centering
+\includegraphics[width=\linewidth]{./image/coord2d.png}
+\end{minipage}
+#+end_export
+
+
+#+begin_src octave :results file :exports none
+  v1 = 0.8; % x-component
+  v2 = 0.5; % y-component
+  v3 = 0.7; % z-component
+
+  figure('Visible','off'); % no GUI
+  hold on; grid on; axis equal;
+  xlabel('X'); ylabel('Y'); zlabel('Z');
+
+  % Axis limits
+  xlim([-1 1]);
+  ylim([-1 1]);
+  zlim([-1 1]);
+
+  % Draw X, Y, Z axes (color coded)
+  plot3([-1 1],[0 0],[0 0],'r','LineWidth',2); % X-axis in red
+  plot3([0 0],[-1 1],[0 0],'g','LineWidth',2); % Y-axis in green
+  plot3([0 0],[0 0],[-1 1],'b','LineWidth',2); % Z-axis in blue
+
+  % Vector (arrow from origin)
+  quiver3(0,0,0,v1,v2,v3,0,'b','LineWidth',2,'MaxHeadSize',0.1);
+  
+  % Axis labels
+  text(1.05,0,0,'X','FontSize',12,'Color','r');
+  text(0,1.05,0,'Y','FontSize',12,'Color','g');
+  text(0,0,1.05,'Z','FontSize',12,'Color','b');
+
+  % Create grid points
+  [xg, yg, zg] = meshgrid(-1:0.5:1, -1:0.5:1, -1:0.5:1);
+
+  % Draw grid edges
+  % plot3([xg(:) xg(:)]',[yg(:) yg(:)]',[ones(size(zg(:)))*-1 ones(size(zg(:)))*1]','k:');
+  % plot3([xg(:) xg(:)]',[ones(size(yg(:)))*-1 ones(size(yg(:)))*1]',[zg(:) zg(:)]','k:');
+  % plot3([ones(size(xg(:)))*-1 ones(size(xg(:)))*1]',[yg(:) yg(:)]',[zg(:) zg(:)]','k:');
+
+  view(3); % 3D view
+  hold off;
+
+  % Save as PNG
+  print('./image/coord3d.png','-dpng','-r300');
+  ans = "./image/coord3d.png";
+#+end_src
+
+#+RESULTS:
+[[file:./image/coord3d.png]]
+
+#+begin_export latex
+\begin{minipage}[c]{0.45\textwidth}
+\[
+    \mathbf{v} =
+    \begin{bmatrix}
+      v_1 \\
+      v_2 \\
+      v_3
+    \end{bmatrix}
+    \in \mathbb{R}^3
+\]
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.45\textwidth}
+\centering
+\includegraphics[width=\linewidth]{./image/coord3d.png}
+\end{minipage}
+#+end_export
+
+
 
 ** Operationl Definitions
+
+** Formal properties of a vector space
+
+** Measure and Compare Vectors
+
 
 #+ATTR_LATEX: :options [logo=\bcbook, couleur=yellow!10, barre=snake, arrondi=0.1]{Inner Product}
  #+BEGIN_bclogo
@@ -47,6 +192,7 @@ Measure of similarity between vectors
   inner product = 0
 - Distance :: $d(x,y) = \mathbf{x} -\mathbf{y}_2$
   
+
 ** Some Examples
 
 Not all vector spaces have got a graphical representation. The following table shows the
@@ -70,6 +216,7 @@ graphical representation of vector spaces
   # Axes Label
   set xlabel "Phase (radians)"
   set ylabel "Amplitude"
+  set grid
   # Axes ranges
   set xrange [0:2*pi]
   set yrange [-1.5:1.5]
@@ -106,6 +253,7 @@ set ylabel "Amplitude"
 # Axes ranges
 set xrange [0:2*pi]
 set yrange [-1.5:1.5]
+set grid
 # Axes tics     
 set xtics ("0" 0,"0.5{/Symbol p}" pi/2, "{/Symbol p}" pi, "1.5{/Symbol p}" 1.5*pi, "2{/Symbol p}" 2*pi)
 set ytics 1
@@ -141,6 +289,7 @@ set ylabel "Amplitude"
 # Axes ranges
 set xrange [0:2*pi]
 set yrange [-1.5:1.5]
+set grid
 # Axes tics     
 set xtics ("0" 0,"0.5{/Symbol p}" pi/2, "{/Symbol p}" pi, "1.5{/Symbol p}" 1.5*pi, "2{/Symbol p}" 2*pi)
 set ytics 1

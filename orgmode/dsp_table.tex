@@ -1,0 +1,24 @@
+% dsp_table.tex
+% -------------
+\ifcsname DSPTABLE\endcsname
+  % Already loaded → do nothing
+\else
+  \newcommand{\DSPTABLE}{}
+
+  \usepackage{array}
+  \usepackage{ragged2e}
+  \usepackage{colortbl}
+  \usepackage{makecell}
+  
+  % Farben definieren
+  
+  % Kopfzeile einfärben
+  \newcommand{\myheadcolor}{\rowcolor{CornflowerBlue}}
+  \newcommand{\mytextcolor}{\color{white}}
+  
+  % Abwechselnde Zeilenfarben ab 2. Zeile (weiß und AliceBlue)
+  \usepackage{etoolbox}
+  \AtBeginEnvironment{tabular}{\rowcolors{2}{white}{AliceBlue}}
+  
+  % Neue Spaltentypen mit makecell für zentrierten und umgebrochenen Text
+  \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}

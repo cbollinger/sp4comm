@@ -2,6 +2,7 @@
 
 # #+LATEX_CLASS: koma-report                                   
 # #+LATEX_HEADER: \input{../dsp_setup.tex}
+# #+LATEX_HEADER: \input{../dsp_table.tex}
 
 * Filter Design
 - First strategy of filter design: Imitation
@@ -1286,14 +1287,14 @@ Filterdesign was established art long before digital processing appeared
 
 **** Butterworth lowpass
 
-#+ATTR_LATEX: :caption \rowcolors[]{1}{yellow!5}{} :placement [h] :align  p{4cm}  p{4cm} p{4cm}
+#+ATTR_LATEX: :align  p{4cm}  p{4cm} p{4cm}
 #+CAPTION: Butterworth lowpass
-| <20>                                                              | <20>                                        | <20>                                  |
-|-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
-| \rowcolor{yellow!30} \bfseries\textcolor{red}{Magnitude response} | \bfseries\textcolor{red}{Design Parameters} | \bfseries\textcolor{red}{Test values} |
-| maximally flat                                                    | order N                                     | width of transition band              |
-| monotonic over [0, $\pi$ ]                                        | cutoff frequency                            | passband error                        |
-|-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
+| <20>                                        | <20>                           | <20>                     |
+|---------------------------------------------+--------------------------------+--------------------------|
+| \myheadcolor\mytextcolor Magnitude response | \mytextcolor Design Parameters | \mytextcolor Test values |
+| maximally flat                              | order N                        | width of transition band |
+| monotonic over [0, $\pi$ ]                  | cutoff frequency               | passband error           |
+|---------------------------------------------+--------------------------------+--------------------------|
 #+TBLFM: 
 
 ***** Pole-Zero Plot
@@ -1385,15 +1386,15 @@ Filterdesign was established art long before digital processing appeared
 
 **** Chebyshev lowpass
 
-#+ATTR_LATEX: :caption \rowcolors[]{1}{yellow!5}{} :placement [h] :align  p{4cm} p{4cm} p{4cm}
+#+ATTR_LATEX: :placement [h] :align  p{4cm} p{4cm} p{4cm}
 #+CAPTION: Chebyshev lowpass
-| <20>                                                              | <20>                                        | <20>                                  |
-|-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
-| \rowcolor{yellow!30} \bfseries\textcolor{red}{Magnitude response} | \bfseries\textcolor{red}{Design Parameters} | \bfseries\textcolor{red}{Test values} |
-| equiripple in passband                                            | order N                                     | width of transition band              |
-| monotonic in stopband                                             | passband max error                          | stopband error                        |
-|                                                                   | cutoff frequency                            |                                       |
-|-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
+| <20>                                        | <20>                           | <20>                     |
+|---------------------------------------------+--------------------------------+--------------------------|
+| \myheadcolor\mytextcolor Magnitude response | \mytextcolor Design Parameters | \mytextcolor Test values |
+| equiripple in passband                      | order N                        | width of transition band |
+| monotonic in stopband                       | passband max error             | stopband error           |
+|                                             | cutoff frequency               |                          |
+|---------------------------------------------+--------------------------------+--------------------------|
 
 ***** Pole-Zero Plot
 #+ATTR_LATEX: :options bgcolor=gray!10, breaklines
@@ -1487,16 +1488,16 @@ Filterdesign was established art long before digital processing appeared
  
 **** Elliptic Lowpass
 
-#+ATTR_LATEX: :caption \rowcolors[]{1}{yellow!5}{} :placement [h] :align  p{4cm}  p{4cm} p{4cm}
+#+ATTR_LATEX: :placement [h] :align  p{4cm}  p{4cm} p{4cm}
 #+CAPTION: Elliptic Lowpass
-| <20>                                                              | <20>                                        | <20>                                  |
-|-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
-| \rowcolor{yellow!30} \bfseries\textcolor{red}{Magnitude response} | \bfseries\textcolor{red}{Design Parameters} | \bfseries\textcolor{red}{Test values} |
-| equiripple in passband                                            | order N                                     | width of transition band              |
-| equiripple in stopband                                            | cutoff frequnecy                            |                                       |
-|                                                                   | passband max error                          |                                       |
-|                                                                   | stopband min attenuation                    |                                       |
-|-------------------------------------------------------------------+---------------------------------------------+---------------------------------------|
+| <20>                                        | <20>                           | <20>                     |
+|---------------------------------------------+--------------------------------+--------------------------|
+| \myheadcolor\mytextcolor Magnitude response | \mytextcolor Design Parameters | \mytextcolor Test values |
+| equiripple in passband                      | order N                        | width of transition band |
+| equiripple in stopband                      | cutoff frequnecy               |                          |
+|                                             | passband max error             |                          |
+|                                             | stopband min attenuation       |                          |
+|---------------------------------------------+--------------------------------+--------------------------|
 
 ***** Pole-Zero Plot
 #+ATTR_LATEX: :options bgcolor=gray!10, breaklines
@@ -1657,16 +1658,16 @@ one half sample.
 
 *** The Park McMellon Design Algorithm
 
-#+ATTR_LATEX: :caption \rowcolors[]{1}{yellow!5}{} :placement [h] :align  p{4cm}  p{4cm} p{4cm}
+#+ATTR_LATEX: :placement [h] :align  p{4cm}  p{4cm} p{4cm}
 #+CAPTION: Park McMellon 
-| <20>                                                              | <20>                                                           | <20>                                  |
-|-------------------------------------------------------------------+----------------------------------------------------------------+---------------------------------------|
-| \rowcolor{yellow!30} \bfseries\textcolor{red}{Magnitude response} | \bfseries\textcolor{red}{Design Parameters}                    | \bfseries\textcolor{red}{Test values} |
-| equiripple in passband and stopband                               | order N                                                        | passband max error                    |
-|                                                                   | passband edge $\omega_p$                                       | stopband max error                    |
-|                                                                   | stopband edge $\omega_s$                                       |                                       |
-|                                                                   | ratio of passband to stopband error $\frac{\delta_p}{delta_s}$ |                                       |
-|-------------------------------------------------------------------+----------------------------------------------------------------+---------------------------------------|
+| <20>                                        | <20>                                                           | <20>                     |
+|---------------------------------------------+----------------------------------------------------------------+--------------------------|
+| \myheadcolor\mytextcolor Magnitude response | \mytextcolor Design Parameters                                 | \mytextcolor Test values |
+| equiripple in passband and stopband         | order N                                                        | passband max error       |
+|                                             | passband edge $\omega_p$                                       | stopband max error       |
+|                                             | stopband edge $\omega_s$                                       |                          |
+|                                             | ratio of passband to stopband error $\frac{\delta_p}{delta_s}$ |                          |
+|---------------------------------------------+----------------------------------------------------------------+--------------------------|
 
 #+ATTR_LATEX: :options bgcolor=gray!10, breaklines
 #+NAME: 4_9_fir_park_mcmellon

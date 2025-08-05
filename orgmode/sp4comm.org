@@ -11,6 +11,7 @@
 
 #+LATEX_CLASS: koma-report                               
 #+LATEX_HEADER: \input{dsp_setup.tex}
+#+LATEX_HEADER: \input{dsp_table.tex}
 
 \newpage
 #+INCLUDE: "./week1/week1.org"

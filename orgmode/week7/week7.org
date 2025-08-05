@@ -2,6 +2,7 @@
 
 # #+LATEX_CLASS: koma-report                                   
 # #+LATEX_HEADER: \input{../dsp_setup.tex}
+# #+LATEX_HEADER: \input{../dsp_table.tex}
 
 * Sampling and Quantization
 Interpolation describes the process of building a continuous-time signal *x(t)* from
@@ -63,28 +64,28 @@ class, the continuous-time Fourier transform.
 
 Two views of the world
 
-#+ATTR_LATEX: :caption \rowcolors[]{1}{yellow!5}{} :placement [ht] :align  p{5cm}  p{5cm} 
+#+ATTR_LATEX: :placement [ht] :align  p{5cm}  p{5cm} 
 #+CAPTION: Two views of the world 1
-| <40>                                                         | <40>                                   |
-|--------------------------------------------------------------+----------------------------------------|
-| \rowcolor{yellow!30} \bfseries\textcolor{red}{Digital World} | \bfseries\textcolor{red}{Analog World} |
-| arithmetic                                                   | calculus                               |
-| combinatorics                                                | distributions                          |
-| computer sience                                              | system theory                          |
-| DSP                                                          | electronics                            |
-|--------------------------------------------------------------+----------------------------------------|
+| <40>                                   | <40>                      |
+|----------------------------------------+---------------------------|
+| \myheadcolor\mytextcolor Digital World | \mytextcolor Analog World |
+| arithmetic                             | calculus                  |
+| combinatorics                          | distributions             |
+| computer sience                        | system theory             |
+| DSP                                    | electronics               |
+|----------------------------------------+---------------------------|
 
 
-#+ATTR_LATEX: :caption \rowcolors[]{1}{yellow!5}{} :placement [ht] :align  p{5cm}  p{5cm} 
+#+ATTR_LATEX: :placement [ht] :align  p{5cm}  p{5cm} 
 #+CAPTION: Two views of the world 2
-| <40>                                                         | <40>                                              |
-|--------------------------------------------------------------+---------------------------------------------------|
-| \rowcolor{yellow!30} \bfseries\textcolor{red}{Digital World} | \bfseries\textcolor{red}{Analog World}            |
-| countable integer index M                                    | real-valued time t [sec]                          |
-| sequences $x[n] \in \ell_2(\mathbb{Z})$                      | function $x(t) \in L_2(\mathbb{R})$               |
-| frequency $\omega \in [-\pi, \pi]$                           | frequency $\Omega \in \mathbb{R} (rad/sec)$       |
-| DTFT: $\ell_2(\mathbb{Z}) \rightarrow L_2[-\pi, \pi]$        | FT: $L_2(\mathbb{R}) \rightarrow L_2(\mathbb{R})$ |
-|--------------------------------------------------------------+---------------------------------------------------|
+| <40>                                                  | <40>                                              |
+|-------------------------------------------------------+---------------------------------------------------|
+| \myheadcolor\mytextcolor Digital World                | \mytextcolor Analog World                         |
+| countable integer index M                             | real-valued time t [sec]                          |
+| sequences $x[n] \in \ell_2(\mathbb{Z})$               | function $x(t) \in L_2(\mathbb{R})$               |
+| frequency $\omega \in [-\pi, \pi]$                    | frequency $\Omega \in \mathbb{R} (rad/sec)$       |
+| DTFT: $\ell_2(\mathbb{Z}) \rightarrow L_2[-\pi, \pi]$ | FT: $L_2(\mathbb{R}) \rightarrow L_2(\mathbb{R})$ |
+|-------------------------------------------------------+---------------------------------------------------|
 
 #+ATTR_LATEX: :options [leftmargin=3cm,labelwidth=2.7cm,itemindent=-2pt]
  - $\ell_2(\mathbb{Z})$ :: Square-Summable infinite sequences
@@ -743,15 +744,15 @@ The continous-time complex exponential
 - $FT \left\{e^{j \Omega_0 t} \right\} = 2\pi\delta(\Omega - \Omega_0)$
 - bandlimited to $\Omega_0$
 
-#+ATTR_LATEX: :caption \rowcolors[]{1}{yellow!5}{} :placement [ht] :align  p{4cm} p{4cm} p{4cm}
+#+ATTR_LATEX: :placement [ht] :align  p{4cm} p{4cm} p{4cm}
 #+CAPTION: Aliasing
-| <20>                                                           | <20>                                        | <20>                                                       |
-|----------------------------------------------------------------+---------------------------------------------+------------------------------------------------------------|
-| \rowcolor{yellow!30} \bfseries\textcolor{red}{sampling period} | \bfseries\textcolor{red}{digital frequency} | \bfseries\textcolor{red}{$\hat{x}$}                        |
-| $T_s < \pi/\Omega_0$                                           | 0 < \omega_o < \pi                          | e^{j\Omega_0}                                              |
-| $\pi/\Omega_0 < T_s < 2\pi/\Omega_0$                           | \pi < \omega_0 < 2\pi                       | $e^{j\Omega_1}\text{: } \Omega_1 = \Omega_0 -2\pi/T_s$     |
-| T_s > 2\pi/\Omega_0                                            | \omega_0 > 2\pi                             | $e^{j\Omega_2}\text{: } \Omega_2 = \Omega_0 mod(2\pi/T_s)$ |
-|----------------------------------------------------------------+---------------------------------------------+------------------------------------------------------------|
+| <20>                                     | <20>                            | <20>                                                       |
+|------------------------------------------+---------------------------------+------------------------------------------------------------|
+| \myheadcolor\mytextcolor sampling period | \mytextcolor digital frequency  | \mytextcolor {$\hat{x}$}                                                |
+| $T_s < \pi/\Omega_0$                     | 0 < \omega_o < \pi              | e^{j\Omega_0}                                              |
+| $\pi/\Omega_0 < T_s < 2\pi/\Omega_0$     | \pi < \omega_0 < 2\pi           | $e^{j\Omega_1}\text{: } \Omega_1 = \Omega_0 -2\pi/T_s$     |
+| T_s > 2\pi/\Omega_0                      | \omega_0 > 2\pi                 | $e^{j\Omega_2}\text{: } \Omega_2 = \Omega_0 mod(2\pi/T_s)$ |
+|------------------------------------------+---------------------------------+------------------------------------------------------------|
 
 *** Sinusoidal Aliasing
 
